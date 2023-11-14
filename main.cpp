@@ -1,47 +1,48 @@
 #include <bits/stdc++.h>
 
-#define GET_MAX(a, b) (a > b ? a : b)
-#define GET_MIN(a ,b) (a < b ? a : b)
-
+using Int64_type = long;
+using Int128_type = long long;
 using namespace std;
 
+void _scan(string &value) {cin >> value;}
+void _scan(int &value) {cin >> value;}
+void _scan(char &value) {cin >> value;}
+void _scan(char *value) {cin >> value;}
+
+
+#define GET_MAX(a, b) (a > b ? a : b)
+#define GET_MIN(a ,b) (a < b ? a : b)
+#define scan_char(value) _scan(value)
+#define scan_arr(N, _array_type) {for(int i = 0; i < N; i++) {scan_char(_array_type[i]);};}
+
 int n = 0;
-int goods[10] = {1, 5, 10, 50, 100, 500, 1000, 3000, 6000, 12000};
-vector<int> res;
 
-int runCase(vector<int> boxes) {
+int runCase(vector<int> arr) {
     int ret = 0;
-    int temp = 0;
-    int next = 0;
+    int min = INT32_MAX;
+    int max = INT32_MIN;
+    bool isUp = true;
 
-    for(int i = 0; i < 10; i++) {
-        temp = 0;
-        for(int j = boxes[i]; j >= 0; j--) {
-            if(i+1 >= 10) {
-                if(n - (j*goods[i]) == 0) {
-                    temp = j;
-                    break;
-                } else {
-                    continue;
-                }
+    for(int i = 0; i < n; i++) {
+        if(isUp) {
+            if(arr[i] > max) {
+                max = arr[i];
+                if(i == n-1) ret += max;
+            } else {
+                ret += arr[i-1];
+                isUp = false;
+                min = arr[i];
             }
-
-            for(int k = i+1; k < 10; k++) {
-                if(boxes[k] > 0) {
-                    next = k;
-                    break;
-                }
-            }
-
-            if(n - (j*goods[i]) >= 0 && (n - (j*goods[i])) % goods[next] == 0) {
-                temp = j;
-                break;
+        } else {
+            if(arr[i] < min) {
+                min = arr[i];
+            } else {
+                ret -= arr[i-1];
+                if(i == n-1) ret += arr[i];
+                isUp = true;
+                max = arr[i];
             }
         }
-
-        n -= (temp*goods[i]);
-        res.push_back(temp);
-        ret += temp;
     }
 
     return ret;
@@ -51,28 +52,11 @@ int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    vector<int> boxes(10);
+    scan_char(n);
+    vector<int> arr(n);
+    scan_arr(n, arr);
 
-    cin >> n;
-    for(int i = 0; i < 10; i++) {
-        cin >> boxes[i];
-    }
-
-    cout << runCase(boxes) << endl;
-
-    const char *end = " ";
-    
-    for(int i = 0; i < 10; i++) {
-        if(i == 9) {
-            end = "\n";
-        }
-
-        if(i < res.size()) {
-            cout << res[i] << end;
-        } else {
-            cout << 0 << end;
-        }
-    }
+    cout << runCase(arr) << endl;
 
     return 0;
 }
