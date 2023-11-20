@@ -18,13 +18,63 @@ void _scan(char *value) {cin >> value;}
 
 int n = 0;
 
-void solve(char *arr, int color_num) {
+int solve(char *arr, const int len, char color, vector<char> &colors, int &index) {
+    int begin = INT32_MIN;
+    int end = INT32_MIN;
 
+    for(int i = 0; i < len; i++) {
+        if(begin == INT32_MIN && arr[i] == color) begin = i;
+        if(arr[i] == color && i > end) end = i;
+    }
+
+    int row_begin = begin / n;
+    int row_end = end / n;
+    int sub_len = end - (begin + (row_end - row_begin) * n) + 1; 
+    char push_back_char = 0;
+
+    for(int i = row_begin; i <= row_end; i++) {
+        for(int j = i * n + begin; j < i * n + sub_len + begin; j++) {
+            if(arr[j] != color) {   
+                for(int k = index; k < colors.size(); k++) {
+                    if(colors[k] == arr[j]) {
+                        index++;
+                        swap(colors[k], colors[index]);
+                    }
+                }
+            }
+        }
+    }
+
+    return 1;
 }
 
 int runCase(char *arr) {
     int ret = 0;
     const int len = n*n;
+    vector<char> colors;
+    int temp = 0;
+
+    for(int i = 0; i < len; i++) {
+        temp = i;
+        for(int j = 0; j < colors.size(); j++) {
+            if(arr[i] == colors[j] || arr[i] == '0') {
+                temp += 1;
+                break;
+            }
+        }
+
+        if(temp != i) {
+            continue;
+        }
+
+        if(static_cast<int>(arr[i]-'0') > 0) {
+            colors.push_back(arr[i]);
+        }
+    }
+
+    for(int i = 0; i < colors.size(); i++) {
+        ret += solve(arr, len, colors[i], colors, i);
+    }
 
     return ret;
 }
