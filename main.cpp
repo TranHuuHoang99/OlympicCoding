@@ -30,19 +30,21 @@ int solve(char *arr, const int len, char color, vector<char> &colors, int &index
     int row_begin = begin / n;
     int row_end = end / n;
     int sub_len = end - (begin + (row_end - row_begin) * n) + 1; 
-    char push_back_char = 0;
+    int add = 0;
 
     for(int i = row_begin; i <= row_end; i++) {
-        for(int j = i * n + begin; j < i * n + sub_len + begin; j++) {
+        for(int j = add * n + begin; j < add * n + begin + sub_len; j++) {
             if(arr[j] != color) {   
-                for(int k = index; k < colors.size(); k++) {
-                    if(colors[k] == arr[j]) {
+                for(int k = index+1; k < colors.size(); k++) {
+                    if(arr[j] == colors[k]) {
                         index++;
-                        swap(colors[k], colors[index]);
+                        swap(colors[index], colors[k]);
+                        break;
                     }
                 }
             }
         }
+        add++;
     }
 
     return 1;
@@ -62,19 +64,11 @@ int runCase(char *arr) {
                 break;
             }
         }
-
-        if(temp != i) {
-            continue;
-        }
-
-        if(static_cast<int>(arr[i]-'0') > 0) {
-            colors.push_back(arr[i]);
-        }
+        if(temp != i) continue;
+        if(static_cast<int>(arr[i]-'0') > 0) colors.push_back(arr[i]);
     }
-
-    for(int i = 0; i < colors.size(); i++) {
-        ret += solve(arr, len, colors[i], colors, i);
-    }
+    
+    for(int i = 0; i < colors.size(); i++) ret += solve(arr, len, colors[i], colors, i);
 
     return ret;
 }
