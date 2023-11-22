@@ -21,31 +21,22 @@ int n = 0;
 int solve(char *arr, const int len, char color, vector<char> &colors, int &index) {
     int begin = INT32_MIN;
     int end = INT32_MIN;
+    int ver = INT32_MIN;
+    int hor = 1;
+    int min_hor = INT32_MAX;
 
     for(int i = 0; i < len; i++) {
         if(begin == INT32_MIN && arr[i] == color) begin = i;
         if(arr[i] == color && i > end) end = i;
+        if(arr[i] == color && i/n + 1 > ver) ver = i/n +1;
+        if(arr[i] == color && (i/n + 1) * n - i < min_hor) min_hor = (i/n + 1) * n - i;
+        if(arr[i] == color && (i/n + 1) * n - i > hor) hor = (i/n + 1) * n - i; 
     }
 
-    int row_begin = begin / n;
-    int row_end = end / n;
-    int sub_len = end - (begin + (row_end - row_begin) * n) + 1; 
-    int add = 0;
+    hor -= (min_hor-1);
+    ver -= begin / n;   
 
-    for(int i = row_begin; i <= row_end; i++) {
-        for(int j = add * n + begin; j < add * n + begin + sub_len; j++) {
-            if(arr[j] != color) {   
-                for(int k = index+1; k < colors.size(); k++) {
-                    if(arr[j] == colors[k]) {
-                        index++;
-                        swap(colors[index], colors[k]);
-                        break;
-                    }
-                }
-            }
-        }
-        add++;
-    }
+    
 
     return 1;
 }
