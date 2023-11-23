@@ -18,25 +18,55 @@ void _scan(char *value) {cin >> value;}
 
 int n = 0;
 
-int solve(char *arr, const int len, char color, vector<char> &colors, int &index) {
+int solve(char *arr, const int len, char color) {
     int begin = INT32_MIN;
     int end = INT32_MIN;
     int ver = INT32_MIN;
-    int hor = 1;
+    int hor = 0;
     int min_hor = INT32_MAX;
+    int min_len = 0;
+    int max_len = 0;
+    bool isOnly_zero = true;
 
     for(int i = 0; i < len; i++) {
+        if(arr[i] != '0') isOnly_zero = false;
         if(begin == INT32_MIN && arr[i] == color) begin = i;
         if(arr[i] == color && i > end) end = i;
         if(arr[i] == color && i/n + 1 > ver) ver = i/n +1;
-        if(arr[i] == color && (i/n + 1) * n - i < min_hor) min_hor = (i/n + 1) * n - i;
-        if(arr[i] == color && (i/n + 1) * n - i > hor) hor = (i/n + 1) * n - i; 
+        if(arr[i] == color && (i/n + 1) * n - i < min_hor) {
+            min_hor = (i/n + 1) * n - i;
+            max_len = i;
+        }
+        if(arr[i] == color && (i/n + 1) * n - i > hor) {
+            hor = (i/n + 1) * n - i; 
+            min_len = i;
+        }
     }
+
+    if(color == '0' && !isOnly_zero) return 0;
 
     hor -= (min_hor-1);
     ver -= begin / n;   
 
-    
+    int temp_end = end - (end/n - max_len/n) * n;
+    int temp_begin = min_len - (min_len/n - begin/n) * n;
+
+    while(begin > temp_begin) {
+        begin--;
+    }
+
+    while(temp_end < max_len) {
+        end++;
+        temp_end++;
+    }
+
+    for(int i = 0; begin + i*n <= begin + ((ver-1)*n); i++) {
+        for(int j = begin + i*n; j < begin + i*n + hor; j++) {
+            if(arr[j] != color) {
+                return 0;
+            }
+        }   
+    }
 
     return 1;
 }
@@ -50,16 +80,16 @@ int runCase(char *arr) {
     for(int i = 0; i < len; i++) {
         temp = i;
         for(int j = 0; j < colors.size(); j++) {
-            if(arr[i] == colors[j] || arr[i] == '0') {
+            if(arr[i] == colors[j]) {
                 temp += 1;
                 break;
             }
         }
         if(temp != i) continue;
-        if(static_cast<int>(arr[i]-'0') > 0) colors.push_back(arr[i]);
+        if(static_cast<int>(arr[i]-'0') >= 0) colors.push_back(arr[i]);
     }
     
-    for(int i = 0; i < colors.size(); i++) ret += solve(arr, len, colors[i], colors, i);
+    for(int i = 0; i < colors.size(); i++) ret += solve(arr, len, colors[i]);
 
     return ret;
 }
