@@ -18,7 +18,7 @@ void _scan(char *value) {cin >> value;}
 
 int n = 0;
 
-int solve(char *arr, const int len, char color) {
+void solve(char *arr, const int len, vector<char> colors, vector<bool> &isValid, int index) {
     int begin = INT32_MIN;
     int end = INT32_MIN;
     int ver = INT32_MIN;
@@ -26,24 +26,21 @@ int solve(char *arr, const int len, char color) {
     int min_hor = INT32_MAX;
     int min_len = 0;
     int max_len = 0;
-    bool isOnly_zero = true;
+    const char temp = colors[index];
 
     for(int i = 0; i < len; i++) {
-        if(arr[i] != '0') isOnly_zero = false;
-        if(begin == INT32_MIN && arr[i] == color) begin = i;
-        if(arr[i] == color && i > end) end = i;
-        if(arr[i] == color && i/n + 1 > ver) ver = i/n +1;
-        if(arr[i] == color && (i/n + 1) * n - i < min_hor) {
+        if(begin == INT32_MIN && arr[i] == temp) begin = i;
+        if(arr[i] == temp && i > end) end = i;
+        if(arr[i] == temp && i/n + 1 > ver) ver = i/n +1;
+        if(arr[i] == temp && (i/n + 1) * n - i < min_hor) {
             min_hor = (i/n + 1) * n - i;
             max_len = i;
         }
-        if(arr[i] == color && (i/n + 1) * n - i > hor) {
+        if(arr[i] == temp && (i/n + 1) * n - i > hor) {
             hor = (i/n + 1) * n - i; 
             min_len = i;
         }
     }
-
-    if(color == '0' && !isOnly_zero) return 0;
 
     hor -= (min_hor-1);
     ver -= begin / n;   
@@ -62,13 +59,18 @@ int solve(char *arr, const int len, char color) {
 
     for(int i = 0; begin + i*n <= begin + ((ver-1)*n); i++) {
         for(int j = begin + i*n; j < begin + i*n + hor; j++) {
-            if(arr[j] != color) {
-                return 0;
+            if(arr[j] != temp) {
+                for(int count = 0; count < colors.size(); count++) {
+                    if(colors[count] == arr[j]) {
+                        isValid[count] = false;
+                    }
+                }
             }
         }   
     }
 
-    return 1;
+    isValid[index] = !isValid[index] ? false : true;
+    return;
 }
 
 int runCase(char *arr) {
@@ -79,6 +81,7 @@ int runCase(char *arr) {
 
     for(int i = 0; i < len; i++) {
         temp = i;
+        if(arr[i] == '0') continue;
         for(int j = 0; j < colors.size(); j++) {
             if(arr[i] == colors[j]) {
                 temp += 1;
@@ -86,10 +89,18 @@ int runCase(char *arr) {
             }
         }
         if(temp != i) continue;
-        if(static_cast<int>(arr[i]-'0') >= 0) colors.push_back(arr[i]);
+        if(static_cast<int>(arr[i]-'0') > 0) colors.push_back(arr[i]);
     }
     
-    for(int i = 0; i < colors.size(); i++) ret += solve(arr, len, colors[i]);
+    vector<bool> isValid(colors.size(), true);
+    
+    for(int i = 0; i < colors.size(); i++) {
+        solve(arr, len, colors, isValid, i);
+    }
+
+    for(int i = 0; i < colors.size(); i++) {
+        if(isValid[i]) ret += 1;
+    }
 
     return ret;
 }
@@ -97,6 +108,7 @@ int runCase(char *arr) {
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);  
+    cout.tie(NULL);
 
     scan_char(n);
 
