@@ -1,7 +1,12 @@
 #include <bits/stdc++.h>
 
-using Int64_type = long;
-using Int128_type = long long;
+using int64_type = long;
+using int128_type = long long;
+using uint64_type = unsigned long;
+using sint64_type = signed long;
+using uint128_type = unsigned long long;
+using sint128_type = signed long long;
+
 using namespace std;
 
 void _scan(string &value) {cin >> value;}
@@ -17,92 +22,72 @@ void _scan(char *value) {cin >> value;}
 #define loop(i, N) for(i; i < N; i++)
 
 int n = 0;
+map<int, int> ret;
 
-void solve(char *arr, const int len, vector<char> colors, vector<bool> &isValid, int index) {
-    int begin = INT32_MIN;
-    int end = INT32_MIN;
-    int ver = INT32_MIN;
-    int hor = 0;
-    int min_hor = INT32_MAX;
-    int min_len = 0;
-    int max_len = 0;
-    const char temp = colors[index];
-
-    for(int i = 0; i < len; i++) {
-        if(begin == INT32_MIN && arr[i] == temp) begin = i;
-        if(arr[i] == temp && i > end) end = i;
-        if(arr[i] == temp && i/n + 1 > ver) ver = i/n +1;
-        if(arr[i] == temp && (i/n + 1) * n - i < min_hor) {
-            min_hor = (i/n + 1) * n - i;
-            max_len = i;
-        }
-        if(arr[i] == temp && (i/n + 1) * n - i > hor) {
-            hor = (i/n + 1) * n - i; 
-            min_len = i;
-        }
-    }
-
-    hor -= (min_hor-1);
-    ver -= begin / n;   
-
-    int temp_end = end - (end/n - max_len/n) * n;
-    int temp_begin = min_len - (min_len/n - begin/n) * n;
-
-    while(begin > temp_begin) {
-        begin--;
-    }
-
-    while(temp_end < max_len) {
-        end++;
-        temp_end++;
-    }
-
-    for(int i = 0; begin + i*n <= begin + ((ver-1)*n); i++) {
-        for(int j = begin + i*n; j < begin + i*n + hor; j++) {
-            if(arr[j] != temp) {
-                for(int count = 0; count < colors.size(); count++) {
-                    if(colors[count] == arr[j]) {
-                        isValid[count] = false;
-                    }
-                }
-            }
-        }   
-    }
-
-    isValid[index] = !isValid[index] ? false : true;
-    return;
+void _insert(map<int, int> &ret_map, int i, int j) {
+    ret_map.clear();
+    ret_map.insert(std::pair<int, int>(i,j));
 }
 
-int runCase(char *arr) {
-    int ret = 0;
-    const int len = n*n;
-    vector<char> colors;
-    int temp = 0;
+void runCase(vector<int128_type> arr) {
+    int128_type min = LLONG_MAX; // positive
+    int128_type max = LLONG_MIN; // negative
+    map<int, int> ret_pos;
+    map<int, int> ret_neg;
 
-    for(int i = 0; i < len; i++) {
-        temp = i;
-        if(arr[i] == '0') continue;
-        for(int j = 0; j < colors.size(); j++) {
-            if(arr[i] == colors[j]) {
-                temp += 1;
-                break;
-            }
+    const int len = n / 2;
+
+    int i = 0;
+    int j = n-1;
+    int128_type temp = 0;
+
+    while(i < j) {
+        temp = arr[i] + arr[j];
+        if(temp == 0) {
+            _insert(ret, i, j);
+            return;
         }
-        if(temp != i) continue;
-        if(static_cast<int>(arr[i]-'0') > 0) colors.push_back(arr[i]);
-    }
-    
-    vector<bool> isValid(colors.size(), true);
-    
-    for(int i = 0; i < colors.size(); i++) {
-        solve(arr, len, colors, isValid, i);
+
+        if(temp < 0) {
+            if(temp > max) {
+                max = temp;
+                _insert(ret_neg, i, j);
+            }
+            i++;
+        } else {
+            if(temp < min) {
+                min = temp;
+                _insert(ret_pos, i, j);
+            }
+            j--;
+        }
     }
 
-    for(int i = 0; i < colors.size(); i++) {
-        if(isValid[i]) ret += 1;
+    int128_type sum_pos = 0;
+    int128_type sum_neg = 0;
+
+    if(ret_pos.size() > 0 && ret_neg.size() > 0) {
+        sum_pos = arr[ret_pos.begin()->first] + arr[ret_pos.begin()->second];
+        sum_neg = (arr[ret_neg.begin()->first] + arr[ret_neg.begin()->second]) * (-1);
+
+        if(sum_neg == sum_pos) {
+            ret = ret_neg.begin()->first < ret_pos.begin()->first ? ret_neg : ret_pos;
+        } else if(sum_neg < sum_pos) {
+            ret = ret_neg;
+        } else {
+            ret = ret_pos;
+        }
     }
 
-    return ret;
+    if(ret_pos.size() > 0 && ret_neg.size() <= 0) {
+        ret = ret_pos;
+    } 
+
+    if(ret_pos.size() <= 0 && ret_neg.size() > 0) {
+        ret = ret_neg;
+    }
+
+    return;
 }
 
 int main(void) {
@@ -111,26 +96,17 @@ int main(void) {
     cout.tie(NULL);
 
     scan_char(n);
-
-    char temp[n];
-    char arr[n*n];
-
-    memset(temp, 0, n);
-    memset(arr, 0, n*n);
-
-    int j = 0;
+    vector<int128_type> arr(n, 0);
     for(int i = 0; i < n; i++) {
-        cin >> temp;
-        memcpy(&arr[j], temp, n);
-        memset(temp, 0, n);
-        j += n;
-    }   
+        cin >> arr[i];
+    }
 
 #ifdef HOANG_DEBUG
     auto start_pro = std::chrono::high_resolution_clock::now();
 #endif
 
-    cout << runCase(arr) << endl;
+    runCase(arr);   
+    cout << ret.begin()->first << " " << ret.begin()->second << endl;
 
 #ifdef HOANG_DEBUG
     auto stop_pro = std::chrono::high_resolution_clock::now();
