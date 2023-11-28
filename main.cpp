@@ -22,72 +22,36 @@ void _scan(char *value) {cin >> value;}
 #define loop(i, N) for(i; i < N; i++)
 
 int n = 0;
-map<int, int> ret;
 
-void _insert(map<int, int> &ret_map, int i, int j) {
-    ret_map.clear();
-    ret_map.insert(std::pair<int, int>(i,j));
-}
+int runCase(vector<vector<int> > arr, vector<vector<bool> > visited) {
+    int ret = 0;
+    int hor = 0;
+    int ver = 0;
+    queue<vector<int> > path;
+    path.push({0,0});
+    vector<int> temp(2,0);
+    vector<vector<int> > ret_temp;
+    visited[0][0] = true;
+    vector<int> ret_arr;
 
-void runCase(vector<int128_type> arr) {
-    int128_type min = LLONG_MAX; // positive
-    int128_type max = LLONG_MIN; // negative
-    map<int, int> ret_pos;
-    map<int, int> ret_neg;
+    while(!path.empty()) {
+        temp = path.front();
+        ret_arr.push_back(arr[temp[0]][temp[1]]);
+        ret_temp.push_back(temp);
+        path.pop();
 
-    const int len = n / 2;
-
-    int i = 0;
-    int j = n-1;
-    int128_type temp = 0;
-
-    while(i < j) {
-        temp = arr[i] + arr[j];
-        if(temp == 0) {
-            _insert(ret, i, j);
-            return;
+        if(temp[1] < n-1 && !visited[temp[0]][temp[1]+1]) {
+            path.push({temp[0], temp[1]+1});
+            visited[temp[0]][temp[1]+1] = true;
         }
 
-        if(temp < 0) {
-            if(temp > max) {
-                max = temp;
-                _insert(ret_neg, i, j);
-            }
-            i++;
-        } else {
-            if(temp < min) {
-                min = temp;
-                _insert(ret_pos, i, j);
-            }
-            j--;
+        if(temp[0] < n-1 && !visited[temp[0]+1][temp[1]]) {
+            path.push({temp[0]+1, temp[1]});
+            visited[temp[0]+1][temp[1]] = true;
         }
     }
 
-    int128_type sum_pos = 0;
-    int128_type sum_neg = 0;
-
-    if(ret_pos.size() > 0 && ret_neg.size() > 0) {
-        sum_pos = arr[ret_pos.begin()->first] + arr[ret_pos.begin()->second];
-        sum_neg = (arr[ret_neg.begin()->first] + arr[ret_neg.begin()->second]) * (-1);
-
-        if(sum_neg == sum_pos) {
-            ret = ret_neg.begin()->first < ret_pos.begin()->first ? ret_neg : ret_pos;
-        } else if(sum_neg < sum_pos) {
-            ret = ret_neg;
-        } else {
-            ret = ret_pos;
-        }
-    }
-
-    if(ret_pos.size() > 0 && ret_neg.size() <= 0) {
-        ret = ret_pos;
-    } 
-
-    if(ret_pos.size() <= 0 && ret_neg.size() > 0) {
-        ret = ret_neg;
-    }
-
-    return;
+    return ret;
 }
 
 int main(void) {
@@ -96,17 +60,25 @@ int main(void) {
     cout.tie(NULL);
 
     scan_char(n);
-    vector<int128_type> arr(n, 0);
+    char temp[n];
+    vector<vector<int> > arr(n);
+    vector<vector<bool> > visited(n);
+    
     for(int i = 0; i < n; i++) {
-        cin >> arr[i];
+        memset(temp, 0, n);
+        cin >> temp;
+
+        for(int j = 0; j < n; j++) {
+            arr[i].push_back(static_cast<int>(temp[j]-'0'));
+            visited[i].push_back(false);
+        }
     }
 
 #ifdef HOANG_DEBUG
     auto start_pro = std::chrono::high_resolution_clock::now();
 #endif
 
-    runCase(arr);   
-    cout << ret.begin()->first << " " << ret.begin()->second << endl;
+    cout << runCase(arr, visited) << endl;
 
 #ifdef HOANG_DEBUG
     auto stop_pro = std::chrono::high_resolution_clock::now();
