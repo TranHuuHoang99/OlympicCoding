@@ -23,23 +23,39 @@ void _scan(char *value) {cin >> value;}
 
 int n = 0;
 
-int runCase(vector<vector<int> > arr, vector<vector<bool> > visited) {
+int runCase(vector<vector<int> > arr, vector<vector<bool> > visited, vector<vector<int> > ret_arr) {
     int ret = 0;
     int hor = 0;
     int ver = 0;
+
     queue<vector<int> > path;
-    path.push({0,0});
     vector<int> temp(2,0);
-    vector<vector<int> > ret_temp;
+    vector<int> second_fac;
+
+    path.push({0,0});
     visited[0][0] = true;
-    vector<int> ret_arr;
 
     while(!path.empty()) {
         temp = path.front();
-        ret_arr.push_back(arr[temp[0]][temp[1]]);
-        ret_temp.push_back(temp);
         path.pop();
 
+        if(temp[0]-1 >= 0 && temp[1]-1 >= 0) {
+            if(arr[temp[0]][temp[1]] + ret_arr[temp[0]-1][temp[1]] < ret_arr[temp[0]][temp[1]]) {
+                ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]-1][temp[1]];
+            }
+
+            if(arr[temp[0]][temp[1]] + ret_arr[temp[0]][temp[1]-1] < ret_arr[temp[0]][temp[1]]) {
+                ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]][temp[1]-1];
+            }
+
+        } else if(temp[0]-1 >= 0) {
+            ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]-1][temp[1]];
+        } else if(temp[1]-1 >= 0) {
+            ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]][temp[1]-1];
+        } else {
+            ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]];
+        }
+        
         if(temp[1] < n-1 && !visited[temp[0]][temp[1]+1]) {
             path.push({temp[0], temp[1]+1});
             visited[temp[0]][temp[1]+1] = true;
@@ -51,7 +67,7 @@ int runCase(vector<vector<int> > arr, vector<vector<bool> > visited) {
         }
     }
 
-    return ret;
+    return ret_arr[n-1][n-1];
 }
 
 int main(void) {
@@ -63,6 +79,7 @@ int main(void) {
     char temp[n];
     vector<vector<int> > arr(n);
     vector<vector<bool> > visited(n);
+    vector<vector<int> > ret_arr(n);
     
     for(int i = 0; i < n; i++) {
         memset(temp, 0, n);
@@ -71,6 +88,7 @@ int main(void) {
         for(int j = 0; j < n; j++) {
             arr[i].push_back(static_cast<int>(temp[j]-'0'));
             visited[i].push_back(false);
+            ret_arr[i].push_back(INT32_MAX);
         }
     }
 
@@ -78,7 +96,7 @@ int main(void) {
     auto start_pro = std::chrono::high_resolution_clock::now();
 #endif
 
-    cout << runCase(arr, visited) << endl;
+    cout << runCase(arr, visited, ret_arr) << endl;
 
 #ifdef HOANG_DEBUG
     auto stop_pro = std::chrono::high_resolution_clock::now();
