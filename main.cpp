@@ -24,46 +24,75 @@ void _scan(char *value) {cin >> value;}
 int n = 0;
 
 int runCase(vector<vector<int> > arr, vector<vector<bool> > visited, vector<vector<int> > ret_arr) {
-    int ret = 0;
+    queue<vector<int>> path;
+    vector<vector<int>> temp;
+    int index = 0;
+    int min = INT32_MAX;
+
     int hor = 0;
     int ver = 0;
 
-    queue<vector<int> > path;
-    vector<int> temp(2,0);
-    vector<int> second_fac;
-
     path.push({0,0});
+    ret_arr[0][0] = 0;
     visited[0][0] = true;
 
     while(!path.empty()) {
-        temp = path.front();
+        ver = path.front()[0];
+        hor = path.front()[1];
         path.pop();
+        index = 0;
+        min = INT32_MAX;
 
-        if(temp[0]-1 >= 0 && temp[1]-1 >= 0) {
-            if(arr[temp[0]][temp[1]] + ret_arr[temp[0]-1][temp[1]] < ret_arr[temp[0]][temp[1]]) {
-                ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]-1][temp[1]];
+        if(ver-1 >= 0) {
+            if(ret_arr[ver-1][hor] > ret_arr[ver][hor] + arr[ver-1][hor]) {
+                ret_arr[ver-1][hor] = ret_arr[ver][hor] + arr[ver-1][hor];
             }
-
-            if(arr[temp[0]][temp[1]] + ret_arr[temp[0]][temp[1]-1] < ret_arr[temp[0]][temp[1]]) {
-                ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]][temp[1]-1];
+            if(!visited[ver-1][hor]) {
+                visited[ver-1][hor] = true;
+                temp.push_back({ver-1, hor});
             }
-
-        } else if(temp[0]-1 >= 0) {
-            ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]-1][temp[1]];
-        } else if(temp[1]-1 >= 0) {
-            ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]] + ret_arr[temp[0]][temp[1]-1];
-        } else {
-            ret_arr[temp[0]][temp[1]] = arr[temp[0]][temp[1]];
-        }
-        
-        if(temp[1] < n-1 && !visited[temp[0]][temp[1]+1]) {
-            path.push({temp[0], temp[1]+1});
-            visited[temp[0]][temp[1]+1] = true;
         }
 
-        if(temp[0] < n-1 && !visited[temp[0]+1][temp[1]]) {
-            path.push({temp[0]+1, temp[1]});
-            visited[temp[0]+1][temp[1]] = true;
+        if(ver+1 < n) {
+            if(ret_arr[ver+1][hor] > ret_arr[ver][hor] + arr[ver+1][hor]) {
+                ret_arr[ver+1][hor] = ret_arr[ver][hor] + arr[ver+1][hor];
+            }
+            if(!visited[ver+1][hor]) {
+                visited[ver+1][hor] = true;
+                temp.push_back({ver+1, hor});
+            }
+        }
+
+        if(hor-1 >= 0) {
+            if(ret_arr[ver][hor-1] > ret_arr[ver][hor] + arr[ver][hor-1]) {
+                ret_arr[ver][hor-1] = ret_arr[ver][hor] + arr[ver][hor-1];
+            }
+            if(!visited[ver][hor-1]) {
+                visited[ver][hor-1] = true;
+                temp.push_back({ver, hor-1});
+            }
+        }
+
+        if(hor+1 < n) {
+            if(ret_arr[ver][hor+1] > ret_arr[ver][hor] + arr[ver][hor+1]) {
+                ret_arr[ver][hor+1] = ret_arr[ver][hor] + arr[ver][hor+1];
+            }
+            if(!visited[ver][hor+1]) {
+                visited[ver][hor+1] = true;
+                temp.push_back({ver, hor+1});
+            }
+        }
+
+        for(int i = 0; i < temp.size(); i++) {
+            if(min > ret_arr[temp[i][0]][temp[i][1]]) {
+                min = ret_arr[temp[i][0]][temp[i][1]];
+                index = i;
+            }
+        }
+
+        if(min != INT32_MAX) {
+            path.push({temp[index][0], temp[index][1]});
+            temp.erase(temp.begin()+index);
         }
     }
 
