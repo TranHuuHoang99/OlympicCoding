@@ -1,12 +1,5 @@
 #include <bits/stdc++.h>
 
-using int64_type = long;
-using int128_type = long long;
-using uint64_type = unsigned long;
-using sint64_type = signed long;
-using uint128_type = unsigned long long;
-using sint128_type = signed long long;
-
 using namespace std;
 
 void _scan(string &value) {cin >> value;}
@@ -23,37 +16,37 @@ void _scan(char *value) {cin >> value;}
 
 int n = 0;
 
-uint128_type runCase(vector<int> arr) {
-    uint128_type ret = 0;
-    int min = INT32_MAX;
-    int max = INT32_MIN;
-    bool isUp = true;
-    vector<int> path;
+int64_t runCase(vector<int64_t> arr) {
+    int64_t ret = 0;
+    list<int64_t> l;
+    int64_t max = INT64_MIN;
+    int index_max = 0;
+    arr.push_back(INT64_MAX);
+    l.push_back(0);
 
-    for(int i = 0; i < n; i++) {
-        if(isUp) {
-            if(arr[i] > max) {
-                max = arr[i];
-            } else {
-                path.push_back(i-1);
-                isUp = false;
-                min = arr[i];
-            }
-        } else {
-            if(arr[i] < min) {
-                min = arr[i];
-            } else {
-                path.push_back(i-1);
-                isUp = true;
-                max = arr[i];
+    for(int i = 1; i <= n; i++) {
+        if(arr[i] >= arr[l.front()]) {
+            max = INT64_MIN;
+            index_max = 0;
+            while(!l.empty()) {
+                if(arr[l.back()] > max) {
+                    ret += (i-l.back()-1);
+                    cout << " l.back() : " << l.back() << ",  : " << (i-l.back()-1) << endl;
+                } else {
+                    ret += (index_max-l.back()-1);
+                    cout << "index_max : " << index_max << ", l.back() : " << l.back() << ", " <<(index_max-l.back()-1) << endl;
+                }
+
+                if(arr[l.back()] >= max) {
+                    max = arr[l.back()];
+                    index_max = l.back();
+                }
+
+                l.pop_back();
             }
         }
-    }
 
-    if(path.back() != n-1 && arr[path.back()] > arr[n-1]) path.push_back(n-1);
-
-    for(int i = 1; i < path.size(); i++) {
-        ret += (path[i] - path[i-1]);
+        l.push_back(i);
     }
 
     return ret;
@@ -65,8 +58,8 @@ int main(void) {
     cout.tie(NULL);
 
     scan_char(n);
-    vector<int> arr(n, 0);
-    scan_arr(n, arr);
+    vector<int64_t> arr(n, 0);
+    for(int i = 0; i < n; i++) cin >> arr[i];
 
 #ifdef HOANG_DEBUG
     auto start_pro = std::chrono::high_resolution_clock::now();
