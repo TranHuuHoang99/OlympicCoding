@@ -18,35 +18,18 @@ int n = 0;
 
 int64_t runCase(vector<int64_t> arr) {
     int64_t ret = 0;
-    list<int64_t> l;
-    int64_t max = INT64_MIN;
-    int index_max = 0;
+    stack<int64_t> st;
     arr.push_back(INT64_MAX);
-    l.push_back(0);
+    st.push(0);
 
     for(int i = 1; i <= n; i++) {
-        if(arr[i] >= arr[l.front()]) {
-            max = INT64_MIN;
-            index_max = 0;
-            while(!l.empty()) {
-                if(arr[l.back()] > max) {
-                    ret += (i-l.back()-1);
-                    cout << " l.back() : " << l.back() << ",  : " << (i-l.back()-1) << endl;
-                } else {
-                    ret += (index_max-l.back()-1);
-                    cout << "index_max : " << index_max << ", l.back() : " << l.back() << ", " <<(index_max-l.back()-1) << endl;
-                }
-
-                if(arr[l.back()] >= max) {
-                    max = arr[l.back()];
-                    index_max = l.back();
-                }
-
-                l.pop_back();
+        if(arr[i] >= arr[st.top()]) {
+            while(!st.empty() && arr[i] >= arr[st.top()]) {
+                ret += (i-st.top()-1);
+                st.pop();
             }
         }
-
-        l.push_back(i);
+        st.push(i);
     }
 
     return ret;
