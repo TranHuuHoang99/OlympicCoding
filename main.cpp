@@ -3,25 +3,46 @@
 
 using namespace std;
 
-string solve(string str, string cmd, int cursor) {
-    for(int i = 0; i < cmd.length(); i++) {
-        if(cmd[i] == 'L') {
-            if(cursor > 0) cursor--;
-        } else if(cmd[i] == 'R') {
-            if(cursor < str.length()) cursor++;
-        } else if(cmd[i] == 'B') {
-            if(str == " ") continue;
-            if(cursor == 0) continue;
-            int index = cursor > 0 ? cursor-1 : cursor;
-            str.erase(str.begin() + index);
-            if(cursor > 0) cursor--;
+int n = 0;
+int ret = 0;
+
+void solve(vector<int> numbs) {
+    if(numbs[3] > numbs[0]) {
+        numbs[0] = 0;
+    } else {
+        numbs[0] -= numbs[3];
+    }
+
+    if(numbs[2] > numbs[1]) {
+        ret += numbs[2];
+        numbs[2] -= numbs[1];
+        numbs[0] -= ((5-3)*numbs[2]);
+    } else if(numbs[2] == numbs[1]) {
+        ret += numbs[2];
+    } else {
+        ret += numbs[2];
+        numbs[1] -= numbs[2];
+        if(numbs[1] >= 2) {
+            if(numbs[1] % 2 == 0) {
+                numbs[0] -= (numbs[1] / 2);
+                ret += (numbs[1]/2);
+            } else {
+                numbs[0] -= ((numbs[1]/2) + 3);
+                ret += ((numbs[1]/2)+1);
+            }
         } else {
-            str.insert(str.begin()+cursor, cmd[i]);
-            if(cursor < str.length()) cursor++;
+            numbs[0] -= 3;
+            ret++;
         }
     }
 
-    return str;
+    if(numbs[0] > 0) {
+        if(numbs[0] > 5) {
+            ret = numbs[0] % 5 == 0 ? (ret+(numbs[0]/5)) : (ret+(numbs[0]/5)+1);
+        } else {
+            ret += 1;
+        }
+    }
 }
 
 int main(void) {
@@ -29,13 +50,16 @@ int main(void) {
     cin.tie(NULL);
     cout.tie(NULL);
 
-    string str = " ";
-    string cmd = " ";
+    vector<int> numbs(5,0);
 
-    cin >> str >> cmd;
-    int cursor = str.length();
+    for(int i = 0; i < 5; i++) {
+        cin >> numbs[i];
+        if(i == 3 || i == 4) ret += numbs[i];
+    }
 
-    cout << solve(str, cmd, cursor) << endl;
+    solve(numbs);
+
+    cout << ret << endl;
 
     return 0;
 }
