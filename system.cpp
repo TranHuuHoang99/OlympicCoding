@@ -6,7 +6,7 @@ using namespace std;
 
 
 int main(void) {
-    int compile = system("g++ --std=c++11 -DHOANG_DEBUG main.cpp -o main.out");
+    int compile = system("g++ --std=c++17 -DHOANG_DEBUG main.cpp -o main.out");
     int run  = 0;
 
     if(compile == 0) {
