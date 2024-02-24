@@ -1,118 +1,74 @@
 #include <bits/stdc++.h>
-#include <memory>
-#define int long long
 
 using namespace std;
 
-int n = 0;
+class Solution {
+    private:
+        vector<int> moves = {0,1,0,-1,0};
 
-vector<int> ver = {0,0,-1,1};
-vector<int> hor = {-1,1,0,0};
+    public:
+        bool isValid(vector<vector<char>> &grid, vector<vector<bool>> &isVisited, int i, int j, int x, int y) {
+            isVisited[i][j] = true;
 
-struct pos {
-    int x;
-    int y;
-    pos(int x_, int y_) : x(x_), y(y_) {}
-};
-
-struct cell {
-    int value;
-    vector<shared_ptr<pos>> possible;
-    cell(int value_) : value(value_) {};
-};
-
-int solve(vector<vector<int>> lands, vector<shared_ptr<cell>> cells, vector<bool> isExisted) {
-    int ret = INT32_MIN;
-    vector<vector<bool>> temp_visited(n, vector<bool>(n,false));
-    vector<vector<bool>> isVisited = temp_visited;
-    int total = 0;
-    queue<shared_ptr<pos>> q;
-    shared_ptr<pos> temp = nullptr;
-    queue<int> ret_q;
-
-    for(int i = 0; i < isExisted.size(); i++) {
-        if(!isExisted[i]) continue;
-        total = 0;
-        isVisited = temp_visited;
-        temp = nullptr;
-
-        for(auto &_pos : cells[i]->possible) {
-            if(!isVisited[_pos->x][_pos->y]) {
-                total++;
-                q.push(_pos);
-                isVisited[_pos->x][_pos->y] = true;
-            }
-
-            while(!q.empty()) {
-                temp = q.front();
-                q.pop();
-
-                for(int j = 0; j < 4; j++) {
-                    if(temp->x+ver[j] >= n || temp->x+ver[j] < 0) continue;
-                    if(temp->y+hor[j] >= n || temp->y+hor[j] < 0) continue;
+            for(int index = 0; index < 4; index++) {
+                int ver = i + moves[index];
+                int hor = j + moves[index+1];
+                if(
+                    ver >= 0 &&
+                    ver < grid.size() && 
+                    hor >= 0 &&
+                    hor < grid[0].size() && 
+                    grid[ver][hor] == grid[i][j] &&
+                    !(ver == x && hor == y)
+                ) {
                     
-                    if(lands[temp->x+ver[j]][temp->y+hor[j]] - i <= 0) {
-                        isVisited[temp->x+ver[j]][temp->y+hor[j]] = true;
-                    }
-
-                    if(!isVisited[temp->x+ver[j]][temp->y+hor[j]]) {
-                        q.push(make_shared<pos>(temp->x+ver[j], temp->y+hor[j]));
-                        isVisited[temp->x+ver[j]][temp->y+hor[j]] = true;
+                    if(isVisited[ver][hor] || isValid(grid, isVisited, ver, hor, i, j)) {
+                        return true;
                     }
                 }
             }
+
+            return false;
         }
 
-        if(total > ret) {
-            if(!ret_q.empty()) ret_q.pop();
-            ret = total;
-            ret_q.push(i);
-        } else if(total == ret) {
-            ret_q.push(i);
-        } else {
-            //DO NOTHING
+        bool containsCycle(vector<vector<char>>& grid) {
+            vector<vector<bool>> isVisited(grid.size(), vector<bool>(grid[0].size(), false));
+
+            for(int i = 0; i < grid.size(); i++) {
+                for(int j = 0; j < grid[i].size(); j++) {
+                    if(!isVisited[i][j] && isValid(grid, isVisited, i, j, -1, -1)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
-    }
+};  
 
-    int res = INT32_MAX;
-
-    while(!ret_q.empty()) { 
-        res = min(res, ret_q.front());
-        ret_q.pop();
-    }
-
-    return res;
-}
-
-int32_t main(void) {
+int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    cin >> n;
+    vector<vector<vector<char>>> data = {
+        // {{'a','a','a','a'}, {'a','b','b','a'}, {'a','b','b','a'}, {'a','a','a','a'}},
+        // {{'c','c','c','a'},{'c','d','c','c'},{'c','c','e','c'},{'f','c','c','c'}},
+        // {{'a','b','b'},{'b','z','b'},{'b','b','a'}},
+        // {{'c','a','d'},{'a','a','a'},{'a','a','d'},{'a','c','d'},{'a','b','c'}},
+        {{'b','a','c'},{'c','a','c'},{'d','d','c'},{'b','c','c'}}
+    };
 
-    vector<bool> isExisted(11, false);
-    vector<shared_ptr<cell>> cells;
-    vector<vector<int>> lands(n, vector<int>(n, 0));
+    // b a c
+    // c a c 
+    // d d c
+    // b c c
 
-    for(int i = 0; i <= 10; i++) {
-        cells.push_back(make_shared<cell>(i));
+    Solution solve;
+
+    for(auto d : data) {
+        cout << solve.containsCycle(d) << endl;
     }
-
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cin >> lands[i][j];
-            isExisted[lands[i][j]] = true;
-            for(auto &_cell : cells) {
-                if(lands[i][j] - _cell->value > 0) {
-                    _cell->possible.push_back(make_shared<pos>(i,j));
-                } 
-            }
-        }
-    }
-
-    cout << solve(lands, cells, isExisted) << endl;
 
     return 0;
 }
-
