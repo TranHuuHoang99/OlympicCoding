@@ -4,7 +4,8 @@
     "bitset": "cpp",
     "chrono": "cpp",
     "algorithm": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "vector": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": ""
 }
