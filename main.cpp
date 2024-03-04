@@ -2,70 +2,35 @@
 
 using namespace std;
 
-class Solution {
-    public:
-        vector<vector<int>> ret_int;
+typedef long long ll;
+vector<ll> dp(1e7, -1);
 
-        void dfs(int ver, int hor, const int &len, map<int,int> get_ret, vector<int> temp_ret) {
-            if(ver >= len-1) {
-                ret_int.push_back(temp_ret);
-                return;
-            }
+ll solve(const ll &value) {
+    if(value < 1e7 && dp[value] != -1) {
+        return dp[value];
+    }
 
-            for(int i = 0; i < len; i++) {
-                if(i-1 == hor || i+1 == hor || get_ret.find(i) != get_ret.end()) {
-                    continue;
-                }
+    ll temp = value;
 
-                get_ret[i] = i;
-                temp_ret.push_back(i);
-                dfs(ver+1, i, len, get_ret, temp_ret);
-                get_ret.erase(i);
-                temp_ret.pop_back();
-            }
+    if(value/4 > 2) {
+        temp = max(value, solve(value/2) + solve(value/3) + solve(value/4));
+    }
 
-            return;
-        }
-
-        vector<vector<string>> solveNQueens(int n) {    
-            string temp;
-            for(int i = 0; i < n; i++) temp += '.';
-            vector<vector<string>> ret;
-            map<int,int> get_ret;
-            vector<int> temp_ret;
-            
-            for(int i = 0; i < n; i++) {
-                get_ret[i] = i;
-                temp_ret.push_back(i);
-                dfs(0, i, n, get_ret, temp_ret);
-                get_ret.clear();
-                temp_ret.clear();
-            }
-
-            ret.assign(ret_int.size(), vector<string>(n, temp));
-
-            for(int i = 0; i < ret_int.size(); i++) {
-                for(int j = 0; j < ret_int[i].size(); j++) {
-                    ret[i][j][ret_int[i][j]] = 'Q';
-                }
-            }
-
-            return ret;
-        }
-};
+    if(value < 1e7) {
+        dp[value] = temp;
+    }
+    
+    return temp;
+}
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
 
-    Solution solve;
-    
-    for(auto c : solve.solveNQueens(4)) {
-        for(auto sub_c : c) {
-            cout << sub_c << ", ";
-        }
-        cout << "\n";
+    ll value = 0;
+    while(cin >> value) {
+        cout << solve(value) << endl;
     }
 
     return 0;
