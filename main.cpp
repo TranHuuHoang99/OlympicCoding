@@ -3,35 +3,41 @@
 using namespace std;
 
 typedef long long ll;
-vector<ll> dp(1e7, -1);
 
-ll solve(const ll &value) {
-    if(value < 1e7 && dp[value] != -1) {
-        return dp[value];
+int n = 0, t = 0;
+vector<ll> A;
+vector<ll> S;
+vector<ll> arr;
+
+int solve(void) {
+    arr.assign(n, 0);
+    arr[n-1] = A[n-1] + t * S[n-1];
+    for(int i = n-2; i >= 0; i--) {
+        arr[i] = A[i] + t * S[i];
+        if(arr[i] > arr[i+1]) arr[i] = arr[i+1]; 
     }
 
-    ll temp = value;
-
-    if(value/4 > 2) {
-        temp = max(value, solve(value/2) + solve(value/3) + solve(value/4));
+    set<ll> ret;
+    for(auto a : arr) {
+        ret.insert(a);
     }
 
-    if(value < 1e7) {
-        dp[value] = temp;
-    }
-    
-    return temp;
+    return ret.size();
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    cout.tie(NULL);
 
-    ll value = 0;
-    while(cin >> value) {
-        cout << solve(value) << endl;
+    cin >> n >> t;
+    A.assign(n, 0);
+    S.assign(n, 0);
+
+    for(int i = 0; i < n; i++) {
+        cin >> A[i] >> S[i];
     }
+
+    cout << solve() << endl;
 
     return 0;
 }
