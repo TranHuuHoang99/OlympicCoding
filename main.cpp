@@ -2,72 +2,32 @@
 
 using namespace std;
 
-struct Node {
-    pair<int,int> pos;
-    int value;
-    Node(pair<int,int> _pos, int _value) : pos(_pos), value(_value) {}
-};
-
 int n = 0;
-vector<vector<int>> lands;
-set<int> walls;
-vector<int> moves = {-1,0,1,0,-1};
-vector<Node> nodes;
-
-bool compare(pair<int,int> a, pair<int,int> b) {
-    if(a.first > b.first) {
-        return true;
-    } else if(a == b) {
-        return a.second < b.second;
-    } else {
-        return false;
-    }
-
-    return false;
-}
+vector<int> A;
+vector<int> B;
 
 int solve(void) {
-    vector<pair<int,int>> ret;
-    queue<pair<int,int>> q;
-    vector<vector<bool>> temp_visited(n, vector<bool>(n, false));
-    vector<vector<bool>> isVisited;
+    int ret = INT_MIN;
 
-    for(auto w : walls) {
-        int count = 0;
-        isVisited = temp_visited;
-        pair<int,int> temp;
-
-        for(auto node : nodes) {
-            if(!isVisited[node.pos.first][node.pos.second] && node.value > w) {
-                count++;
-                q.push({node.pos.first, node.pos.second});
-                isVisited[node.pos.first][node.pos.second] = true;
-            }
-
-            while(!q.empty()) {
-                temp = q.front();
-                q.pop();
-
-                for(int i = 0; i < 4; i++) {
-                    int ver = temp.first + moves[i];
-                    int hor = temp.second + moves[i+1];
-
-                    if(ver < 0 || ver >= n || hor < 0 || hor >= n) continue;
-
-                    if(!isVisited[ver][hor] && lands[ver][hor] > w) {
-                        q.push({ver, hor});
-                        isVisited[ver][hor] = true;
-                    }
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            vector<int> temp_a(A.begin(), A.end());
+            vector<int> temp_b(B.begin(), B.end());
+            temp_a.erase(temp_a.begin()+i);
+            temp_b.erase(temp_b.begin()+j);
+            int count = 0;
+            for(int k = 0; k < n-1; k++) {
+                if(temp_a[k] == temp_b[k]) {
+                    count++;
+                } else {
+                    count = 0;
                 }
-            }   
+                ret = max(ret, count);
+            }
         }
-
-        ret.push_back({count, w});
     }
 
-    sort(ret.begin(), ret.end(), compare);
-
-    return ret[0].second;
+    return ret;
 }
 
 int main(void) {
@@ -75,17 +35,19 @@ int main(void) {
     cin.tie(NULL);
 
     cin >> n;
-    lands.assign(n, vector<int>(n, 0)); 
+    A.assign(n, 0);
+    B.assign(n, 0);
 
     for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            cin >> lands[i][j];
-            walls.insert(lands[i][j]);
-            nodes.push_back(Node({i,j}, lands[i][j]));
-        }
+        cin >> A[i];
+    }
+
+    for(int i = 0; i < n; i++) {
+        cin >> B[i];
     }
 
     cout << solve() << endl;
+
 
     return 0;
 }
