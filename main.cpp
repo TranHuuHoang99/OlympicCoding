@@ -3,55 +3,41 @@
 using namespace std;
 
 typedef long long ll;
-int n = 0, k = 0;
-ll l = 0;
-vector<ll> trees;
-
-bool isValid(ll force) {
-    ll distance = trees[0] + force*2;
-    int count = k-1;
-    for(int i = 0; i < n; i++) {
-        if(trees[i] > distance) {
-            distance = trees[i] + force*2;
-            count--;
-        }
-    }
-
-    if(count >= 0) return true;
-    return false;
-}
+vector<vector<ll>> matrix;
+ll sum = 0;
+ll max_value = INT64_MIN;
+int n = 0;
 
 ll solve(void) {
-    ll left = 0;
-    ll right = l;
-    ll ret = INT64_MAX;
-
-    while(left <= right) {
-        ll mid = left + (right-left)/2;
-        if(isValid(mid)) {
-            ret = min(ret, mid);
-            right = mid - 1;
-        } else {
-            left = mid + 1;
+    for(int i = 0; i < n; i++) {
+        ll temp = 0;
+        for(int j = 0; j < n; j++) {
+            temp += matrix[j][i];
         }
+        max_value = max(max_value, temp);
     }
 
-    return ret;
+    ll total = max_value * n;
+    return total - sum;
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> n >> l >> k;
-    trees.assign(n, 0);
-    for(int i = 0; i < n; i++) {
-        cin >> trees[i];
+    cin >> n;
+    matrix.assign(n, vector<ll>(n, 0));
+    for(auto &m : matrix) {
+        ll temp = 0;
+        for(auto &sub_m : m) {
+            cin >> sub_m;
+            sum += sub_m;
+            temp += sub_m;
+            max_value = max(max_value, temp);
+        }
     }
 
-    sort(trees.begin(), trees.end());
-
-    cout << solve() << endl;    
+    cout << solve() << endl;
 
     return 0;
 }
