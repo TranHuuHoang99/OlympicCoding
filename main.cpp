@@ -2,49 +2,53 @@
 
 using namespace std;
 
-int n = 0;
-vector<pair<int,int>> calendar;
+typedef long long ll;
 
-bool isValid(pair<int,int> a, pair<int,int> b) {
-    return a.first >= b.second || a.second <= b.first;
+struct Node {
+    int weight;
+    ll price;
+    Node(int _weight = 0, ll _price = 0) :
+    weight(_weight),
+    price(_price) {}
+};
+
+int n = 0;
+int max_weight = 0;
+vector<Node> goods;
+vector<vector<ll>> dp;
+
+bool cmp(Node a, Node b) {
+    return a.weight < b.weight;
 }
 
-int solve(void) {
-    int ret = 1;
-    sort(calendar.begin(), calendar.end());
-
-    for(int i = 0; i < calendar.size(); i++) {
-        int count = 1;
-        pair<int,int> temp = calendar[i];
-        for(int j = i-1; j >= 0; j--) {
-            if(isValid(temp, calendar[j])) {
-                temp.first = calendar[j].first;
-                count++;
+ll solve(void) {
+    for(int i = 1; i <= n; i++) {
+        Node temp = goods[i];
+        for(int j = 1; j <= max_weight; j++) {
+            if(temp.weight > j) {
+                dp[i][j] = dp[i-1][j];
+            } else {
+                dp[i][j] = max(dp[i-1][j], temp.price + dp[i-1][j-temp.weight]);
             }
         }
-
-        for(int j = 0; j < calendar.size(); j++) {
-            if(isValid(temp, calendar[j])) {
-                temp.second = calendar[j].second;
-                count++;
-            }
-        }
-
-        ret = max(ret, count);
     }
 
-    return ret;
+    return dp[n][max_weight];
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> n;
-    calendar.assign(n, {0,0});
-    for(int i = 0; i < n; i++) {
-        cin >> calendar[i].first >> calendar[i].second;
+    cin >> n >> max_weight;
+    goods.assign(n+1, Node());
+    dp.assign(n+1, vector<ll>(max_weight+1, 0));
+
+    for(int i = 1; i <= n; i++) {
+        cin >> goods[i].weight >> goods[i].price;
     }
+
+    sort(goods.begin(), goods.end(), cmp);
 
     cout << solve() << endl;
 
