@@ -4,29 +4,33 @@ using namespace std;
 
 typedef long long ll;
 
-int n = 0,k=0;
-vector<int> arr;
+int n = 0;
+ll a = 0, b = 0, c = 0;
+vector<pair<ll,ll>> arr;
+
+bool cmp(pair<ll,ll> a, pair<ll,ll> b) {
+    return a.first < b.first;
+}
 
 void solve(void) {
-    cin >> n >> k;
-    arr.assign(n, 0);
-
-    for(auto &a : arr) {
-        cin >> a;
+    cin >> n >> c;
+    arr.assign(n, {0,0});
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i].first >> arr[i].second;
     }
 
-    sort(arr.begin()+1, arr.end(), greater<int>());
-    int ret = arr[0];
-    for(int i = 1; i < n; i++) {
-        if(i <= k) {
-            ret += arr[i];
-        } else {
-            ret -= arr[i];
+    sort(arr.begin(), arr.end(), cmp);
+
+    int count = 0;
+    for(auto a : arr) {
+        if(a.first <= c) {
+            c += a.second;
+            count++;
         }
     }
 
-    cout << ret << endl;
-}
+    cout << count << endl;
+}   
 
 int main(void) {
     ios_base::sync_with_stdio(false);
