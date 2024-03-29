@@ -12,20 +12,23 @@ vector<ll> arr;
 void bs(ll k) {
     int left = 0;
     int right = n-1;
+    ll ret = 1e9 * (-2);
 
     while(left <= right) {
         int mid = left + (right-left)/2;
-        if(arr[mid] == k) {
-            cout << "YES" << endl;
-            return;
-        } else if(arr[mid] < k) {
-            left = mid + 1;
+        if(arr[mid] <= k) {
+            left = mid+1;
         } else {
             right = mid-1;
+            ret = arr[mid];
         }
     }
 
-    cout << "NO" << endl;
+    if(ret != 1e9 * (-2)) {
+        cout << ret << endl;
+    } else {
+        cout << "NONE" << endl;
+    }
     return;
 }
 
