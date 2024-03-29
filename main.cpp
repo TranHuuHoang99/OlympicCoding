@@ -16,11 +16,11 @@ void bs(ll k) {
 
     while(left <= right) {
         int mid = left + (right-left)/2;
-        if(arr[mid] <= k) {
+        if(arr[mid] < k) {
             left = mid+1;
+            ret = arr[mid];
         } else {
             right = mid-1;
-            ret = arr[mid];
         }
     }
 
