@@ -8,38 +8,65 @@ int n = 0;
 int Q = 0;
 vector<ll> K;
 vector<ll> arr;
+vector<ll> dp;
 
 void bs(ll k) {
     int left = 0;
     int right = n-1;
-    ll ret = 1e9 * (-2);
+    ll ret = INT64_MIN;
+    ll sum = 0;
+    ll count = 0;
 
     while(left <= right) {
         int mid = left + (right-left)/2;
-        if(arr[mid] < k) {
-            left = mid+1;
-            ret = arr[mid];
+
+        int index = left-1;
+        ll temp = 0;
+        if(index < 0) {
+            sum += dp[mid];
+            temp = dp[mid];
         } else {
+            sum += (dp[mid] - dp[index]);
+            temp = (dp[mid]-dp[index]);
+        }
+
+        count += (mid-left+1);
+        if(sum / count < k) {
+            ret = max(ret, count);
+            left = mid+1;
+        } else {
+            count -= (mid-left+1);
+            sum -= temp;
             right = mid-1;
         }
     }
 
-    if(ret != 1e9 * (-2)) {
+    if(ret != INT64_MIN) {
         cout << ret << endl;
     } else {
-        cout << "NONE" << endl;
+        cout << 0 << endl;
     }
+
     return;
 }
 
 void solve(void) {
     cin >> n;
     arr.assign(n, 0);
-    for(auto &a : arr) {
-        cin >> a;
+    dp.assign(n, 0);
+    ll temp = 0;
+
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
     }
+
     sort(arr.begin(), arr.end());
 
+    for(int i = 0; i < n; i++) {
+        temp += arr[i];
+        dp[i] = temp;
+    }
+    
     cin >> Q;
     K.assign(Q, 0);
     for(auto &_k : K) {
