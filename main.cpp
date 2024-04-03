@@ -3,48 +3,50 @@
 using namespace std;
 
 int n = 0, m = 0;
-map<int,set<int>> connect;
-vector<bool> visits;
+vector<vector<int>> matrix;
+vector<vector<bool>> isVisited;
+vector<pair<int,int>> sea;
+vector<int> moves = {1,0,-1,0,1};
 
-int solve(void) {
-    int ret = 0;
-    set<int> connected;
-    for(int i = 1; i <= n; i++) {
-        connect[i] = connected;
-    }
+void solve(void) {   
+    map<int,int> ret;
+    queue<pair<int,int>> q;
+    pair<int,int> temp;
+    int slicks = 0;
 
-    int index = 0;
-    int value = 0;
-    for(int i = 0; i < m; i++) {
-        cin >> index >> value;
-        connect[index].insert(value);
-        connect[value].insert(index);
-    }
-
-    queue<set<int>> q;
-    set<int> temp;
-
-    for(auto c : connect) {
-        if(!visits[c.first]) {
-            q.push(c.second);
-            ret++;
-            visits[c.first] = true;
-        }
+    for(auto s : sea) {
+        if(isVisited[s.first][s.second] || matrix[s.first][s.second] == 0) continue;
+        int count = 0;
+        slicks++;
+        q.push({s.first, s.second});
+        isVisited[s.first][s.second] = true;
 
         while(!q.empty()) {
             temp = q.front();
             q.pop();
+            count++;
 
-            for(auto t : temp) {
-                if(!visits[t]) {
-                    q.push(connect[t]);
-                    visits[t] = true;
+            for(int i = 0; i < 4; i++) {
+                int ver = temp.first + moves[i];
+                int hor = temp.second + moves[i+1];
+
+                if(ver >= 0 && ver < n && hor >= 0 && hor < m) {
+                    if(!isVisited[ver][hor] && matrix[ver][hor] != 0) {
+                        q.push({ver, hor});
+                        isVisited[ver][hor] = true;
+                    }
                 }
             }
         }
+        ret[count] +=1;
     }
 
-    return ret;
+    cout << slicks << endl;
+    for(auto r : ret) {
+        cout << r.first << " " << r.second << endl;
+    }
+
+    return;
 }
 
 int main(void) {
@@ -52,9 +54,17 @@ int main(void) {
     cin.tie(NULL);
 
     cin >> n >> m;
-    visits.assign(n+1, false);
+    matrix.assign(n, vector<int>(m, 0));   
+    isVisited.assign(n, vector<bool>(m, false));
     
-    cout << solve() << endl;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            cin >> matrix[i][j];
+            sea.push_back({i,j});
+        }
+    }
+
+    solve();
 
     return 0;
 }
