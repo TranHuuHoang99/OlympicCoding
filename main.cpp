@@ -2,89 +2,59 @@
 
 using namespace std;
 
-typedef long long ll;
+int n = 0, m = 0;
+map<int,set<int>> connect;
+vector<bool> visits;
 
-int n = 0;
-int Q = 0;
-vector<ll> K;
-vector<ll> arr;
-vector<ll> dp;
+int solve(void) {
+    int ret = 0;
+    set<int> connected;
+    for(int i = 1; i <= n; i++) {
+        connect[i] = connected;
+    }
 
-void bs(ll k) {
-    int left = 0;
-    int right = n-1;
-    ll ret = INT64_MIN;
-    ll sum = 0;
-    ll count = 0;
+    int index = 0;
+    int value = 0;
+    for(int i = 0; i < m; i++) {
+        cin >> index >> value;
+        connect[index].insert(value);
+        connect[value].insert(index);
+    }
 
-    while(left <= right) {
-        int mid = left + (right-left)/2;
+    queue<set<int>> q;
+    set<int> temp;
 
-        int index = left-1;
-        ll temp = 0;
-        if(index < 0) {
-            sum += dp[mid];
-            temp = dp[mid];
-        } else {
-            sum += (dp[mid] - dp[index]);
-            temp = (dp[mid]-dp[index]);
+    for(auto c : connect) {
+        if(!visits[c.first]) {
+            q.push(c.second);
+            ret++;
+            visits[c.first] = true;
         }
 
-        count += (mid-left+1);
-        if(sum / count < k) {
-            ret = max(ret, count);
-            left = mid+1;
-        } else {
-            count -= (mid-left+1);
-            sum -= temp;
-            right = mid-1;
+        while(!q.empty()) {
+            temp = q.front();
+            q.pop();
+
+            for(auto t : temp) {
+                if(!visits[t]) {
+                    q.push(connect[t]);
+                    visits[t] = true;
+                }
+            }
         }
     }
 
-    if(ret != INT64_MIN) {
-        cout << ret << endl;
-    } else {
-        cout << 0 << endl;
-    }
-
-    return;
+    return ret;
 }
-
-void solve(void) {
-    cin >> n;
-    arr.assign(n, 0);
-    dp.assign(n, 0);
-    ll temp = 0;
-
-    for(int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
-
-    sort(arr.begin(), arr.end());
-
-    for(int i = 0; i < n; i++) {
-        temp += arr[i];
-        dp[i] = temp;
-    }
-    
-    cin >> Q;
-    K.assign(Q, 0);
-    for(auto &_k : K) {
-        cin >> _k;
-    }
-
-    for(auto _k : K) {
-        bs(_k);
-    }
-
-    return;
-}   
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    solve();
+    cin >> n >> m;
+    visits.assign(n+1, false);
+    
+    cout << solve() << endl;
 
     return 0;
 }
