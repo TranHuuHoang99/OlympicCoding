@@ -2,42 +2,64 @@
 
 using namespace std;
 
-typedef long long ll;
-
-ll m = 0, n = 0, k = 0;
-
-ll count(const ll x) {
-    ll ret = 0;
-    for(int i = 1; i <= m; i++) {
-        if(i*i > x) break;
-        ret += min(n, (ll)sqrt(x-i*i));
-    }
-
-    return ret;
-}
+int n = 0, m = 0;
+vector<bool> isVisited;
+map<int,set<int>> cows;
+set<int> ret;
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> m >> n >> k;
+    cin >> n >> m;
+    isVisited.assign(n+1, false);
+    int cow1 = 0;
+    int cow2 = 0;
+    set<int> temp_s;
+    for(int i = 1; i <= n; i++) {
+        cows[i] = temp_s;
+    }
 
-    ll left = 2;
-    ll right = m*m + n*n;
+    for(int i = 0; i < m; i++) {
+        cin >> cow1 >> cow2;
+        cows[cow1].insert(cow2);
+        cows[cow2].insert(cow1);
+    }
 
-    if(m > n) swap(m,n);
+    queue<int> q;
+    int temp = 0;
+    isVisited[1] = true;
 
-    while(left <= right) {
-        ll mid = (right+left)/2;
-        
-        if(count(mid) < k) {
-            left = mid+1;
-        } else {
-            right = mid-1;
+    for(auto s : cows[1]) {
+        q.push(s);
+    }
+    
+    while(!q.empty()) {
+        temp = q.front();
+        q.pop();
+        isVisited[temp] = true;
+
+        for(auto s : cows[temp]) {
+            if(!isVisited[s]) {
+                isVisited[s] = true;
+                q.push(s);
+            }
         }
     }
 
-    cout << left << endl;
+    bool isValid = true;
+    for(int i = 1; i <= n; i++) {
+        if(!isVisited[i]) {
+            cout << i << " ";
+            isValid = false;
+        }
+    }
+    
+    if(isValid) {
+        cout << 0 << endl;
+    } else {
+        cout << "\n";
+    }
 
     return 0;
 }
