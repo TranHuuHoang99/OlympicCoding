@@ -2,68 +2,42 @@
 
 using namespace std;
 
-vector<int> moves = {1,0,-1,0,1};
+typedef long long ll;
 
-void solve(int n, int m) {
-    int slicks = 0;
-    vector<vector<int>> matrix(n, vector<int>(m,0));
-    vector<vector<bool>> isVisited(n, vector<bool>(m, false));
-    vector<pair<int,int>> sea;
+ll m = 0, n = 0, k = 0;
 
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < m; j++) {
-            cin >> matrix[i][j];
-            sea.push_back({i,j});
-        }
+ll count(const ll x) {
+    ll ret = 0;
+    for(int i = 1; i <= m; i++) {
+        if(i*i > x) break;
+        ret += min(n, (ll)sqrt(x-i*i));
     }
 
-    queue<pair<int,int>> q;
-    pair<int,int> temp;
-    map<int,int> ret;
-
-    for(auto s : sea) {
-        if(isVisited[s.first][s.second] || matrix[s.first][s.second] == 0) continue;
-        q.push({s.first, s.second});
-        isVisited[s.first][s.second] = true;
-        int count = 0;
-
-        while(!q.empty()) {
-            temp = q.front();
-            q.pop();
-            count++;
-
-            for(int i = 0; i < 4; i++) {
-                int ver = temp.first + moves[i];
-                int hor = temp.second + moves[i+1];
-                
-                if(ver >= 0 && ver < n && hor >= 0 && hor < m && !isVisited[ver][hor]) {
-                    isVisited[ver][hor] = true;
-                    if(matrix[ver][hor] == 1) {
-                        q.push({ver, hor});
-                    }
-                }
-            }
-        }
-
-        ret[count] += 1;
-        slicks++;
-    }
-
-    cout << slicks << endl;
-    for(auto r : ret) {
-        cout << r.first << " " << r.second << endl;
-    }
+    return ret;
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n = 0, m = 0;
+    cin >> m >> n >> k;
 
-    while(cin >> n >> m && n && m) {
-        solve(n, m);
+    ll left = 2;
+    ll right = m*m + n*n;
+
+    if(m > n) swap(m,n);
+
+    while(left <= right) {
+        ll mid = (right+left)/2;
+        
+        if(count(mid) < k) {
+            left = mid+1;
+        } else {
+            right = mid-1;
+        }
     }
+
+    cout << left << endl;
 
     return 0;
 }
