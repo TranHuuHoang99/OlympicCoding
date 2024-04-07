@@ -1,67 +1,56 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-int n = 0, m = 0;
-vector<pair<int,int>> lands;
-vector<vector<int>> matrix;
-set<int> sea_level;
-vector<int> moves = {1,0,-1,0,1};
+int64_t minCost(int N, int B, int C, vector<int>& P, vector<int>& F, vector<int>& D) {
+    
+    vector<vector<int64_t>> dp(N + 1, vector<int64_t>(C + 1, INT64_MAX));
+    dp[0][B]= 0; 
 
-int solve(void) {
-    priority_queue<int,vector<int>, greater<int>> ret;
-
-    for(auto sl : sea_level) {  
-        vector<vector<bool>> isVisited(n, vector<bool>(m, false));
-        queue<pair<int,int>> q;
-        pair<int,int> temp;
-        int count = 0;
-
-        for(auto l : lands) {
-            if(matrix[l.first][l.second] <= sl || isVisited[l.first][l.second]) continue;
-            q.push({l.first, l.second});
-            count++;
-            isVisited[l.first][l.second] = true;
-
-            while(!q.empty()) {
-                temp = q.front();
-                q.pop();
-
-                for(int i = 0; i < 4; i++) {
-                    int ver = temp.first + moves[i];
-                    int hor = temp.second + moves[i+1];
-
-                    if(ver >= 0 && ver < n && hor >= 0 && hor < m) {
-                        if(!isVisited[ver][hor] && matrix[ver][hor] > sl) {
-                            isVisited[ver][hor] = true;
-                            q.push({ver,hor});
-                        }
-                    }
-                }
+    for (int i = 1; i <= N; ++i) {
+        for (int j = 0; j <= C; ++j) {
+            if (j >= D[i - 1] && dp[i - 1][j]!= INT64_MAX) {
+                dp[i][j - D[i - 1]] = min(dp[i][j - D[i - 1]], dp[i - 1][j]);
             }
 
-            if(count > 1) ret.push(sl);
+            if (dp[i - 1][j] != INT64_MAX) {
+                int chargeAfter = min(j + P[i - 1], C); 
+                dp[i][chargeAfter] = min(dp[i][chargeAfter], dp[i - 1][j]+ D[i - 1]* F[i - 1]);
+            }
         }
     }
 
-    return ret.empty() ? -1 : ret.top();
+    int64_t min_cost = INT64_MAX;
+    for (int j = B; j <= C; ++j) {
+        if (dp[N][j] < min_cost) {
+            min_cost = dp[N][j];
+        }
+    }
+
+
+    return min_cost;
 }
 
-int main(void) {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+int main() {
+    vector<int64_t> result;
 
-    cin >> n >> m;
-    matrix.assign(n, vector<int>(m, 0));
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < m; j++) {
-            cin >> matrix[i][j];
-            lands.push_back({i,j});
-            sea_level.insert(matrix[i][j]);
-        }
+    int N = 0, B = 0, C = 0;
+    std::cin >> N >> B >> C;
+
+    std::vector<int> P(N,0), F(N,0), D(N,0);
+
+    for (int i = 0; i < N; ++i) {
+        std::cin >> P[i];
     }
 
-    cout << solve() << endl;
+    for (int i = 0; i < N; ++i) {
+        std::cin >> F[i];
+    }
+
+    for (int i = 0; i < N; ++i) {
+        std::cin >> D[i];
+    }
+
+    int64_t minimumCost = minCost(N, B, C, P, F, D);
 
     return 0;
 }
