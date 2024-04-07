@@ -1,56 +1,86 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-int64_t minCost(int N, int B, int C, vector<int>& P, vector<int>& F, vector<int>& D) {
-    
-    vector<vector<int64_t>> dp(N + 1, vector<int64_t>(C + 1, INT64_MAX));
-    dp[0][B]= 0; 
+#define ll long long
 
-    for (int i = 1; i <= N; ++i) {
-        for (int j = 0; j <= C; ++j) {
-            if (j >= D[i - 1] && dp[i - 1][j]!= INT64_MAX) {
-                dp[i][j - D[i - 1]] = min(dp[i][j - D[i - 1]], dp[i - 1][j]);
-            }
+int test_case = 0;
+int N = 0;
+vector<ll> D;
+string S;
+vector<ll> R;
+vector<ll> next_ele;
+ll max_value = 0;
+vector<ll> debug;
 
-            if (dp[i - 1][j] != INT64_MAX) {
-                int chargeAfter = min(j + P[i - 1], C); 
-                dp[i][chargeAfter] = min(dp[i][chargeAfter], dp[i - 1][j]+ D[i - 1]* F[i - 1]);
-            }
+bool health(ll mid) {
+    ll temp = mid;
+    for(int i = 0; i < N; i++) {
+        mid -= D[i];
+
+        if(mid <= 0) return false;
+        if(S[i] == '+') {
+            mid += R[i];
+        } else {
+            if((ll)log2(mid) + (ll)log2(R[i]) >= 62) return true;
+            mid *= R[i];
         }
+
     }
 
-    int64_t min_cost = INT64_MAX;
-    for (int j = B; j <= C; ++j) {
-        if (dp[N][j] < min_cost) {
-            min_cost = dp[N][j];
-        }
-    }
-
-
-    return min_cost;
+    return mid > 0;
 }
 
-int main() {
-    vector<int64_t> result;
+void solve(ll left, ll right) {
+    ll ret = 0;
 
-    int N = 0, B = 0, C = 0;
-    std::cin >> N >> B >> C;
-
-    std::vector<int> P(N,0), F(N,0), D(N,0);
-
-    for (int i = 0; i < N; ++i) {
-        std::cin >> P[i];
+    while(left <= right) {
+        ll mid = (right+left) / 2;
+        if(health(mid)) {
+            ret = mid;
+            right = mid-1;
+        } else {
+            left = mid+1;
+        }
+        
     }
 
-    for (int i = 0; i < N; ++i) {
-        std::cin >> F[i];
+    cout << ret << endl;
+    // debug.push_back(ret);
+}
+
+int main(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> test_case;
+    ll left = 1;
+    
+    while(test_case-- >= 1) {
+        max_value = 0;
+        cin >> N;
+        D.assign(N, 0);
+        R.assign(N, 0);
+        for(int i = 0; i < N; i++) {
+            cin >> D[i];
+            max_value += D[i];
+            next_ele.push_back(max_value);
+        }
+
+        cin >> S;
+
+        for(int i = 0; i < N; i++) {
+            cin >> R[i];
+        }
+
+        solve(left, max_value+1);
     }
 
-    for (int i = 0; i < N; ++i) {
-        std::cin >> D[i];
-    }
+    // for(auto db : debug) {
+    //     cout << db << " ";
+    // }
+    // cout << "\n";
 
-    int64_t minimumCost = minCost(N, B, C, P, F, D);
 
     return 0;
 }
