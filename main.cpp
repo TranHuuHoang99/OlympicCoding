@@ -1,86 +1,42 @@
 #include <bits/stdc++.h>
+#define ll long long
 
 using namespace std;
 
-#define ll long long
+int N, W;
+vector<int> weight;
+vector<ll> profit;
+vector<vector<ll>> dp(100+1, vector<ll>(1e5+1, -1));
 
-int test_case = 0;
-int N = 0;
-vector<ll> D;
-string S;
-vector<ll> R;
-vector<ll> next_ele;
-ll max_value = 0;
-vector<ll> debug;
+ll solve(int i, int cur_w) {
+    if(i >= N) return 0;
 
-bool health(ll mid) {
-    ll temp = mid;
-    for(int i = 0; i < N; i++) {
-        mid -= D[i];
+    if(dp[i][cur_w] != -1) return dp[i][cur_w];
 
-        if(mid <= 0) return false;
-        if(S[i] == '+') {
-            mid += R[i];
-        } else {
-            if((ll)log2(mid) + (ll)log2(R[i]) >= 62) return true;
-            mid *= R[i];
-        }
-
+    ll take = -1e15;
+    if(cur_w + weight[i] <= W) {
+        take = profit[i] + solve(i+1, cur_w+weight[i]);
     }
 
-    return mid > 0;
-}
+    ll not_take = solve(i+1, cur_w);
 
-void solve(ll left, ll right) {
-    ll ret = 0;
+    ll temp = max(take, not_take);
+    dp[i][cur_w] = temp;
 
-    while(left <= right) {
-        ll mid = (right+left) / 2;
-        if(health(mid)) {
-            ret = mid;
-            right = mid-1;
-        } else {
-            left = mid+1;
-        }
-        
-    }
-
-    cout << ret << endl;
-    // debug.push_back(ret);
+    return temp;
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> test_case;
-    ll left = 1;
-    
-    while(test_case-- >= 1) {
-        max_value = 0;
-        cin >> N;
-        D.assign(N, 0);
-        R.assign(N, 0);
-        for(int i = 0; i < N; i++) {
-            cin >> D[i];
-            max_value += D[i];
-            next_ele.push_back(max_value);
-        }
+    cin >> N >> W;
+    weight.assign(N, 0);
+    profit.assign(N, 0);
 
-        cin >> S;
+    for(int i = 0; i < N; i++) cin >> weight[i] >> profit[i];
 
-        for(int i = 0; i < N; i++) {
-            cin >> R[i];
-        }
-
-        solve(left, max_value+1);
-    }
-
-    // for(auto db : debug) {
-    //     cout << db << " ";
-    // }
-    // cout << "\n";
-
+    cout << solve(0,0) << endl;
 
     return 0;
 }
