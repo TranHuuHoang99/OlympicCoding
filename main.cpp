@@ -1,54 +1,43 @@
 #include <bits/stdc++.h>
-
+#define ll long long
 using namespace std;
 
 struct Node {
-    int x,y,value;
-    Node(int _x = 0, int _y = 0, int _value = 0) : 
-    x(_x), y(_y), value(_value) {}
+    int x,y;
+    ll value;
+    bool operator < (const Node &a) const  {
+        return a.value < value;
+    }
 };
 
-int N,M;
+int N, M;
+vector<vector<ll>> matrix;
+vector<vector<ll>> dp;
 vector<int> moves = {1,0,-1,0,1};
-vector<vector<char>> matrix;
-vector<vector<int>> dp;
-pair<int,int> S;
-pair<int,int> D;
 
-int solve(void) {
-    queue<Node> q;
-    Node temp;
-    vector<vector<bool>> isVisited(N, vector<bool>(M, false));
-
-    q.push(Node(S.first, S.second, 0));
-    isVisited[S.first][S.second] = true;
-    dp[D.first][D.second] = INT32_MAX;
-    isVisited[D.first][D.second] = true;
+ll solve(void) {
+    dp[0][0] = matrix[0][0];
+    priority_queue<Node> q;
+    q.push({0,0, dp[0][0]});
 
     while(!q.empty()) {
-        temp = q.front();
+        auto [x,y,value] = q.top();
         q.pop();
 
         for(int i = 0; i < 4; i++) {
-            int ver = temp.x + moves[i];
-            int hor = temp.y + moves[i+1];
+            int ver = x + moves[i];
+            int hor = y + moves[i+1];
 
-            if(ver >= 0 && ver < N && hor >= 0 && hor < M) {
-                Node next(ver,hor, temp.value+1);
-                if(ver == D.first && hor == D.second) {
-                    dp[ver][hor] = min(dp[ver][hor], next.value);
-                }
-
-                if(!isVisited[ver][hor] && matrix[ver][hor] != '+') {
-                    q.push(next);
-                    isVisited[ver][hor] = true;
+            if(ver >= 0 && ver < N && hor >=0 && hor < M) {
+                if(dp[ver][hor] > matrix[ver][hor] + value) {
+                    dp[ver][hor] = matrix[ver][hor] + value;
+                    q.push({ver,hor, dp[ver][hor]});
                 }
             }
         }
     }
 
-    dp[D.first][D.second] = dp[D.first][D.second] == INT32_MAX ? -1 : dp[D.first][D.second];
-    return dp[D.first][D.second];
+    return dp[N-1][M-1];
 }
 
 int main(void) {
@@ -56,14 +45,12 @@ int main(void) {
     cin.tie(NULL);
 
     cin >> N >> M;
-    matrix.assign(N, vector<char>(M, 0));
-    dp.assign(N, vector<int>(M, 0));
+    matrix.assign(N, vector<ll>(M, 0));
+    dp.assign(N, vector<ll>(M, LLONG_MAX));
 
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < M; j++) {
             cin >> matrix[i][j];
-            if(matrix[i][j] == 'S') S = {i,j};
-            if(matrix[i][j] == 'D') D = {i,j};
         }
     }
 
