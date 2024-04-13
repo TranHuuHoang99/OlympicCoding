@@ -2,69 +2,70 @@
 
 using namespace std;
 
-int N;
-vector<vector<int>> matrix;
-vector<pair<int,int>> isLand;
+struct Node {
+    int x,y,value;
+    Node(int _x = 0, int _y = 0, int _value = 0) : 
+    x(_x), y(_y), value(_value) {}
+};
+
+int N,M;
 vector<int> moves = {1,0,-1,0,1};
-vector<int> sl;
+vector<vector<char>> matrix;
+vector<vector<int>> dp;
+pair<int,int> S;
+pair<int,int> D;
 
 int solve(void) {
-    pair<int,int> ret = {0,INT32_MIN};
-    queue<pair<int,int>> q;
-    pair<int,int> temp;
+    queue<Node> q;
+    Node temp;
+    vector<vector<bool>> isVisited(N, vector<bool>(M, false));
 
-    for(auto _sl : sl) {
-        vector<vector<bool>> isVisited(N, vector<bool>(N, false));
-        int count = 0;
-        for(auto il : isLand) {
-            if(matrix[il.first][il.second] <= _sl || isVisited[il.first][il.second]) continue;
-            q.push({il.first, il.second});
-            isVisited[il.first][il.second] = true;
-            count++;
+    q.push(Node(S.first, S.second, 0));
+    isVisited[S.first][S.second] = true;
+    dp[D.first][D.second] = INT32_MAX;
+    isVisited[D.first][D.second] = true;
 
-            while(!q.empty()) {
-                temp = q.front();
-                q.pop();
+    while(!q.empty()) {
+        temp = q.front();
+        q.pop();
 
-                for(int i = 0; i < 4; i++) {
-                    int ver = temp.first + moves[i];
-                    int hor = temp.second + moves[i+1];
+        for(int i = 0; i < 4; i++) {
+            int ver = temp.x + moves[i];
+            int hor = temp.y + moves[i+1];
 
-                    if(ver >= 0 && ver < N && hor >= 0 && hor < N) {
-                        if(!isVisited[ver][hor] && matrix[ver][hor] > _sl) {
-                            q.push({ver,hor});
-                            isVisited[ver][hor] = true;
-                        }
-                    }
+            if(ver >= 0 && ver < N && hor >= 0 && hor < M) {
+                Node next(ver,hor, temp.value+1);
+                if(ver == D.first && hor == D.second) {
+                    dp[ver][hor] = min(dp[ver][hor], next.value);
+                }
+
+                if(!isVisited[ver][hor] && matrix[ver][hor] != '+') {
+                    q.push(next);
+                    isVisited[ver][hor] = true;
                 }
             }
         }
-
-        if(count > ret.second) {
-            ret = {_sl, count};
-        }
     }
 
-    return ret.first;
+    dp[D.first][D.second] = dp[D.first][D.second] == INT32_MAX ? -1 : dp[D.first][D.second];
+    return dp[D.first][D.second];
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> N;
-    matrix.assign(N, vector<int>(N, 0));
+    cin >> N >> M;
+    matrix.assign(N, vector<char>(M, 0));
+    dp.assign(N, vector<int>(M, 0));
+
     for(int i = 0; i < N; i++) {
-        for(int j = 0; j < N; j++) {
+        for(int j = 0; j < M; j++) {
             cin >> matrix[i][j];
-            sl.push_back(matrix[i][j]);
-            isLand.push_back({i,j});
+            if(matrix[i][j] == 'S') S = {i,j};
+            if(matrix[i][j] == 'D') D = {i,j};
         }
     }
-
-    sort(sl.begin(), sl.end());
-    auto it = unique(sl.begin(), sl.end());
-    sl.erase(it, sl.end());
 
     cout << solve() << endl;
 
