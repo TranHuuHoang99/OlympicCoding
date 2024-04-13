@@ -1,41 +1,72 @@
 #include <bits/stdc++.h>
-#define ll long long
+
 using namespace std;
 
 int N;
-vector<ll> arr;
-vector<ll> ret;
+vector<vector<int>> matrix;
+vector<pair<int,int>> isLand;
+vector<int> moves = {1,0,-1,0,1};
+vector<int> sl;
+
+int solve(void) {
+    pair<int,int> ret = {0,INT32_MIN};
+    queue<pair<int,int>> q;
+    pair<int,int> temp;
+
+    for(auto _sl : sl) {
+        vector<vector<bool>> isVisited(N, vector<bool>(N, false));
+        int count = 0;
+        for(auto il : isLand) {
+            if(matrix[il.first][il.second] <= _sl || isVisited[il.first][il.second]) continue;
+            q.push({il.first, il.second});
+            isVisited[il.first][il.second] = true;
+            count++;
+
+            while(!q.empty()) {
+                temp = q.front();
+                q.pop();
+
+                for(int i = 0; i < 4; i++) {
+                    int ver = temp.first + moves[i];
+                    int hor = temp.second + moves[i+1];
+
+                    if(ver >= 0 && ver < N && hor >= 0 && hor < N) {
+                        if(!isVisited[ver][hor] && matrix[ver][hor] > _sl) {
+                            q.push({ver,hor});
+                            isVisited[ver][hor] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(count > ret.second) {
+            ret = {_sl, count};
+        }
+    }
+
+    return ret.first;
+}
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
     cin >> N;
-    arr.assign(N+1,INT64_MAX);
-    ret.assign(N, 0);
+    matrix.assign(N, vector<int>(N, 0));
     for(int i = 0; i < N; i++) {
-        cin >> arr[i];
-    }
-
-    stack<pair<ll,int>> st;
-
-    for(int i = 0; i < N; i++) {
-        st.push({arr[i], i});
-        while(!st.empty() && arr[i+1] > st.top().first) {
-            if(arr[i+1] == INT64_MAX) {
-                ret[st.top().second] = -1;
-            } else {
-                ret[st.top().second] = arr[i+1];
-            }
-
-            st.pop();
+        for(int j = 0; j < N; j++) {
+            cin >> matrix[i][j];
+            sl.push_back(matrix[i][j]);
+            isLand.push_back({i,j});
         }
     }
 
-    for(auto r : ret) {
-        cout << r << " ";
-    }
-    cout << "\n";
+    sort(sl.begin(), sl.end());
+    auto it = unique(sl.begin(), sl.end());
+    sl.erase(it, sl.end());
+
+    cout << solve() << endl;
 
     return 0;
 }
