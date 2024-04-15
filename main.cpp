@@ -1,69 +1,47 @@
 #include <bits/stdc++.h>
-#define ll long long
+
 using namespace std;
 
-struct Node {
-    int des;
-    int path;
-    pair<int,int> pos;
-    Node(int _des = 0, int _path = 0, pair<int,int> _pos = {0,0}) : 
-    des(_des), path(_path), pos(_pos) {}
+int N, M;
+vector<vector<int>> matrix;
+vector<pair<int,int>> moves = {
+    {1,0},{-1,0},{0,1},{0,-1},{-1,1},{1,1},{1,-1},{-1,-1}
 };
 
-int N, M;
-vector<Node> start;
-vector<vector<char>> matrix;
-vector<int> moves = {1,0,-1,0,1};
-
-bool isDes(char des) {
-    return des >= '1' && des <= '9';
-}
+vector<pair<int,int>> edges;
 
 int solve(void) {
-    int res = 0;
-    map<int,vector<Node>> ret;
-    queue<Node> q;
-    Node temp;
+    int ret = 0;
+    queue<pair<int,int>> q;
+    vector<vector<bool>> isVisited(N, vector<bool>(M, false));
 
-    for(auto s : start) {
-        vector<vector<bool>> isVisited(N, vector<bool>(M, false));
-
-        q.push(s);
-        isVisited[s.pos.first][s.pos.second] = true;
+    for(auto e : edges) {
+        if(isVisited[e.first][e.second]) continue;
+        q.push({e.first, e.second});
+        isVisited[e.first][e.second] = true;
+        bool isValid = true;
 
         while(!q.empty()) {
-            temp = q.front();
+            auto [x,y] = q.front();
             q.pop();
 
-            for(int i = 0; i < 4; i++) {
-                int ver = temp.pos.first + moves[i];
-                int hor = temp.pos.second + moves[i+1];
+            for(int i = 0; i < 8; i++) {
+                int ver = x + moves[i].first;
+                int hor = y + moves[i].second;
 
-                if(ver >= 0 && ver < N && hor >= 0 && hor < M) {
-                    if(!isVisited[ver][hor] && matrix[ver][hor] != '+') {
-                        Node next(matrix[ver][hor]-'0', temp.path+1, {ver,hor});
-                        if(isDes(matrix[ver][hor])) {
-                            ret[s.des].push_back(next);
-                        } 
-                        q.push(next);
-                        isVisited[ver][hor] = true;
-                    }
+                if(ver < 0 || ver > N-1 || hor < 0 || hor > M-1) continue;
+                if(matrix[ver][hor] > matrix[x][y]) isValid = false;
+                if(matrix[x][y] == matrix[ver][hor] && !isVisited[ver][hor]) {
+                    q.push({ver,hor});
+                    isVisited[ver][hor] = true;
                 }
             }
         }
+
+        if(isValid) ret++;
     }
 
-    int temp_val = INT32_MIN;
-    for(auto r : ret) {
-        for(auto _r : r.second) {
-            if(_r.des > temp_val) {
-                res += _r.path;
-            }
-        }
-        temp_val = r.first;
-    }
-
-    return res;
+    return ret;
 }
 
 int main(void) {
@@ -71,14 +49,11 @@ int main(void) {
     cin.tie(NULL);
 
     cin >> N >> M;
-    matrix.assign(N, vector<char>(M, 0));
-
+    matrix.assign(N, vector<int>(M, 0));
     for(int i = 0; i < N; i++) {
         for(int j = 0; j < M; j++) {
             cin >> matrix[i][j];
-            if(matrix[i][j] >= '1' && matrix[i][j] <= '9') {
-                start.push_back(Node(matrix[i][j]-'0', 1, {i,j}));
-            }
+            edges.push_back({i,j});
         }
     }
 
