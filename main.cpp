@@ -3,40 +3,74 @@
 
 using namespace std;
 
-int N, W;
-vector<int> weight;
-vector<ll> profit;
-vector<vector<ll>> dp(100+1, vector<ll>(1e5+1, -1));
+int N,M;
+vector<vector<char>> matrix;
+pair<int,int> ret = {0,0};
+vector<pair<int,int>> back_yard;
+vector<int> moves = {1,0,-1,0,1};
 
-ll solve(int i, int cur_w) {
-    if(i >= N) return 0;
+void solve(void) {
+    vector<vector<bool>> isVisited(N, vector<bool>(M, false));
+    queue<pair<int,int>> q;
+    
+    for(auto by : back_yard) {
+        if(isVisited[by.first][by.second] || matrix[by.first][by.second] == '#') continue;
+        q.push(by);
+        isVisited[by.first][by.second] = true;
+        int _s = 0;
+        int _w = 0;
+        bool isBound = true;
 
-    if(dp[i][cur_w] != -1) return dp[i][cur_w];
+        while(!q.empty()) {
+            auto [x,y] = q.front();
+            q.pop();
 
-    ll take = -1e15;
-    if(cur_w + weight[i] <= W) {
-        take = profit[i] + solve(i+1, cur_w+weight[i]);
+            if(matrix[x][y] == 'k') _s++;
+            if(matrix[x][y] == 'v') _w++;
+            if(x == 0 || x == N-1 || y == 0 || y == M-1) isBound = false;
+
+            for(int i = 0; i < 4; i++) {
+                int ver = x + moves[i];
+                int hor = y + moves[i+1];
+
+                if(ver < 0 || ver > N-1 || hor < 0 || hor > M-1) continue;
+                if(!isVisited[ver][hor] && matrix[ver][hor] != '#') {
+                    q.push({ver,hor});
+                    isVisited[ver][hor] = true;
+                }
+            }
+        }
+
+        if(_s > _w && isBound) {
+            ret.second -= _w;
+        } else if(isBound) {
+            ret.first -= _s;
+        }
     }
 
-    ll not_take = solve(i+1, cur_w);
-
-    ll temp = max(take, not_take);
-    dp[i][cur_w] = temp;
-
-    return temp;
+    cout << ret.first << " " << ret.second << endl;
+    return;
 }
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    cin >> N >> W;
-    weight.assign(N, 0);
-    profit.assign(N, 0);
+    cin >> N >> M;
+    matrix.assign(N, vector<char>(M, 0));
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < M; j++) {
+            cin >> matrix[i][j];
+            back_yard.push_back({i,j});
+            if(matrix[i][j] == 'k') {
+                ret.first += 1;
+            } else if(matrix[i][j] == 'v') {
+                ret.second += 1;
+            }
+        }
+    }
 
-    for(int i = 0; i < N; i++) cin >> weight[i] >> profit[i];
-
-    cout << solve(0,0) << endl;
+    solve();
 
     return 0;
 }
