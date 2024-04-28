@@ -2,40 +2,43 @@
 
 using namespace std;
 
-int N, K;
-vector<int> prices;
 vector<int> res;
-vector<int> dp;
 
-void solve(vector<int> dp) {
-    dp[0] = 0;
-    for(int i = 0; i <= K; i++) {
-        for(int j = 1; j <= K; j++) {
-            if(i+j > K) break;
-            if(prices[j] < 0) continue;
-            if(dp[i] != 1001) {
-                dp[i+j] = min(dp[i+j], dp[i] + prices[j]);
+void solve(vector<int> code, int len) {
+    vector<int> dp(len+1, 0);
+    dp[0] = 1;
+
+    for(int i = 1; i <= len; i++) {
+        if(i - 2 >= 0 ) {
+            if(code[i-2] == 1 || (code[i-2] == 2 && code[i-1] <= 6)) {
+                dp[i] += dp[i-2];
             }
         }
+
+        if(code[i-1] != 0) dp[i] += dp[i-1];
     }
-    
-    dp[K] = dp[K] == 1001 ? -1 : dp[K];
-    res.push_back(dp[K]);
-}   
+
+    res.push_back(dp[len]);
+}
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    cout.tie(NULL);
 
-    int T;
-    cin >> T;
+#ifdef HOANG_DEBUG
+    freopen("input.txt", "r", stdin);
+#endif // HOANG_DEBUG
 
-    while(T--) {
-        cin >> N >> K;
-        prices.assign(K+1,0);
-        for(int i = 1; i <= K; i++) cin >> prices[i];
-        dp.assign(K+1, 1001);
-        solve(dp);
+    string T;
+    while(cin >> T) {
+        if(T[0] == '0') break;
+        vector<int> code(T.size(), 0);
+        for(int i = 0; i < T.size(); i++) {
+            code[i] = static_cast<int>(T[i]-'0');
+        }
+
+        solve(code, T.size());
     }
 
     for(auto r : res) {
