@@ -1,24 +1,52 @@
 #include <bits/stdc++.h>
+#define ll long long
 
 using namespace std;
 
-vector<int> res;
+void solve(void) {
+    int N;
+    cin >> N;
+    vector<pair<int,int>> lands(N, {0,0});
 
-void solve(vector<int> code, int len) {
-    vector<int> dp(len+1, 0);
-    dp[0] = 1;
-
-    for(int i = 1; i <= len; i++) {
-        if(i - 2 >= 0 ) {
-            if(code[i-2] == 1 || (code[i-2] == 2 && code[i-1] <= 6)) {
-                dp[i] += dp[i-2];
-            }
-        }
-
-        if(code[i-1] != 0) dp[i] += dp[i-1];
+    for(int i = 0; i < N; i++) {
+        cin >> lands[i].first >> lands[i].second;
     }
 
-    res.push_back(dp[len]);
+    sort(lands.begin(), lands.end(), [&](pair<int,int> A, pair<int,int> B) -> bool {
+        if(A.first > B.first) {
+            return true;
+        } else if(A.first == B.first) {
+            return A.second >= B.second;
+        }
+
+        return false;
+    });
+
+    auto it = unique(lands.begin(), lands.end(), [](pair<int,int> A, pair<int,int> B) -> bool {
+        return A.first == B.first;
+    });
+
+    lands.erase(it, lands.end());   
+
+    vector<pair<int,int>> temp;
+    for(int i = 0; i < lands.size(); i++) {
+        if(i-1 >= 0) {
+            if(lands[i].second <= lands[i-1].second) continue;
+        }
+        temp.push_back(lands[i]);
+    }
+    
+    int len = temp.size();
+    vector<int> dp(len+1, INT32_MAX);
+    dp[0] = 0;
+
+    for(int i = 1; i <= len; i++) {
+        for(int j = 0; j <= i-1; j++) {
+            dp[i] = min(dp[i], dp[j] + temp[j].first * temp[i-1].second);
+        }
+    }
+
+    cout << dp[len] << endl;
 }
 
 int main(void) {
@@ -28,22 +56,9 @@ int main(void) {
 
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
-#endif // HOANG_DEBUG
+#endif // HOANG_DEBUG   
 
-    string T;
-    while(cin >> T) {
-        if(T[0] == '0') break;
-        vector<int> code(T.size(), 0);
-        for(int i = 0; i < T.size(); i++) {
-            code[i] = static_cast<int>(T[i]-'0');
-        }
-
-        solve(code, T.size());
-    }
-
-    for(auto r : res) {
-        cout << r << "\n";
-    }
+    solve();
 
     return 0;
 }
