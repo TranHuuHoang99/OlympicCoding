@@ -1,9 +1,21 @@
-8
-100 7
-20 5
-25 6
-26 7
-27 7
-99 7
-15 15
-1 100
+3
+3
+duckhim
+duck
+hello
+moto
+7
+natiofforessaa
+national
+office
+for
+forest
+safety
+in
+aachen
+4
+whiskey
+what
+is
+secret
+key

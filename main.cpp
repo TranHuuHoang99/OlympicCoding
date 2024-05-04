@@ -3,50 +3,49 @@
 
 using namespace std;
 
-void solve(void) {
-    int N;
-    cin >> N;
-    vector<pair<int,int>> lands(N, {0,0});
+vector<int> res;
+string A;
+int N;
+vector<string> adp = {
+    "and", "in", "on", "at", "to", "of", "from", "for", "with"
+};
 
-    for(int i = 0; i < N; i++) {
-        cin >> lands[i].first >> lands[i].second;
-    }
+bool cmp(string A, string B) {
+    return strcmp(A.c_str(), B.c_str()) == 0;
+}
 
-    sort(lands.begin(), lands.end(), [&](pair<int,int> A, pair<int,int> B) -> bool {
-        if(A.first > B.first) {
-            return true;
-        } else if(A.first == B.first) {
-            return A.second >= B.second;
-        }
-
-        return false;
-    });
-
-    auto it = unique(lands.begin(), lands.end(), [](pair<int,int> A, pair<int,int> B) -> bool {
-        return A.first == B.first;
-    });
-
-    lands.erase(it, lands.end());   
-
-    vector<pair<int,int>> temp;
-    for(int i = 0; i < lands.size(); i++) {
-        if(i-1 >= 0) {
-            if(lands[i].second <= lands[i-1].second) continue;
-        }
-        temp.push_back(lands[i]);
-    }
-    
-    int len = temp.size();
-    vector<int> dp(len+1, INT32_MAX);
-    dp[0] = 0;
-
-    for(int i = 1; i <= len; i++) {
-        for(int j = 0; j <= i-1; j++) {
-            dp[i] = min(dp[i], dp[j] + temp[j].first * temp[i-1].second);
+void solve(vector<vector<string>> W) {
+    queue<string> q;
+    vector<string> dp;
+    for(string _w : W[0]) {
+        if(cmp(_w, A.substr(0, _w.size()))) {
+            q.push(_w);
         }
     }
 
-    cout << dp[len] << endl;
+    for(int i = 1; i < N; i++) {
+        dp.clear();
+        while(!q.empty()) {
+            string temp = q.front();
+            q.pop();
+
+            for(string w : W[i]) {
+                string next = temp + w;
+                if(!dp.empty() && cmp(dp.back(), next)) continue;
+                if(cmp(next, A.substr(0,next.size()))) {
+                    dp.push_back(next);
+                }
+            }
+        }
+        for(string _dp : dp) q.push(_dp);
+    }
+
+    int count = 0;
+    for(string _dp : dp) {
+        if(cmp(_dp, A)) count++; 
+    }
+
+    res.push_back(count);
 }
 
 int main(void) {
@@ -58,7 +57,35 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG   
 
-    solve();
+    int T;
+    cin >> T;
+    while(T--) {
+        cin >> N;
+        cin >> A;
+        vector<vector<string>> W(N);
+        string temp;
+        for(int i = 0; i < N; i++) {
+            cin >> temp;
+            int add = 0;
+            for(auto _adp : adp) {
+                if(strcmp(temp.c_str(), _adp.c_str()) == 0) {
+                    add = 1;
+                    break;
+                }
+            }
+
+            W[i].assign(temp.size()+add, "");
+            for(int j = add; j < temp.size()+add; j++) {
+                W[i][j] = temp.substr(0,j+1-add);
+            }
+        }
+
+        solve(W);
+    }
+
+    for(auto r : res) {
+        cout << r << endl;
+    }
 
     return 0;
 }

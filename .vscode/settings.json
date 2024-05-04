@@ -15,7 +15,8 @@
     "array": "cpp",
     "regex": "cpp",
     "typeindex": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "string_view": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": ""
 }
