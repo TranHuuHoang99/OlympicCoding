@@ -1,66 +1,44 @@
 #include <bits/stdc++.h>
-#define ll long long
 
+#define ll long long
+    
 using namespace std;
 
-struct Node {
-    map<char,pair<Node*, int>> next;
-    Node() {}
-};
-
-int N, Q;
-Node *root = new Node();
 vector<int> res;
-
-void make_node(string str) {
-    Node *temp = root;
-
-    for(auto c : str) {
-        if(temp->next.find(c) == temp->next.end()) {
-            temp->next[c].first = new Node();
-        } 
-        temp->next[c].second++;
-
-        temp = temp->next[c].first;
-    }
-}
-
-void solve(string str) {
-    int ret = 0;
-    Node *temp = root;
-
-    for(auto c : str) {
-        if(temp->next.find(c) != temp->next.end()) {    
-            ret = temp->next[c].second;
-            temp = temp->next[c].first;
-        } else {
-            ret = 0;
-            break;
-        }
-    }
-
-    res.push_back(ret);
-}
-
+  
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-
+    
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
-#endif // HOANG_DEBUG   
+#endif // HOANG_DEBUG
+    
+    int T;
+    cin >> T;
 
-    cin >> N >> Q;
-    string temp;
-    for(int i = 0; i < N; i++) {
-        cin >> temp;
-        make_node(temp);
-    }
+    while(T--) {
+        int M;
+        ll X;
+        cin >> M >> X;
 
-    for(int i = 0; i < Q; i++) {
-        cin >> temp;
-        solve(temp);
+        ll C;
+        int H;
+        int sum = 0;
+        int ans = 0;
+        vector<ll> dp(1e5+1, 1e18);
+        dp[0] = 0;
+        for(int i = 0; i < M; i++) {
+            cin >> C >> H;
+            sum += H;
+            for(int j = sum; j >= H; j--) {
+                if(dp[j-H]+C <= i*X) dp[j] = min(dp[j], dp[j-H]+C);
+                if(dp[j] < 1e18) ans = max(ans, j);
+            }
+        }
+
+        res.push_back(ans);
     }
 
     for(auto r : res) {
