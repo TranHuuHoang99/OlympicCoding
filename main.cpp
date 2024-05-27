@@ -1,49 +1,55 @@
 #include <bits/stdc++.h>
 
 #define ll long long
-    
 using namespace std;
 
-vector<int> res;
-  
+int N, M, X;
+vector<vector<int>> matrix;
+int ans = INT32_MAX;
+
+bool isValid(vector<int> temp) {    
+    for(int i = 1; i <= M; i++) {
+        if(temp[i] < X) return false; 
+    }
+    return true;
+}
+
+void solve(vector<int> temp, int count, int index) {
+    if(isValid(temp)) ans = min(ans, count);
+    if(index >= N) return;
+
+    solve(temp, count, index+1);
+    for(int i = 1; i <= M; i++) temp[i] += matrix[index][i];
+    solve(temp, count+matrix[index][0], index+1);
+}
+
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-    
+
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
-#endif // HOANG_DEBUG
-    
-    int T;
-    cin >> T;
+#endif //HOANG_DEBUG
 
-    while(T--) {
-        int M;
-        ll X;
-        cin >> M >> X;
+    cin >> N >> M >> X;
+    matrix.assign(N, vector<int>(M+1, 0));
 
-        ll C;
-        int H;
-        int sum = 0;
-        int ans = 0;
-        vector<ll> dp(1e5+1, 1e18);
-        dp[0] = 0;
-        for(int i = 0; i < M; i++) {
-            cin >> C >> H;
-            sum += H;
-            for(int j = sum; j >= H; j--) {
-                if(dp[j-H]+C <= i*X) dp[j] = min(dp[j], dp[j-H]+C);
-                if(dp[j] < 1e18) ans = max(ans, j);
-            }
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j <= M; j++) {
+            cin >> matrix[i][j];
         }
-
-        res.push_back(ans);
     }
 
-    for(auto r : res) {
-        cout << r << endl;
+    vector<int> temp(M+1, 0);
+
+    solve(temp, 0, 0);
+    if(ans == INT32_MAX) {
+        cout << -1 << endl;
+        return 0;
     }
+
+    cout << ans << endl;
 
     return 0;
 }
