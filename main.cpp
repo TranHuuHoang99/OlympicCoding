@@ -1,63 +1,50 @@
 #include <bits/stdc++.h>
+#define ll long long
 
 using namespace std;
 
-int N, M;
-vector<vector<int>> matrix;
-vector<pair<int,int>> moves = {
-    {1,0},{-1,0},{0,1},{0,-1},{-1,1},{1,1},{1,-1},{-1,-1}
-};
-
-vector<pair<int,int>> edges;
-
-int solve(void) {
-    int ret = 0;
-    queue<pair<int,int>> q;
-    vector<vector<bool>> isVisited(N, vector<bool>(M, false));
-
-    for(auto e : edges) {
-        if(isVisited[e.first][e.second]) continue;
-        q.push({e.first, e.second});
-        isVisited[e.first][e.second] = true;
-        bool isValid = true;
-
-        while(!q.empty()) {
-            auto [x,y] = q.front();
-            q.pop();
-
-            for(int i = 0; i < 8; i++) {
-                int ver = x + moves[i].first;
-                int hor = y + moves[i].second;
-
-                if(ver < 0 || ver > N-1 || hor < 0 || hor > M-1) continue;
-                if(matrix[ver][hor] > matrix[x][y]) isValid = false;
-                if(matrix[x][y] == matrix[ver][hor] && !isVisited[ver][hor]) {
-                    q.push({ver,hor});
-                    isVisited[ver][hor] = true;
-                }
-            }
-        }
-
-        if(isValid) ret++;
-    }
-
-    return ret;
+bool cmp(ll a, ll b) {
+    return a > b;
 }
 
+void solve(const int N, vector<ll> B, vector<ll> C) {
+    sort(B.begin(), B.end());
+    sort(C.begin(), C.end(), cmp);
+
+    ll ret = abs(B[0]+C[0]);
+    int i = 0, j = 0;
+    while(i < N-1 || j < N-1) {
+        if(j >= N-1 || (i < N-1 && (B[i]+C[j] < 0))) {
+            i++;
+        } else {
+            j++;
+        }
+
+        ret = min(ret, abs(B[i]+C[j]));
+    }
+
+    cout << ret << endl;
+}
+  
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    cout.tie(NULL);
+    
+#ifdef HOANG_DEBUG
+    freopen("input.txt", "r", stdin);
+#endif // HOANG_DEBUG
 
-    cin >> N >> M;
-    matrix.assign(N, vector<int>(M, 0));
-    for(int i = 0; i < N; i++) {
-        for(int j = 0; j < M; j++) {
-            cin >> matrix[i][j];
-            edges.push_back({i,j});
-        }
-    }
+    int N;
+    cin >> N;
+    vector<ll> B(N);
+    vector<ll> C(N);
 
-    cout << solve() << endl;
+    for(int i = 0; i < N; i++) cin >> B[i];
+
+    for(int i = 0; i < N; i++) cin >> C[i];
+
+    solve(N, B, C);
 
     return 0;
 }

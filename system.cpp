@@ -6,11 +6,17 @@ using namespace std;
 
 
 int main(void) {
-    int compile = system("g++ --std=c++17 -DHOANG_DEBUG main.cpp -o main.out");
+    int compile = system("g++ --std=c++17 -DHOANG_DEBUG main.cpp -o main");
     int run  = 0;
 
     if(compile == 0) {
-        run = system("./main.out");
+#ifdef __linux__
+        run = system("./main");
+#endif // __linux__
+
+#ifdef __WIN32
+        run = system(".\main.exe");
+#endif // __WIN32
         if(run == 0) {
             return 0;
         } else {
