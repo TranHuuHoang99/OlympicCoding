@@ -3,24 +3,25 @@
 
 using namespace std;
 
-bool cmp(ll a, ll b) {
-    return a > b;
-}
+void solve(string str) {
+    vector<char> even, odd;
+    string ret = "";
 
-void solve(const int N, vector<ll> B, vector<ll> C) {
-    sort(B.begin(), B.end());
-    sort(C.begin(), C.end(), cmp);
-
-    ll ret = abs(B[0]+C[0]);
-    int i = 0, j = 0;
-    while(i < N-1 || j < N-1) {
-        if(j >= N-1 || (i < N-1 && (B[i]+C[j] < 0))) {
-            i++;
+    for(int i = 0; i < str.size(); i++) {
+        if(str[i] % 2 == 0) {
+            even.push_back(str[i]);
         } else {
-            j++;
+            odd.push_back(str[i]);
         }
-
-        ret = min(ret, abs(B[i]+C[j]));
+    }
+    
+    int i = 0, j = 0;
+    while(i < even.size() || j < odd.size()) {
+        if(j >= odd.size() || (i < even.size() && even[i] < odd[j])) {
+            ret += even[i++];
+        } else {
+            ret += odd[j++];
+        }
     }
 
     cout << ret << endl;
@@ -37,14 +38,11 @@ int main(void) {
 
     int N;
     cin >> N;
-    vector<ll> B(N);
-    vector<ll> C(N);
-
-    for(int i = 0; i < N; i++) cin >> B[i];
-
-    for(int i = 0; i < N; i++) cin >> C[i];
-
-    solve(N, B, C);
+    string str;
+    for(int i = 0; i < N; i++) {
+        cin >> str;
+        solve(str);
+    }
 
     return 0;
 }
