@@ -12,40 +12,30 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    int ret = 0;
-    int N, M;
-    vector<ll> A, B;
-    cin >> N;
-    A.resize(N);
+    int N;
+    ll X;
+    cin >> N >> X;
+    vector<ll> A(N);
+
     for(int i = 0; i < N; i++) {
         cin >> A[i];
     }
-    cin >> M;
-    B.resize(M);
-    for(int i = 0; i < M; i++) {
-        cin >> B[i];
-    }
 
-    int i = 0, j = 0;
-    ll sum1 = A[i++], sum2 = B[j++];
-    
-    while(i < N || j < M) {
-        if(j >= M || (i < N && sum1 < sum2)) {
-            sum1 += A[i++];
+    int i = 0, j = N-1;
+
+    while(i < j) {
+        ll sum = A[i] + A[j];
+        if(sum > X) {
+            j--;
+        } else if(sum < X) {
+            i++;
         } else {
-            if(sum1 == sum2) {
-                ret++;
-                sum1 += A[i++];
-            }
-            sum2 += B[j++];
+            cout << i+1 << " " << j+1 << endl;
+            return 0;
         }
     }
 
-    if(sum1 == sum2) {
-        cout << ret+1 << endl;
-    } else {
-        cout << -1 << endl;
-    }
+    cout << "No solution" << endl;
 
     return 0;
 }
