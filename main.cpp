@@ -13,29 +13,46 @@ int main(void) {
 #endif // HOANG_DEBUG
 
     int N;
-    ll X;
-    cin >> N >> X;
-    vector<ll> A(N);
+    ll K;
+    cin >> N >> K;
+    map<ll,int> A;
+    vector<ll> arr(N);
 
+    ll temp;
     for(int i = 0; i < N; i++) {
-        cin >> A[i];
+        cin >> temp;
+        A[temp] += 1;
+        arr[i] = temp;
     }
 
-    int i = 0, j = N-1;
+    auto it = unique(arr.begin(), arr.begin()+N);
+    arr.resize(distance(arr.begin(), it));
+
+    int i = 0, j = arr.size()-1;
+
+    int ret = 0;
 
     while(i < j) {
-        ll sum = A[i] + A[j];
-        if(sum > X) {
-            j--;
-        } else if(sum < X) {
+        ll sum = arr[i]+arr[j];
+        if(sum < K) {
             i++;
+        } else if(sum > K) {
+            j--;
         } else {
-            cout << i+1 << " " << j+1 << endl;
-            return 0;
+            ret += (A[arr[i]]*A[arr[j]]);
+            i++;
+            j--;
         }
     }
 
-    cout << "No solution" << endl;
+    for(int i = 0; i < arr.size(); i++) {
+        if(arr[i]*2 == K) {
+            int count = A[arr[i]];
+            ret += (count*(count-1)/2);
+        }
+    }
 
+    cout << ret << endl;
+    
     return 0;
 }
