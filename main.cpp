@@ -2,30 +2,6 @@
 #define ll long long
 
 using namespace std;
-
-void solve(string str) {
-    vector<char> even, odd;
-    string ret = "";
-
-    for(int i = 0; i < str.size(); i++) {
-        if(str[i] % 2 == 0) {
-            even.push_back(str[i]);
-        } else {
-            odd.push_back(str[i]);
-        }
-    }
-    
-    int i = 0, j = 0;
-    while(i < even.size() || j < odd.size()) {
-        if(j >= odd.size() || (i < even.size() && even[i] < odd[j])) {
-            ret += even[i++];
-        } else {
-            ret += odd[j++];
-        }
-    }
-
-    cout << ret << endl;
-}
   
 int main(void) {
     ios_base::sync_with_stdio(false);
@@ -36,12 +12,39 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    int N;
+    int ret = 0;
+    int N, M;
+    vector<ll> A, B;
     cin >> N;
-    string str;
+    A.resize(N);
     for(int i = 0; i < N; i++) {
-        cin >> str;
-        solve(str);
+        cin >> A[i];
+    }
+    cin >> M;
+    B.resize(M);
+    for(int i = 0; i < M; i++) {
+        cin >> B[i];
+    }
+
+    int i = 0, j = 0;
+    ll sum1 = A[i++], sum2 = B[j++];
+    
+    while(i < N || j < M) {
+        if(j >= M || (i < N && sum1 < sum2)) {
+            sum1 += A[i++];
+        } else {
+            if(sum1 == sum2) {
+                ret++;
+                sum1 += A[i++];
+            }
+            sum2 += B[j++];
+        }
+    }
+
+    if(sum1 == sum2) {
+        cout << ret+1 << endl;
+    } else {
+        cout << -1 << endl;
     }
 
     return 0;
