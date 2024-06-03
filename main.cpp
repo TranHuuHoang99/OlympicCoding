@@ -2,6 +2,30 @@
 #define ll long long
 
 using namespace std;
+
+int N, M;
+vector<int> A;
+vector<pair<int,int>> P(3*1e5);
+int ret = INT32_MIN;
+
+void solve(void) {
+    for(int i = 1; i <= N; i++) {
+        for(int j = i+1; j <= N; j++) {
+            P[A[i]+A[j]] = {i,j};
+        }
+    }
+
+    for(int i = 1; i <= N; i++) {
+        for(int j = M-A[i]; j >= 0; j--) {
+            if(P[j] != pair<int,int>(0,0) && P[j].first != i && P[j].second != i) {
+                ret = max(ret, j+A[i]);
+                break;
+            }
+        }
+    }
+
+    cout << ret << endl;
+}
   
 int main(void) {
     ios_base::sync_with_stdio(false);
@@ -12,47 +36,14 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    int N;
-    ll K;
-    cin >> N >> K;
-    map<ll,int> A;
-    vector<ll> arr(N);
+    cin >> N >> M;
+    A.resize(N+1);
 
-    ll temp;
-    for(int i = 0; i < N; i++) {
-        cin >> temp;
-        A[temp] += 1;
-        arr[i] = temp;
+    for(int i = 1; i <= N; i++) {
+        cin >> A[i];
     }
 
-    auto it = unique(arr.begin(), arr.begin()+N);
-    arr.resize(distance(arr.begin(), it));
+    solve();
 
-    int i = 0, j = arr.size()-1;
-
-    int ret = 0;
-
-    while(i < j) {
-        ll sum = arr[i]+arr[j];
-        if(sum < K) {
-            i++;
-        } else if(sum > K) {
-            j--;
-        } else {
-            ret += (A[arr[i]]*A[arr[j]]);
-            i++;
-            j--;
-        }
-    }
-
-    for(int i = 0; i < arr.size(); i++) {
-        if(arr[i]*2 == K) {
-            int count = A[arr[i]];
-            ret += (count*(count-1)/2);
-        }
-    }
-
-    cout << ret << endl;
-    
     return 0;
 }
