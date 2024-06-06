@@ -3,28 +3,35 @@
 
 using namespace std;
 
-int N, M;
+int N;
 vector<int> A;
-vector<pair<int,int>> P(3*1e5);
-int ret = INT32_MIN;
+int ret = 0;
 
-void solve(void) {
-    for(int i = 1; i <= N; i++) {
-        for(int j = i+1; j <= N; j++) {
-            P[A[i]+A[j]] = {i,j};
+bool bin_search(int find, int l, int r) {
+    while(l <= r) {
+        int mid = l + (r-l)/2;
+        if(2*A[mid] == find) {
+            return true;
+        } else if(2*A[mid] < find) {
+            l = mid+1;
+        } else {
+            r = mid-1;
         }
     }
 
-    for(int i = 1; i <= N; i++) {
-        for(int j = M-A[i]; j >= 0; j--) {
-            if(P[j] != pair<int,int>(0,0) && P[j].first != i && P[j].second != i) {
-                ret = max(ret, j+A[i]);
-                break;
+    return false;
+}
+
+void solve(void) {
+    for(int i = N; i >= 2; i--) {
+        for(int j = 1; j <= N-i+1; j++) {
+            int temp = A[j+i-1]+A[j-1];
+            if(bin_search(temp, j, j+i-1)) {
+                ret = max(ret, i);
+                return;
             }
         }
     }
-
-    cout << ret << endl;
 }
   
 int main(void) {
@@ -36,14 +43,16 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    cin >> N >> M;
+    cin >> N;
     A.resize(N+1);
 
     for(int i = 1; i <= N; i++) {
         cin >> A[i];
+        A[i] += A[i-1];
     }
 
     solve();
+    cout << ret << endl;
 
     return 0;
 }
