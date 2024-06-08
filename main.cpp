@@ -3,37 +3,21 @@
 
 using namespace std;
 
-int N;
-vector<int> A;
-int ret = 0;
-
-bool bin_search(int find, int l, int r) {
-    while(l <= r) {
-        int mid = l + (r-l)/2;
-        if(2*A[mid] == find) {
-            return true;
-        } else if(2*A[mid] < find) {
-            l = mid+1;
-        } else {
-            r = mid-1;
-        }
+long double ln(const string &P) {
+    stringstream ss;
+    long double temp;
+    if(P.size() < 14) {
+        ss << P;
+        ss >> temp;
+        return log(temp);
     }
 
-    return false;
+    ss << P.substr(0,13);
+    ss >> temp;
+
+    return log(temp) + (int)(P.size()-13) * log(10);
 }
 
-void solve(void) {
-    for(int i = N; i >= 2; i--) {
-        for(int j = 1; j <= N-i+1; j++) {
-            int temp = A[j+i-1]+A[j-1];
-            if(bin_search(temp, j, j+i-1)) {
-                ret = max(ret, i);
-                return;
-            }
-        }
-    }
-}
-  
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -42,17 +26,25 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
+    
+    string P;
+    cin >> P;
+    vector<long double> X;
+    X.resize(1e5+1);
 
-    cin >> N;
-    A.resize(N+1);
-
-    for(int i = 1; i <= N; i++) {
-        cin >> A[i];
-        A[i] += A[i-1];
+    for(int i = 1; i <= 1e5; i++) {
+        X[i] = X[i-1] + log(i);
     }
 
-    solve();
-    cout << ret << endl;
+    long double ln_p = ln(P);
+
+    for(int i = 1, j = 1; i <= 1e5; i++) {
+        while(X[j]-X[i-1] + 1e-9 < ln_p) j++;
+        if(X[j]-X[i-1]-ln_p <= 1e-9) {
+            cout << i << " " << j << endl;
+            return 0;
+        }
+    }
 
     return 0;
 }
