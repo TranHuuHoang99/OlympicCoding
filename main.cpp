@@ -3,19 +3,36 @@
 
 using namespace std;
 
-long double ln(const string &P) {
-    stringstream ss;
-    long double temp;
-    if(P.size() < 14) {
-        ss << P;
-        ss >> temp;
-        return log(temp);
+int M,N,K;
+
+vector<vector<vector<int>>> matrix;
+
+bool isValid(int xA, int yA, int xB, int yB) {
+    int count = 0;
+    for(int i = 0; i < 26; i++) {
+        count += (matrix[yA][yB][i]+matrix[xA-1][xB-1][i]-matrix[xA-1][yB][i]-matrix[yA][xB-1][i] > 0);
+    }
+    
+    if(count == K) return true;
+    return false;
+}
+
+void solve(void) {
+    int ret = 0;
+    for(int i = M; i >= 1; i--) {
+        for(int j = 1; j <= M-i+1; j++) {
+            for(int k = N; k >= 1; k--) {
+                if(i*k < K) break;
+                for(int l = 1; l <= N-k+1; l++) {
+                    if(isValid(j, i+j-1, l, k+l-1)) {
+                        ret++;
+                    }
+                }
+            }
+        }
     }
 
-    ss << P.substr(0,13);
-    ss >> temp;
-
-    return log(temp) + (int)(P.size()-13) * log(10);
+    cout << ret << endl;
 }
 
 int main(void) {
@@ -27,24 +44,21 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
     
-    string P;
-    cin >> P;
-    vector<long double> X;
-    X.resize(1e5+1);
-
-    for(int i = 1; i <= 1e5; i++) {
-        X[i] = X[i-1] + log(i);
-    }
-
-    long double ln_p = ln(P);
-
-    for(int i = 1, j = 1; i <= 1e5; i++) {
-        while(X[j]-X[i-1] + 1e-9 < ln_p) j++;
-        if(X[j]-X[i-1]-ln_p <= 1e-9) {
-            cout << i << " " << j << endl;
-            return 0;
+    cin >> M >> N >> K;
+    matrix.assign(M+1, vector<vector<int>>(N+1, vector<int>(26,0)));
+    for(int i = 1; i <= M; i++) {
+        for(int j = 1; j <= N; j++) {
+            char temp;
+            cin >> temp;
+            temp -= 'A';
+            matrix[i][j][(int)temp] = 1;
+            for(int k = 0; k < 26; k++) {
+                matrix[i][j][k] += (matrix[i-1][j][k]+matrix[i][j-1][k]-matrix[i-1][j-1][k]);
+            }
         }
     }
+
+    solve();
 
     return 0;
 }

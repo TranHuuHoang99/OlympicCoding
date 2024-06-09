@@ -1,1 +1,5 @@
-60
+4 3 3
+CED
+CEB
+CBC
+DDA
