@@ -4,43 +4,75 @@
 
 using namespace std;
 
-int N,L,D;
-ll res = 0;
-vector<int> H;
+ll A, B;
+
+ll f(ll input) {
+    input %= B;
+    return input * 10;
+}
+
+void solve(void) {
+    cin >> A >> B;
+    string ret;
+    string str;
+    string init = to_string(A/B);
+    ll tortoise = A;
+    ll hare = A;
+
+    ll i = 0;
+    str += to_string(A/B);
+    ll temp = A%B;
+    while (i <= 1e7 && temp != 0) {
+        temp *= 10;
+        str += to_string(temp/B);
+        temp %= B;
+        i++;
+    }
+
+    while (tortoise != 0) {
+        tortoise = f(tortoise);
+        hare = f(f(hare));
+
+        if (tortoise == hare) {
+            break;
+        }
+    }
+
+    ll p = A;
+    ll count = 0;
+    while (p != tortoise) {
+        p = f(p);
+        tortoise = f(tortoise);
+        count++;
+    }
+
+    ret += (init+'.');
+    ret += str.substr(init.size(), count-1);
+
+    ll lambda = 0;
+    while (lambda <= 1e7) {
+        str += to_string(p/B);
+        lambda++;
+        p = f(p);
+        if (tortoise == p) break;
+    }
+
+    ret += '(';
+    ret += str.substr(count+init.size()-1, lambda);
+    ret += ')';
+    cout << ret << endl;
+}       
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-    
+
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    cin >> N >> L >> D;
-    H.resize(N+1);
-    for(int i = 1; i <= N; i++) {
-        cin >> H[i];
-    }
-
-    deque<int> ma, mi;
-    for(int i = 1, j = 1; i <= N; i++) {
-        while(!ma.empty() && H[ma.back()] <= H[i]) ma.pop_back();
-        while(!mi.empty() && H[mi.back()] >= H[i]) mi.pop_back();
-        ma.push_back(i); mi.push_back(i);
-
-        while(!ma.empty() && !mi.empty() && H[ma.front()] - H[mi.front()] > D) {
-            j++;
-            if(!ma.empty() && ma.front() < j) ma.pop_front();
-            if(!mi.empty() && mi.front() < j) mi.pop_front();
-        }
-
-        if(i-j >= L) {
-            res += (i-j-L+1);
-        } 
-    }
-
-    cout << res << endl;
+    solve();
 
     return 0;
 }
