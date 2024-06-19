@@ -4,63 +4,60 @@
 
 using namespace std;
 
-ll A, B;
+ll A, B, C;
 
-ll f(ll input) {
-    input %= B;
-    return input * 10;
+
+ll f(const ll &D) {
+    return (A*D + D%B) % C;
 }
 
 void solve(void) {
-    cin >> A >> B;
-    string ret;
-    string str;
-    string init = to_string(A/B);
-    ll tortoise = A;
-    ll hare = A;
+    cin >> A >> B >> C;
 
-    ll i = 0;
-    str += to_string(A/B);
-    ll temp = A%B;
-    while (i <= 1e7 && temp != 0) {
-        temp *= 10;
-        str += to_string(temp/B);
-        temp %= B;
-        i++;
+    ll tortoise = 1;
+    ll hare = 1;
+
+    if (B == 0 || C == 0) {
+        cout << -1 << endl;
+        return;
     }
 
-    while (tortoise != 0) {
+    int count = 0;
+    while (count < 2 * 1e7) {
         tortoise = f(tortoise);
         hare = f(f(hare));
 
-        if (tortoise == hare) {
-            break;
-        }
-    }
-
-    ll p = A;
-    ll count = 0;
-    while (p != tortoise) {
-        p = f(p);
-        tortoise = f(tortoise);
+        if (tortoise == hare) break;
         count++;
     }
 
-    ret += (init+'.');
-    ret += str.substr(init.size(), count-1);
-
-    ll lambda = 0;
-    while (lambda <= 1e7) {
-        str += to_string(p/B);
-        lambda++;
-        p = f(p);
-        if (tortoise == p) break;
+    ll u = 0;
+    ll P = 1;
+    while (P != tortoise && u < 1e7*2) {
+        P = f(P);
+        tortoise = f(tortoise);
+        u++;
     }
 
-    ret += '(';
-    ret += str.substr(count+init.size()-1, lambda);
-    ret += ')';
-    cout << ret << endl;
+    ll lambda = 0;
+
+    while (lambda < 1e7*2) {
+        lambda++;
+        P = f(P);
+        if (P == tortoise) break;
+    }
+
+    if (lambda > 1e7*2 || u > 1e7*2) {
+        cout << -1 << endl;
+        return;
+    } else {
+        ll temp = lambda + u;
+        if (temp > 1e7 * 2) {
+            cout << -1 << endl;
+        } else {
+            cout << temp << endl;
+        }
+    }
 }       
 
 int main(void) {
@@ -68,9 +65,10 @@ int main(void) {
     cin.tie(NULL);
     cout.tie(NULL);
 
-#ifdef HOANG_DEBUG
+// #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
-#endif // HOANG_DEBUG
+// #endif // HOANG_DEBUG
+    freopen("output.txt", "w", stdout);
 
     solve();
 
