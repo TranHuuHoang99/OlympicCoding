@@ -3,30 +3,32 @@
 
 using namespace std;
 
-vector<string> res;
-ll L, R;
-
-void solve(int count) {
+void solve(void) {
+    int N;
+    cin >> N;
+    vector<int> A(N,0);
+    for (int i = 0; i < N; i++) cin >> A[i];
+    vector<int> temp(1e5+1, 1);
+    int j = 0;
+    for (int i = 1; i < N; i++) {
+        if (A[i] == A[i-1]) {
+            temp[j]++;
+        } else {
+            j++;
+        }
+    }
     int ret = 0;
-    cin >> L >> R;
-    for (int i = 40; i >= 1; i--) {
-        ll left = 2, right = R;
-        while (left <= right) {
-            ll mid = (right+left)/2;
-            
-            if (pow(mid, i) < L) {
-                left = mid+1;
-            } else {
-                if (pow(mid, i) <= R) {
-                    ret = max(ret, i);
-                }
-                right = mid-1;
-            }
+    for (int i = 1; i <= j; i++) {
+        if (temp[i] == temp[i-1]) {
+            ret = max(ret, temp[i]*2);
+        } else if (temp[i] > temp[i-1]) {
+            ret = max(ret, temp[i-1]*2);
+        } else {
+            ret = max(ret, temp[i]*2);
         }
     }
 
-    string temp = "Case #" + to_string(count) + ": " + to_string(ret);
-    res.push_back(temp);
+    cout << ret << endl;
 }
 
 int main(void) {
@@ -38,17 +40,7 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    int N;
-    cin >> N;
-    int count = 1;
-    while (N--) {
-        solve(count);
-        count++;
-    }
-
-    for (auto r : res) {
-        cout << r << endl;
-    }
+    solve();
 
     return 0;
 }
