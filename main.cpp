@@ -5,30 +5,36 @@ using namespace std;
 
 void solve(void) {
     int N;
-    cin >> N;
-    vector<int> A(N,0);
-    for (int i = 0; i < N; i++) cin >> A[i];
-    vector<int> temp(1e5+1, 1);
-    int j = 0;
-    for (int i = 1; i < N; i++) {
-        if (A[i] == A[i-1]) {
-            temp[j]++;
-        } else {
-            j++;
+    ll K, L;
+    cin >> N >> K >> L;
+    vector<int> papers(N, 0);
+    for (int i = 0; i < N; i++) cin >> papers[i];
+    sort(papers.begin(), papers.end(), greater<int>());
+
+    auto check = [=](const int &mid) -> bool {
+        ll sum = 0;
+        for (int i = 0; i < mid; i++) {
+            if (papers[i] < mid) {
+                if (mid - papers[i] > K) return false;
+                sum += (mid-papers[i]);
+            }
         }
-    }
-    int ret = 0;
-    for (int i = 1; i <= j; i++) {
-        if (temp[i] == temp[i-1]) {
-            ret = max(ret, temp[i]*2);
-        } else if (temp[i] > temp[i-1]) {
-            ret = max(ret, temp[i-1]*2);
+
+        return sum <= L * K;
+    };  
+
+    int left = 0, right = N+1;
+    while (left < right) {
+        int mid = left + (right-left+1)/2;
+
+        if (check(mid)) {
+            left = mid;
         } else {
-            ret = max(ret, temp[i]*2);
+            right = mid-1;
         }
     }
 
-    cout << ret << endl;
+    cout << left << endl;
 }
 
 int main(void) {
