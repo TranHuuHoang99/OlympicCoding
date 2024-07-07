@@ -3,38 +3,29 @@
 
 using namespace std;
 
+vector<int> res;
+
 void solve(void) {
-    int N;
-    ll K, L;
-    cin >> N >> K >> L;
-    vector<int> papers(N, 0);
-    for (int i = 0; i < N; i++) cin >> papers[i];
-    sort(papers.begin(), papers.end(), greater<int>());
-
-    auto check = [=](const int &mid) -> bool {
-        ll sum = 0;
-        for (int i = 0; i < mid; i++) {
-            if (papers[i] < mid) {
-                if (mid - papers[i] > K) return false;
-                sum += (mid-papers[i]);
-            }
-        }
-
-        return sum <= L * K;
-    };  
-
-    int left = 0, right = N+1;
-    while (left < right) {
-        int mid = left + (right-left+1)/2;
-
-        if (check(mid)) {
-            left = mid;
-        } else {
-            right = mid-1;
-        }
+    int N, A, B;
+    cin >> N;
+    vector<pair<int,int>> woods(N);
+    for (int i = 0; i < N; i++) {
+        cin >> woods[i].first >> woods[i].second;
     }
 
-    cout << left << endl;
+    sort(woods.begin(), woods.end());
+
+    multiset<int> temp;
+    temp.insert(woods[N-1].second);
+    for (int i = N-2; i >= 0; i--) {
+        auto it = temp.lower_bound(woods[i].second);
+        if (it != temp.end()) {
+            temp.erase(it);
+        }
+        temp.insert(woods[i].second);
+    }
+
+    res.push_back(temp.size());
 }
 
 int main(void) {
@@ -46,7 +37,15 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    solve();
+    int T;
+    cin >> T;
+    while (T--) {
+        solve();
+    }
+
+    for (auto r : res) {
+        cout << r << endl;
+    }
 
     return 0;
 }
