@@ -3,16 +3,54 @@
 
 using namespace std;
 
-vector<ll> res;
+vector<ll> prime;
+
+bool isPrime(const ll &a) {
+    if (a <= 1) return false;
+    for (ll i = 2; i <= sqrt(a); i++) {
+        if (a % i == 0) return false;
+    }
+
+    return true;
+}
+
+void init(void) {
+    for (ll i = 2; i <= 1e5+1000; i++) {
+        if (isPrime(i)) {
+            prime.push_back(i);
+        }
+    }
+}
 
 void solve(void) {
-    ll N;
-    cin >> N;
-    const ll init = sqrt(N);
-    ll ret = init-1;
-    ret += ((N-init)/init);
-    if (N%init) ret++;
-    res.push_back(ret);
+    init();
+
+    int n,m;
+    cin >> n >> m;
+    vector<vector<ll>> matrix(n, vector<ll>(m));
+    ll ret = INT64_MAX;
+
+    for (int i = 0; i < n; i++) {
+        ll temp = 0;
+        for (int j = 0; j < m; j++) {
+            cin >> matrix[i][j];
+            auto it = lower_bound(prime.begin(), prime.end(), matrix[i][j]);
+            temp += (*it - matrix[i][j]);
+        }
+
+        ret = min(ret, temp);
+    }
+
+    for (int i = 0; i < m; i++) {
+        ll temp = 0;
+        for (int j = 0; j < n; j++) {
+            auto it = lower_bound(prime.begin(), prime.end(), matrix[j][i]);
+            temp += (*it - matrix[j][i]);
+        }
+        ret = min(ret, temp);
+    }
+
+    cout << ret << endl;
 }   
 
 int main(void) {
@@ -24,15 +62,7 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    int T;
-    cin >> T;
-    while (T--) {
-        solve();
-    }
-
-    for (auto r : res) {
-        cout << r << endl;
-    }
+    solve();
 
     return 0;
 }
