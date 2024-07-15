@@ -1,2 +1,9 @@
-9 2
-1 4 1 2 2 4 1 2 1
+8
+the
+quick
+brown
+fox
+jumps
+over
+lazy
+dog

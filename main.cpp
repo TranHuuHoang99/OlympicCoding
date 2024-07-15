@@ -3,44 +3,38 @@
 
 using namespace std;
 
-int n, k;
+int n;
+vector<int> A;
+const int alphabet = (1<<26)-1;
+int ret = 0;
 
-ll trapWater(vector<ll> A) {
-    ll ret = 0;
-    stack<int> s;
-    for (int i = 0; i < A.size(); i++) {
-        while (!s.empty() && A[s.top()] < A[i]) {
-            int temp = s.top();
-            s.pop();
-            if (s.empty()) break;
-            ll width = i - s.top() - 1;
-            ll height = min(A[i] - A[temp], A[s.top()] - A[temp]);
-            ret += (width * height);
-        }
-        s.push(i);
+void dfs(int i, int val) {
+    if (val == alphabet) {
+        int temp = n-i;
+        ret += (1<<temp);
+        return;
     }
-
-    return ret;
-}
-
-void dfs(int i, int remain, ll &ret, vector<ll> A) {
-    if (i >= A.size() || remain < 1) {
-        ret = max(ret, trapWater(A));
+    if (i >= n) {
+        if (val == alphabet) ret++;
         return;
     }
 
-    dfs(i+1, remain, ret, A);
-    A[i] += 1;
-    dfs(i, remain - 1, ret, A);
+    dfs(i+1, val);
+    dfs(i+1, val | A[i]);
 }
 
 void solve(void) {
-    int n, k;
-    cin >> n >> k;
-    vector<ll> A(n);
-    for (int i = 0; i < n; i++) cin >> A[i];
-    ll ret = INT64_MIN;
-    dfs(0, k, ret, A);
+    cin >> n;
+    A.assign(n, 0);
+    string temp;
+    for (int i = 0; i < n; i++) {
+        cin >> temp;
+        for (auto t : temp) {
+            A[i] |= (1<<(t-'a'));
+        }
+    }
+
+    dfs(0, 0);
 
     cout << ret << endl;
 }
