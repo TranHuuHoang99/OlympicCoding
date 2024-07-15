@@ -3,40 +3,46 @@
 
 using namespace std;
 
-int n;
-vector<int> A;
-vector<string> ret_str;
-int ret = 0;
+int n, k;
 
-void dfs(int i, int curPos) {
-    if (i < 0) return;
-    if (A[i] == curPos) {
-        dfs(i-1, curPos);
-    } else {
-        dfs(i-1, 3 - curPos - A[i]);
-        string from(1, static_cast<char>(A[i]+'A'));
-        string to(1, static_cast<char>(curPos+'A'));
-        ret_str.push_back(from+to);
-        ret++;
-        A[i] = curPos;
-        dfs(i-1, curPos);
+ll trapWater(vector<ll> A) {
+    ll ret = 0;
+    stack<int> s;
+    for (int i = 0; i < A.size(); i++) {
+        while (!s.empty() && A[s.top()] < A[i]) {
+            int temp = s.top();
+            s.pop();
+            if (s.empty()) break;
+            ll width = i - s.top() - 1;
+            ll height = min(A[i] - A[temp], A[s.top()] - A[temp]);
+            ret += (width * height);
+        }
+        s.push(i);
     }
+
+    return ret;
+}
+
+void dfs(int i, int remain, ll &ret, vector<ll> A) {
+    if (i >= A.size() || remain < 1) {
+        ret = max(ret, trapWater(A));
+        return;
+    }
+
+    dfs(i+1, remain, ret, A);
+    A[i] += 1;
+    dfs(i, remain - 1, ret, A);
 }
 
 void solve(void) {
-    cin >> n;
-    A.resize(n);
-    for (int i = 0; i < n; i++) {
-        char temp;
-        cin >> temp;
-        A[i] = static_cast<int>(temp-'A');
-    }
+    int n, k;
+    cin >> n >> k;
+    vector<ll> A(n);
+    for (int i = 0; i < n; i++) cin >> A[i];
+    ll ret = INT64_MIN;
+    dfs(0, k, ret, A);
 
-    dfs(n-1, 2);
     cout << ret << endl;
-    for (auto str : ret_str) {
-        cout << str << endl;
-    }
 }
   
 int main(void) {
