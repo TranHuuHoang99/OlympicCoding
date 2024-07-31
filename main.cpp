@@ -3,71 +3,58 @@
 
 using namespace std;
 
-vector<ll> A;
-
-ll sum(int i, int j) {
-    ll end = 0;
-    while (j > 0) {
-        end += A[j];
-        j -= (j&-j);
+void update(vector<ll> &arr, int i, ll val, int n) {
+    while (i <= n) {
+        arr[i] += val;
+        i += i&-i;
     }
-
-    ll begin = 0;
-    int index = i-1;
-    while (index > 0) {
-        begin += A[index];
-        index -= (index & -index);
-    }
-
-    return end - begin;
 }
 
-void add(int i, int x) {
-    while (i < A.size()) {
-        A[i] += x;
-        i += (i & -i);
+ll sum(vector<ll> arr, int i) {
+    ll ret = 0;
+    while (i > 0) {
+        ret += arr[i];
+        i -= i&-i;
     }
+    return ret;
 }
 
 void solve(void) {
-    int N, Q;
-    cin >> N >> Q;
-    A.assign(N+1, 0);
-    for (int i = 1; i <= N; i++) cin >> A[i];
-
-    for (int i = 1; i <= N; i++) {
-        int p = i + (i & -i);
-        if (p < A.size()) {
-            A[p] += A[i];
-        }
+    int n, u, q;
+    cin >> n >> u;
+    vector<ll> A(n+1, 0);
+    for (int i = 0; i < u; i++) {
+        int l, r;
+        ll val;
+        cin >> l >> r >> val;
+        l++; r++;
+        update(A, l, val, n);
+        update(A, r+1, -val, n);
     }
 
-    vector<ll> ret;
-    for (int i = 0; i < Q; i++) {
-        int t, p, x;
-        cin >> t >> p >> x;
-        if (t == 1) {
-            add(p,x);
-        } else {
-            ret.push_back(sum(p,x));
-        }
-    }
+    cin >> q;
 
-    for (auto r : ret) {
-        cout << r << endl;
+    for (int i = 0; i < q; i++) {
+        int temp;
+        cin >> temp;
+        cout << sum(A, temp+1) << endl;
     }
-}
-  
+}   
+
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-    
+
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    solve();
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
 
     return 0;
 }
