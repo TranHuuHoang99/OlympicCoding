@@ -3,41 +3,57 @@
 
 using namespace std;
 
-void update(vector<ll> &arr, int i, ll val, int n) {
-    while (i <= n) {
-        arr[i] += val;
-        i += i&-i;
-    }
+ll A[100000+1];
+ll B[100000+1];
+int n, q;
+
+void updatePoint(ll* arr, int index, ll val) {
+    for (int i = index; i <= n; i += i&-i) arr[i] += val;
 }
 
-ll sum(vector<ll> arr, int i) {
+void updateRange(int u, int v, ll x) {    
+    updatePoint(A, u, (n-u+1)*x);
+    updatePoint(A, v+1, -(n-v)*x);
+    updatePoint(B, u, x);
+    updatePoint(B, v+1, -x);
+}
+
+ll getSum(ll* arr, int index) {
     ll ret = 0;
-    while (i > 0) {
-        ret += arr[i];
-        i -= i&-i;
-    }
+    for (int i = index; i > 0; i -= i&-i) ret += arr[i];
     return ret;
 }
 
+ll sum(int i) {
+    return getSum(A, i) - getSum(B, i) * (n-i);
+}
+
+ll sumRange(int u , int v) {
+    return sum(v) - sum(u-1);
+}
+
 void solve(void) {
-    int n, u, q;
-    cin >> n >> u;
-    vector<ll> A(n+1, 0);
-    for (int i = 0; i < u; i++) {
-        int l, r;
-        ll val;
-        cin >> l >> r >> val;
-        l++; r++;
-        update(A, l, val, n);
-        update(A, r+1, -val, n);
+    cin >> n >> q;
+    memset(B, 0, n+1);
+    for (int i = 1; i <= n; i++) cin >> A[i];
+    for (int i = 1; i <= n; i++) {
+        int p = i + (i&-i);
+        if (p <= n) A[p] += A[i];
     }
 
-    cin >> q;
-
     for (int i = 0; i < q; i++) {
-        int temp;
-        cin >> temp;
-        cout << sum(A, temp+1) << endl;
+        int t;
+        cin >> t;
+        if (t == 1) {
+            int u, v;
+            ll x;
+            cin >> u >> v >> x;
+            updateRange(u, v, x);
+        } else {
+            int u, v;
+            cin >> u >> v;
+            cout << sumRange(u, v) << endl;
+        }
     }
 }   
 
@@ -50,11 +66,7 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    int t;
-    cin >> t;
-    while (t--) {
-        solve();
-    }
+    solve();
 
     return 0;
 }
