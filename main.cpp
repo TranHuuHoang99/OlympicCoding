@@ -1,61 +1,62 @@
 #include <bits/stdc++.h>
 #define ll long long
+#define N 100000+1
 
 using namespace std;
 
-ll A[100000+1];
-ll B[100000+1];
-int n, q;
+ll diff[N], A[N];
+int n, m;
 
-void updatePoint(ll* arr, int index, ll val) {
-    for (int i = index; i <= n; i += i&-i) arr[i] += val;
+void update(int index, ll val) {
+    for (int i = index; i <= n; i += i&-i) {
+        diff[i] += val;
+    }
 }
 
-void updateRange(int u, int v, ll x) {    
-    updatePoint(A, u, (n-u+1)*x);
-    updatePoint(A, v+1, -(n-v)*x);
-    updatePoint(B, u, x);
-    updatePoint(B, v+1, -x);
-}
-
-ll getSum(ll* arr, int index) {
+ll sum(int index) {
     ll ret = 0;
-    for (int i = index; i > 0; i -= i&-i) ret += arr[i];
+    for (int i = index; i > 0; i -= i&-i) ret += diff[i];
     return ret;
 }
 
-ll sum(int i) {
-    return getSum(A, i) - getSum(B, i) * (n-i);
-}
+int bs(ll target) {
+    int left = 1;
+    int right = n;
+    int ret = -1;
+    while (left <= right) {
+        int mid = (right+left) /2;
+        if (sum(mid) >= target) {
+            ret = mid;
+            right = mid-1;
+        } else {
+            left = mid + 1;
+        }
+    }
 
-ll sumRange(int u , int v) {
-    return sum(v) - sum(u-1);
+    return ret;
 }
 
 void solve(void) {
-    cin >> n >> q;
-    memset(B, 0, n+1);
+    cin >> n;
     for (int i = 1; i <= n; i++) cin >> A[i];
+    sort(A, A+n+1);
     for (int i = 1; i <= n; i++) {
-        int p = i + (i&-i);
-        if (p <= n) A[p] += A[i];
+        update(i, A[i]-A[i-1]);   
     }
 
-    for (int i = 0; i < q; i++) {
-        int t;
-        cin >> t;
-        if (t == 1) {
-            int u, v;
-            ll x;
-            cin >> u >> v >> x;
-            updateRange(u, v, x);
+    cin >> m;
+    while (m--) {
+        ll target;
+        cin >> target;
+        int i = bs(target);
+        if (i != -1) {
+            cout << n-i+1 << endl;
+            update(i, -1);
         } else {
-            int u, v;
-            cin >> u >> v;
-            cout << sumRange(u, v) << endl;
+            cout << 0 << '\n';
         }
     }
-}   
+}
 
 int main(void) {
     ios_base::sync_with_stdio(false);
