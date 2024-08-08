@@ -1,34 +1,41 @@
 #include <bits/stdc++.h>
-
 #define ll long long
-#define N 10000000
 
 using namespace std;
 
-int A[N], bit[N];
-int n;
+const int LEN = 1e5+1, MOD = 1e6*5;
+int A[LEN], inc[LEN], bit[LEN], n, k;
 
-void update(int index) {
-    for (int i = index; i <= N; i += i&-i) bit[i]++;
+void update(int index, int val) {
+    for (int i = index; i <= LEN; i += i&-i) {
+        bit[i] = (bit[i] + val) % MOD;
+    }
 }
 
 int sum(int index) {
     int ret = 0;
     for (int i = index; i > 0; i -= i&-i) ret += bit[i];
-    return ret;
+    return ret % MOD;
 }
 
 void solve(void) {
-    cin >> n;
-    for (int i = 1; i <= n; i++) cin >> A[i];
-
-    int ret = 0;
-    for (int i = n; i >= 1; i--) {
-        ret += sum(A[i]);
-        update(A[i]+1);
+    cin >> n >> k;
+    for (int i = 1; i <= n; i++) {
+        cin >> A[i]; A[i]++;
+        inc[i] = 1;
     }
 
-    cout << ret << endl;
+    for (int temp = 2; temp <= k; temp++) {
+        memset(bit, 0, sizeof(bit));
+        for (int i = 1; i <= n; i++) {
+            update(A[i], inc[i]);
+            inc[i] = sum(A[i]-1);
+        }
+    }
+
+    ll ret = 0;
+    for (int i = 1; i <= n; i++) ret += inc[i];
+    cout << ret % MOD << endl;
 }
 
 
