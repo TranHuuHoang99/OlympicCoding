@@ -5,18 +5,19 @@ using namespace std;
 
 class Solution {
 public:
-    int subsetXORSum(vector<int>& nums) {
+    int sumIndicesWithKSetBits(vector<int>& nums, int k) {
         int ret = 0;
-
-        for (int mask = 1; mask < (1 << nums.size()); mask++) {
-            int temp = 0;
-            for (int i = 0; i < nums.size(); i++) {
-                if (mask & (1 << i)) {
-                    temp ^= nums[i];
-                }
+        for (int i = 0; i < nums.size(); i++) {
+            int cnt = 0;
+            int temp = i;
+            for (int j = 0; j < 32; j++) {
+                if (temp % 2 != 0) cnt++;
+                temp >>= 1; 
             }
-            ret += temp;
+
+            if (cnt == k) ret += nums[i];
         }
+
         return ret;
     }
 };
@@ -29,10 +30,6 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
-
-    Solution s;
-    vector<int> temp = {5,1,6};
-    cout << s.subsetXORSum(temp) << endl;
 
     return 0;
 }
