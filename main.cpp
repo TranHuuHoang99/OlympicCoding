@@ -5,18 +5,13 @@ using namespace std;
 
 class Solution {
 public:
-    int sumIndicesWithKSetBits(vector<int>& nums, int k) {
-        int ret = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            int cnt = 0;
-            int temp = i;
-            for (int j = 0; j < 32; j++) {
-                if (temp % 2 != 0) cnt++;
-                temp >>= 1; 
-            }
+    vector<int> decode(vector<int>& encoded, int first) {
+        vector<int> ret(encoded.size()+1);
+        ret[0] = first;
 
-            if (cnt == k) ret += nums[i];
-        }
+        for (int i = 0; i < encoded.size(); i++) {
+            ret[i+1] = encoded[i] ^ ret[i];
+        }      
 
         return ret;
     }
