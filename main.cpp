@@ -5,16 +5,19 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
-        for (int i = 0; i < nums.size()-1; i++) {
-            for (int j = i+1; j < nums.size(); j++) {
-                if (nums[i] + nums[j] == target) {
-                    return {i,j};
+    int subsetXORSum(vector<int>& nums) {
+        int ret = 0;
+
+        for (int mask = 1; mask < (1 << nums.size()); mask++) {
+            int temp = 0;
+            for (int i = 0; i < nums.size(); i++) {
+                if (mask & (1 << i)) {
+                    temp ^= nums[i];
                 }
             }
+            ret += temp;
         }
-
-        return {-1,-1};
+        return ret;
     }
 };
   
@@ -27,6 +30,9 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
+    Solution s;
+    vector<int> temp = {5,1,6};
+    cout << s.subsetXORSum(temp) << endl;
 
     return 0;
 }
