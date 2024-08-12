@@ -5,14 +5,11 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> decode(vector<int>& encoded, int first) {
-        vector<int> ret(encoded.size()+1);
-        ret[0] = first;
-
-        for (int i = 0; i < encoded.size(); i++) {
-            ret[i+1] = encoded[i] ^ ret[i];
-        }      
-
+    int xorOperation(int n, int start) {
+        int ret = 0;
+        for (int i = 0; i < n; i++) {
+            ret ^= (start + i*2);
+        }
         return ret;
     }
 };
