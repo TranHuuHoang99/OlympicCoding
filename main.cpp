@@ -5,25 +5,18 @@ using namespace std;
 
 class Solution {
 public:
-    int countConsistentStrings(string allowed, vector<string>& words) {
-        int ret = 0;
-        int mask = 0;
-        for (int i = 0 ; i < allowed.size(); i++) {
-            mask |= (1 << (allowed[i]-'a'));
-        }
-
-        for (int i = 0; i < words.size(); i++) {
-            bool isValid = true;
-            for (int j = 0; j < words[i].size(); j++) {
-                if ((mask >> (words[i][j]-'a')) % 2 == 0) {
-                    isValid = false;
-                    break;
-                }
+    vector<vector<int>> flipAndInvertImage(vector<vector<int>>& image) {
+        for (int i = 0; i < image.size(); i++) {
+            for (int j = 0, k = image[i].size()-1; j < image[i].size()/2; j++) {
+                swap(image[i][j], image[i][k]);
+                k--;
             }
-            if (isValid) ret++;
+            for (int j = 0; j < image[i].size(); j++) {
+                image[i][j] ^= 1;
+            }
         }
-
-        return ret;
+        
+        return image;
     }
 };
 
