@@ -5,16 +5,13 @@ using namespace std;
 
 class Solution {
 public:
-    int maximumStrongPairXor(vector<int>& nums) {
-        int ret = INT_MIN;
-        for (int i = 0; i < nums.size(); i++) {
-            for (int j = 0; j < nums.size(); j++) {
-                if (abs(nums[i] - nums[j]) <= min(nums[i], nums[j])) {
-                    ret = max(ret, nums[i] ^ nums[j]);
-                }
-            }
-        }
-
+    int hammingDistance(int x, int y) {
+        int ret = 0;
+        for (int i = 0; i < 32; i++) {
+            if (x%2 != y%2) ret++;
+            x >>= 1;
+            y >>= 1;
+        }      
         return ret;
     }
 };
