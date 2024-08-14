@@ -5,16 +5,27 @@ using namespace std;
 
 class Solution {
 public:
-    int duplicateNumbersXOR(vector<int>& nums) {
-        int ret = 0;
-        map<int,int> cnt;
-        set<int> temp;
-        for (auto n : nums) {
-            cnt[n]++;
-            if (cnt[n] == 2) temp.insert(n);
+    vector<int> sortByBits(vector<int>& arr) {
+        vector<int> ret;
+        map<int,vector<int>> m;
+
+        for (auto a : arr) {
+            int temp = a;
+            int cnt = 0;
+            for (int i = 0; i < 32; i++) {
+                if (temp % 2 != 0) cnt++;
+                temp >>= 1;
+            }
+            m[cnt].push_back(a);
         }
 
-        for (auto t : temp) ret ^= t;
+        for (auto _m : m) {
+            sort(_m.second.begin(), _m.second.end());
+            for (auto __m : _m.second) {
+                ret.push_back(__m);
+            }
+        }
+
         return ret;
     }
 };
