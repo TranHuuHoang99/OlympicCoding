@@ -5,18 +5,17 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<int>> flipAndInvertImage(vector<vector<int>>& image) {
-        for (int i = 0; i < image.size(); i++) {
-            for (int j = 0, k = image[i].size()-1; j < image[i].size()/2; j++) {
-                swap(image[i][j], image[i][k]);
-                k--;
-            }
-            for (int j = 0; j < image[i].size(); j++) {
-                image[i][j] ^= 1;
-            }
+    int duplicateNumbersXOR(vector<int>& nums) {
+        int ret = 0;
+        map<int,int> cnt;
+        set<int> temp;
+        for (auto n : nums) {
+            cnt[n]++;
+            if (cnt[n] == 2) temp.insert(n);
         }
-        
-        return image;
+
+        for (auto t : temp) ret ^= t;
+        return ret;
     }
 };
 
