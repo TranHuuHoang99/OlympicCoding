@@ -5,24 +5,13 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> sortByBits(vector<int>& arr) {
-        vector<int> ret;
-        map<int,vector<int>> m;
-
-        for (auto a : arr) {
-            int temp = a;
-            int cnt = 0;
-            for (int i = 0; i < 32; i++) {
-                if (temp % 2 != 0) cnt++;
-                temp >>= 1;
-            }
-            m[cnt].push_back(a);
-        }
-
-        for (auto _m : m) {
-            sort(_m.second.begin(), _m.second.end());
-            for (auto __m : _m.second) {
-                ret.push_back(__m);
+    int maximumStrongPairXor(vector<int>& nums) {
+        int ret = INT_MIN;
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = 0; j < nums.size(); j++) {
+                if (abs(nums[i] - nums[j]) <= min(nums[i], nums[j])) {
+                    ret = max(ret, nums[i] ^ nums[j]);
+                }
             }
         }
 
