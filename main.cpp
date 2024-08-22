@@ -3,48 +3,48 @@
 #define ll long long
 using namespace std;
 
-int N, M;
-vector<int> pay;
-map<int,set<int>> friend_ship;
+const ll N = 1e5+1;
+int n, m;
+int c[N];
+vector<int> arr;
+
+bool isValid(int target) {
+    int left = arr[0];
+    int count = 0;
+    for (int i = 1; i < arr.size(); i++) {
+        if (arr[i]-left >= target) {
+            count++;
+            left = arr[i];
+        }
+    }
+
+    return count >= n-1;
+}
 
 void solve(void) {
-    vector<vector<int>> relations;
-    vector<bool> isVisisted(N+1, false);
-    queue<int> q;
-
-    for(int i = 1; i <= N; i++) {
-        if(isVisisted[i]) continue;
-        vector<int> temp_arr;
-        temp_arr.push_back(i);
-        q.push(i);
-        isVisisted[i] = true;
-        
-        while(!q.empty()) {
-            int temp = q.front();
-            q.pop();
-
-            for(auto f : friend_ship[temp]) {
-                if(!isVisisted[f]) {
-                    q.push(f);
-                    isVisisted[f] = true;
-                    temp_arr.push_back(f);
-                }
-            }
-        }
-
-        relations.push_back(temp_arr);
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        cin >> c[i];
+        arr.push_back(c[i]);
+        arr.push_back(c[i]-1);
+        arr.push_back(c[i]+1);
     }
 
-    int count = 0;
-    for(auto rl : relations) {
-        int min_value = INT32_MAX;
-        for(auto _rl : rl) {
-            min_value = min(min_value, pay[_rl]);
+    arr.resize(distance(arr.begin(), unique(arr.begin(), arr.end())));
+    sort(arr.begin(), arr.end());
+
+    int left = 0;
+    int right = arr.back();
+
+    while (left < right-1) {
+        int mid = (right + left) / 2;
+        if (isValid(mid)) {
+            left = mid;
+        } else {
+            right = mid;
         }
-        count += min_value;
     }
-    
-    cout << count << endl;
+    cout << left << endl;
 }
 
 int main(void) {
@@ -55,21 +55,6 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif //HOANG_DEBUG
-
-    cin >> N >> M;
-    pay.assign(N+1, 0);
-
-    for(int i = 1; i <= N; i++) {
-        cin >> pay[i];
-        friend_ship[i];
-    }
-
-    int A, B;
-    for(int i = 0; i < M; i++) {
-        cin >> A >> B;
-        friend_ship[A].insert(B);
-        friend_ship[B].insert(A);
-    }
 
     solve();
 
