@@ -5,14 +5,19 @@ using namespace std;
 
 class Solution {
 public:
-    char repeatedCharacter(string s) {
-        int temp = 0;
-        for (char c : s) {
-            if (temp & (1 << (c-'a'))) return c;
-            temp ^= (1 << (c-'a'));
+    vector<int> evenOddBit(int n) {
+        vector<int> ret(2,0);
+        for (int i = 0; i < 32; i++) {
+            if (n & (1 << i)) {
+                if (i % 2 == 0) {
+                    ret[0]++;
+                } else {
+                    ret[1]++;
+                }
+            }
         }
 
-        return '\0';
+        return ret;
     }
 };
 
