@@ -5,15 +5,14 @@ using namespace std;
 
 class Solution {
 public:
-    bool divideArray(vector<int>& nums) {
-        vector<int> ret(501, 0);
-        for (int i = 0; i < nums.size(); i++) {
-            ret[nums[i]]++;
-        }        
-        for (auto r : ret) {
-            if (r > 0 && r%2 != 0) return false;
+    char repeatedCharacter(string s) {
+        int temp = 0;
+        for (char c : s) {
+            if (temp & (1 << (c-'a'))) return c;
+            temp ^= (1 << (c-'a'));
         }
-        return true;
+
+        return '\0';
     }
 };
 
@@ -26,6 +25,9 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
+
+    char temp = '\0';
+    cout << temp << endl;
 
     return 0;
 }
