@@ -5,12 +5,15 @@ using namespace std;
 
 class Solution {
 public:
-    int singleNumber(vector<int>& nums) {
-        int ret = 0;
+    bool divideArray(vector<int>& nums) {
+        vector<int> ret(501, 0);
         for (int i = 0; i < nums.size(); i++) {
-            ret ^= nums[i];
+            ret[nums[i]]++;
+        }        
+        for (auto r : ret) {
+            if (r > 0 && r%2 != 0) return false;
         }
-        return ret;
+        return true;
     }
 };
 
