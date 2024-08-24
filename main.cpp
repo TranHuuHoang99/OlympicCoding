@@ -7,12 +7,15 @@ using namespace std;
 
 class Solution {
 public:
-    int hammingWeight(int n) {
-        int ret = 0;
-        for (int i = 0; i < 32; i++) {
-            if (n & (1 << i)) ret++;
+    bool hasTrailingZeros(vector<int>& nums) {
+        vector<bool> isVisited(101, false);
+
+        int count = 0;
+        for (auto n : nums) {
+            if (n % 2 == 0) count++;
+            if (count >= 2) return true;
         }
-        return ret;
+        return false;
     }
 };
 
