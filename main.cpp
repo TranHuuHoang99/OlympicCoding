@@ -7,23 +7,15 @@ using namespace std;
 
 class Solution {
 public:
-    int similarPairs(vector<string>& words) {
-        int ret = 0;
-        vector<int> temp(words.size(), 0);
-
-        for (int i = 0; i < words.size(); i++) {
-            for (int j = 0; j < words[i].size(); j++) {
-                temp[i] |= (1 << (words[i][j] - 'a'));
-            }
+    int findComplement(int num) {
+        bool isValid = false;
+        for (int i = 30; i >= 0; i--) {
+            int mask = 1 << i;
+            if (num & mask) isValid = true;
+            if (isValid) num ^= mask;
         }
 
-        for (int i = 0; i < temp.size(); i++) {
-            for (int j = i+1; j < temp.size(); j++) {
-                if (temp[i] == temp[j]) ret++;
-            }
-        }
-
-        return ret;
+        return num;
     }
 };
 
@@ -36,9 +28,8 @@ int main(void) {
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
 
-    vector<string> temp = {"aba","aabb","abcd","bac","aabc"};
     Solution s;
-    s.similarPairs(temp);
+    cout << s.findComplement(5) << endl;
 
     return 0;
 }
