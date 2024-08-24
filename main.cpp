@@ -7,15 +7,26 @@ using namespace std;
 
 class Solution {
 public:
-    int findComplement(int num) {
-        bool isValid = false;
-        for (int i = 30; i >= 0; i--) {
-            int mask = 1 << i;
-            if (num & mask) isValid = true;
-            if (isValid) num ^= mask;
+    bool isPrime(int x) {
+        if (x == 1) return false;
+        for (int i = 2; i < x; i++) {
+            if (x % i == 0) return false;
+        }
+        return true;
+    }
+
+    int countPrimeSetBits(int left, int right) {
+        int ret = 0;
+        for (int i = left; i <= right; i++) {
+            int cnt = 0;
+            for (int j = 0; j < 32; j++) {
+                int mask = 1 << j;
+                if (i & mask) cnt++;
+            }
+            if (isPrime(cnt)) ret++;
         }
 
-        return num;
+        return ret;
     }
 };
 
@@ -27,9 +38,6 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
-
-    Solution s;
-    cout << s.findComplement(5) << endl;
 
     return 0;
 }
