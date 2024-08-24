@@ -7,15 +7,23 @@ using namespace std;
 
 class Solution {
 public:
-    bool hasTrailingZeros(vector<int>& nums) {
-        vector<bool> isVisited(101, false);
+    int similarPairs(vector<string>& words) {
+        int ret = 0;
+        vector<int> temp(words.size(), 0);
 
-        int count = 0;
-        for (auto n : nums) {
-            if (n % 2 == 0) count++;
-            if (count >= 2) return true;
+        for (int i = 0; i < words.size(); i++) {
+            for (int j = 0; j < words[i].size(); j++) {
+                temp[i] |= (1 << (words[i][j] - 'a'));
+            }
         }
-        return false;
+
+        for (int i = 0; i < temp.size(); i++) {
+            for (int j = i+1; j < temp.size(); j++) {
+                if (temp[i] == temp[j]) ret++;
+            }
+        }
+
+        return ret;
     }
 };
 
@@ -27,6 +35,10 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
+
+    vector<string> temp = {"aba","aabb","abcd","bac","aabc"};
+    Solution s;
+    s.similarPairs(temp);
 
     return 0;
 }
