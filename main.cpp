@@ -7,25 +7,16 @@ using namespace std;
 
 class Solution {
 public:
-    bool isPrime(int x) {
-        if (x == 1) return false;
-        for (int i = 2; i < x; i++) {
-            if (x % i == 0) return false;
+    int missingNumber(vector<int>& nums) {
+        vector<bool> v(nums.size()+1, false);
+        for (auto n : nums) {
+            v[n] = true;
         }
-        return true;
-    }
 
-    int countPrimeSetBits(int left, int right) {
         int ret = 0;
-        for (int i = left; i <= right; i++) {
-            int cnt = 0;
-            for (int j = 0; j < 32; j++) {
-                int mask = 1 << j;
-                if (i & mask) cnt++;
-            }
-            if (isPrime(cnt)) ret++;
-        }
-
+        for (int i = 0; i < v.size(); i++) {
+            if (!v[i]) ret = i;
+        } 
         return ret;
     }
 };
