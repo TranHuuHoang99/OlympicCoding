@@ -7,18 +7,16 @@ using namespace std;
 
 class Solution {
 public:
-    int bitwiseComplement(int n) {
-        if (n == 0) return 1;
-        bool isValid = false;
-        for (int i = 63; i >= 0; i--) {
-            long int mask = (static_cast<long int>(1) << i);
-            if (mask & n) isValid = true;
-            if (isValid) {
-                n ^= mask;
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t ret = 0;
+        for (int i = 0; i < 32; i++) {
+            uint32_t mask = 1 << i;
+            if (mask & n) {
+                ret |= (1 << (31-i));
             }
         }
 
-        return n;
+        return ret;
     }
 };
 
