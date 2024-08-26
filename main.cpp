@@ -7,15 +7,24 @@ using namespace std;
 
 class Solution {
 public:
-    int minChanges(int n, int k) {
-        int ret = 0;
-        for (int i = 0 ; i < 32; i++) {
+    int binaryGap(int n) {
+        int ret = INT_MIN;
+        int temp = 0;
+        bool init = false;
+        
+        for (int i = 0; i < 32; i++) {
             int mask = 1 << i;
-            if (!(mask & n) && (mask & k)) return -1;
-            if ((mask & n) && !(mask & k)) ret++;
+            if (mask & n) {
+                if (init) {
+                    ret = max(ret, i-temp);
+                }
+
+                temp = i;
+                init = true;
+            }
         }
 
-        return ret;
+        return ret == INT_MIN ? 0 : ret;
     }
 };
 
