@@ -7,17 +7,23 @@ using namespace std;
 
 class Solution {
 public:
-    uint32_t reverseBits(uint32_t n) {
-        uint32_t ret = 0;
-        for (int i = 0; i < 32; i++) {
-            uint32_t mask = 1 << i;
-            if (mask & n) {
-                ret |= (1 << (31-i));
+    int minOperations(vector<int>& nums, int k) {
+        int ret = 0;
+        int sum = 0;
+        vector<bool> v(51, false);
+        for (int i = 1; i <= k; i++) sum += i;
+        int temp = 0;
+        for (int i = nums.size()-1; i >= 0; i--) {
+            if (nums[i] <= k && !v[nums[i]]) {
+                temp += nums[i];
+                v[nums[i]] = true;
             }
+            ret++;
+            if (temp == sum) break;
         }
 
         return ret;
-    }
+    }   
 };
 
 int main(void) {
