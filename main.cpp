@@ -5,34 +5,14 @@
 
 using namespace std;
 
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
-
 class Solution {
 public:
-    int countNodes(TreeNode* root) {
-        if (root == nullptr) return 0;
+    int minChanges(int n, int k) {
         int ret = 0;
-        queue<TreeNode*> q;
-        q.push(root);
-
-        while (!q.empty()) {
-            TreeNode* temp = q.front();
-            q.pop();
-            ret++;
-            if (temp->left != nullptr) {
-                q.push(temp->left);
-            }
-
-            if (temp->right != nullptr) {
-                q.push(temp->right);
-            }
+        for (int i = 0 ; i < 32; i++) {
+            int mask = 1 << i;
+            if (!(mask & n) && (mask & k)) return -1;
+            if ((mask & n) && !(mask & k)) ret++;
         }
 
         return ret;
