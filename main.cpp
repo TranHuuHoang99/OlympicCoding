@@ -7,30 +7,18 @@ using namespace std;
 
 class Solution {
 public:
-    string longestNiceSubstring(string s) {
-        string ret;
-
-        for (int i = 0; i < s.size(); i++) {
-            string str;
-            for (int j = i; j < s.size(); j++) {
-                str += s[j];
-                int left = 0;
-                int right = 0;
-                for (int k = 0; k < str.size(); k++) {
-                    if (str[k] >= 'a') {
-                        left |= (1 << (str[k]-'a'));
-                    } else {
-                        right |= (1 << (str[k]-'A'));
-                    }
-                }
-
-                if (left == right) {
-                    if (ret.size() < str.size()) ret = str;
-                }
+    int bitwiseComplement(int n) {
+        if (n == 0) return 1;
+        bool isValid = false;
+        for (int i = 63; i >= 0; i--) {
+            long int mask = (static_cast<long int>(1) << i);
+            if (mask & n) isValid = true;
+            if (isValid) {
+                n ^= mask;
             }
         }
 
-        return ret;
+        return n;
     }
 };
 
