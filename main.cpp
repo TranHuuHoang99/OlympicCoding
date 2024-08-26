@@ -7,23 +7,22 @@ using namespace std;
 
 class Solution {
 public:
-    int minOperations(vector<int>& nums, int k) {
-        int ret = 0;
-        int sum = 0;
-        vector<bool> v(51, false);
-        for (int i = 1; i <= k; i++) sum += i;
-        int temp = 0;
-        for (int i = nums.size()-1; i >= 0; i--) {
-            if (nums[i] <= k && !v[nums[i]]) {
-                temp += nums[i];
-                v[nums[i]] = true;
+    char findTheDifference(string s, string t) {
+        char ret = 0;
+        int left = 0;
+        int right = 0;
+        for (char c : s) left ^= (1 << (c-'a'));
+        for (char c : t) right ^= (1 << (c-'a'));
+        
+        int ret_mask = left ^ right;
+        for (int i = 0; i <= 26; i++) {
+            int mask = 1 << i;
+            if (mask & ret_mask) {
+                ret = 'a'+i;
             }
-            ret++;
-            if (temp == sum) break;
-        }
-
+        }   
         return ret;
-    }   
+    }
 };
 
 int main(void) {
