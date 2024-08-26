@@ -7,51 +7,26 @@ using namespace std;
 
 class Solution {
 public:
-    vector<string> readBinaryWatch(int turnedOn) {
-        vector<string> ret;
-        if (turnedOn == 0) {
-            string str = "0:00";
-            ret.push_back(str);
-            return ret;
-        }
-        const int len = 1 << 10;
-        for (int mask = 1; mask < len; mask++) {
-            int cnt = 0;
-            for (int i = 0; i < 10; i++) {
-                if (mask & (1 << i)) cnt++;
+    string addBinary(string a, string b) {
+        string ret;
+        int i = a.size()-1;
+        int j = b.size()-1;
+        int add = 0;
+
+        while (i >= 0 || j >= 0 || add) {
+            if (i >= 0) {
+                add += (a[i--]-'0');
             }
 
-            if (cnt == turnedOn) {
-                int hour = 0;
-                for (int i = 0; i <= 3; i++) {
-                    if (mask & (1 << i)) {
-                        hour += (1 << i);
-                    }
-                }   
-
-                int minute = 0;
-                for (int i = 4; i <= 9; i++) {
-                    if (mask & (1 << i)) {
-                        minute += (1 << (i-4));
-                    }
-                }
-
-                if (hour <= 11 && minute <= 59) {
-                    string str;
-                    str += to_string(hour);
-                    str += ':';
-                    if (minute < 10) {
-                        str += '0';
-                        str += to_string(minute);
-                    } else {
-                        str += to_string(minute);
-                    }   
-
-                    ret.push_back(str);
-                }
+            if (j >= 0) {
+                add += (b[j--]-'0');
             }
+
+            ret += (add % 2 + '0');
+            add /= 2;
         }
 
+        reverse(ret.begin(), ret.end());
         return ret;
     }
 };
