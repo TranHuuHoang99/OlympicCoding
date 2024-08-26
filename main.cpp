@@ -7,24 +7,23 @@ using namespace std;
 
 class Solution {
 public:
-    int binaryGap(int n) {
-        int ret = INT_MIN;
-        int temp = 0;
-        bool init = false;
-        
-        for (int i = 0; i < 32; i++) {
+    bool hasAlternatingBits(int n) {
+        bool valid = false;
+        for (int i = 31; i >= 0; i--) {
             int mask = 1 << i;
-            if (mask & n) {
-                if (init) {
-                    ret = max(ret, i-temp);
-                }
+            if (n & mask) valid = true;
 
-                temp = i;
-                init = true;
+            if (valid && i < 31) {
+                int n_mask = 1 << (i+1);
+                if (((n & n_mask) && (n & mask)) ||
+                    !(n & n_mask) && !(n & mask))
+                {
+                        return false;
+                }
             }
         }
 
-        return ret == INT_MIN ? 0 : ret;
+        return true;
     }
 };
 
