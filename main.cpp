@@ -7,23 +7,30 @@ using namespace std;
 
 class Solution {
 public:
-    bool hasAlternatingBits(int n) {
-        bool valid = false;
-        for (int i = 31; i >= 0; i--) {
-            int mask = 1 << i;
-            if (n & mask) valid = true;
+    string longestNiceSubstring(string s) {
+        string ret;
 
-            if (valid && i < 31) {
-                int n_mask = 1 << (i+1);
-                if (((n & n_mask) && (n & mask)) ||
-                    !(n & n_mask) && !(n & mask))
-                {
-                        return false;
+        for (int i = 0; i < s.size(); i++) {
+            string str;
+            for (int j = i; j < s.size(); j++) {
+                str += s[j];
+                int left = 0;
+                int right = 0;
+                for (int k = 0; k < str.size(); k++) {
+                    if (str[k] >= 'a') {
+                        left |= (1 << (str[k]-'a'));
+                    } else {
+                        right |= (1 << (str[k]-'A'));
+                    }
+                }
+
+                if (left == right) {
+                    if (ret.size() < str.size()) ret = str;
                 }
             }
         }
 
-        return true;
+        return ret;
     }
 };
 
