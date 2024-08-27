@@ -7,16 +7,19 @@ using namespace std;
 
 class Solution {
 public:
-    vector<bool> prefixesDivBy5(vector<int>& nums) {
-        vector<bool> ret(nums.size(), false);
-
-        int mask = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            mask = ((mask << 1) + nums[i]) % 5;
-            ret[i] = mask == 0;
+    vector<int> findErrorNums(vector<int>& nums) {
+        unordered_set<int> unqNums;
+        vector<int> res;
+        for(auto num : nums){
+            if(unqNums.count(num)){
+                res.push_back(num);
+            }
+            unqNums.insert(num);
         }
-
-        return ret;
+        for(int num = 1; num <= nums.size(); num++){
+            if(!unqNums.count(num))res.push_back(num);
+        }
+        return res;
     }
 };
 
