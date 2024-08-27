@@ -7,23 +7,22 @@ using namespace std;
 
 class Solution {
 public:
-    string addBinary(string a, string b) {
+    string toHex(int num) {
+        map<int,char> m;
+
+        for (int i = 0; i < 10; i++) m[i] = i + '0';
+        for (int i = 10; i < 16; i++) m[i] = i-10 + 'a';
+
         string ret;
-        int i = a.size()-1;
-        int j = b.size()-1;
-        int add = 0;
+        if (num == 0) return "0";
+        long long temp = num;
+        if (num < 0) {
+            temp = ((long long)INT32_MAX << 1) + 2 + num;
+        }
 
-        while (i >= 0 || j >= 0 || add) {
-            if (i >= 0) {
-                add += (a[i--]-'0');
-            }
-
-            if (j >= 0) {
-                add += (b[j--]-'0');
-            }
-
-            ret += (add % 2 + '0');
-            add /= 2;
+        while (temp) {
+            ret += m[temp%16];
+            temp /= 16;
         }
 
         reverse(ret.begin(), ret.end());
@@ -39,6 +38,9 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
+
+    Solution s;
+    cout << s.toHex(-1) << endl;
 
     return 0;
 }
