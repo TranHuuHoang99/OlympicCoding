@@ -7,13 +7,16 @@ using namespace std;
 
 class Solution {
 public:
-    bool isPowerOfTwo(int n) {
-        if (n < 0) return false;
-        for (int i = 0; i < 32; i++) {
-            if (n == (1 << i)) return true;
+    vector<bool> prefixesDivBy5(vector<int>& nums) {
+        vector<bool> ret(nums.size(), false);
+
+        int mask = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            mask = ((mask << 1) + nums[i]) % 5;
+            ret[i] = mask == 0;
         }
 
-        return false;
+        return ret;
     }
 };
 
