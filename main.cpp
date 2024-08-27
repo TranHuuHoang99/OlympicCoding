@@ -7,26 +7,18 @@ using namespace std;
 
 class Solution {
 public:
-    string toHex(int num) {
-        map<int,char> m;
-
-        for (int i = 0; i < 10; i++) m[i] = i + '0';
-        for (int i = 10; i < 16; i++) m[i] = i-10 + 'a';
-
-        string ret;
-        if (num == 0) return "0";
-        long long temp = num;
-        if (num < 0) {
-            temp = ((long long)INT32_MAX << 1) + 2 + num;
+    bool isPowerOfFour(int n) {
+        if (n == 1) return true;
+        vector<int> temp;
+        for (int i = 2; i < 32; i+=2) {
+            temp.push_back(1 << i);
         }
 
-        while (temp) {
-            ret += m[temp%16];
-            temp /= 16;
+        for (auto t : temp) {
+            if (n == t) return true;
         }
 
-        reverse(ret.begin(), ret.end());
-        return ret;
+        return false;
     }
 };
 
@@ -38,9 +30,6 @@ int main(void) {
 #ifdef HOANG_DEBUG
     freopen("input.txt", "r", stdin);
 #endif // HOANG_DEBUG
-
-    Solution s;
-    cout << s.toHex(-1) << endl;
 
     return 0;
 }
