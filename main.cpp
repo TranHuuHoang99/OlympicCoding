@@ -7,15 +7,10 @@ using namespace std;
 
 class Solution {
 public:
-    bool isPowerOfFour(int n) {
-        if (n == 1) return true;
-        vector<int> temp;
-        for (int i = 2; i < 32; i+=2) {
-            temp.push_back(1 << i);
-        }
-
-        for (auto t : temp) {
-            if (n == t) return true;
+    bool isPowerOfTwo(int n) {
+        if (n < 0) return false;
+        for (int i = 0; i < 32; i++) {
+            if (n == (1 << i)) return true;
         }
 
         return false;
