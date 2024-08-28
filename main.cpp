@@ -10,29 +10,33 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e6+1;
-const ll MOD = 1e9+7;
-int memo[N];
-int n;
+void solve(void) {
+    int n, x;
+    cin >> n >> x;
+    vector<int> c(n+1);
+    for (int i = 1; i <= n; i++) cin >> c[i];
+    vector<vector<int>> dp(2, vector<int>(x+1, INT32_MAX));
 
-ll recur(int next) {
-    if (next == 0) return 1;
-    if (next < 0) return 0;
-    if (memo[next] != -1) return memo[next];
+    for (int i = 0; i <= 1; i++) dp[i][0] = 0;
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= x; j++) {
+            dp[1][j] = min(dp[1][j], dp[0][j]);
+            if (j - c[i] >= 0 && dp[1][j-c[i]] != INT32_MAX) {
+                dp[1][j] = min(dp[1][j], dp[1][j-c[i]]+1);
+            }
+        }
 
-    ll temp = 0;
-    for (int i = 1; i <= 6; i++) {
-        temp += recur(next-i);
-        temp %= MOD;
+        swap(dp[1], dp[0]);
+        fill(dp[1].begin(), dp[1].end(), INT32_MAX);
+        dp[1][0] = 0;
     }
 
-    return memo[next] = temp;
-}
-
-void solve(void) {
-    cin >> n;
-    memset(memo, -1, sizeof(memo));
-    cout << recur(n) << endl;
+    if (dp[0][x] == INT32_MAX) {
+        cout << -1 << endl;
+    } else {
+        cout << dp[0][x] << endl;
+    }
 }
   
 int32_t main(void) {
