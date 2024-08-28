@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#define int long long
+#define ll long long
 
 #ifdef HOANG_DEBUG
 #include <time.h>
@@ -10,8 +10,29 @@ double time1, timedif;
 
 using namespace std;
 
+const ll N = 1e6+1;
+const ll MOD = 1e9+7;
+int memo[N];
+int n;
+
+ll recur(int next) {
+    if (next == 0) return 1;
+    if (next < 0) return 0;
+    if (memo[next] != -1) return memo[next];
+
+    ll temp = 0;
+    for (int i = 1; i <= 6; i++) {
+        temp += recur(next-i);
+        temp %= MOD;
+    }
+
+    return memo[next] = temp;
+}
+
 void solve(void) {
-    
+    cin >> n;
+    memset(memo, -1, sizeof(memo));
+    cout << recur(n) << endl;
 }
   
 int32_t main(void) {
