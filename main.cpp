@@ -10,23 +10,29 @@ double time1, timedif;
 
 using namespace std;
 
+const ll N = 1e6+1;
+
 void solve(void) {
     int n;
     cin >> n;
-    int ret = 0;
-    while (n > 0) {
-        int temp = n;
-        int max_val = INT32_MIN;
+    vector<int> dp(n+1, INT32_MAX);
+    dp[0] = 0;
+
+    for (int i = 1; i <= n; i++) {
+        int temp = i;
+        int min_val = INT32_MAX;
+
         while (temp > 0) {
-            max_val = max(max_val, temp % 10);
+            if (i - temp%10 >= 0) {
+                min_val = min(min_val, dp[i-temp%10]);
+            }
             temp /= 10;
         }
 
-        n -= max_val;
-        ret++;
+        dp[i] = min_val+1;
     }
 
-    cout << ret << endl;
+    cout << dp[n] << endl;
 }
   
 int32_t main(void) {
