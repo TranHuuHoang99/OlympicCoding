@@ -10,32 +10,23 @@ double time1, timedif;
 
 using namespace std;
 
-const ll MOD = 1e9 + 7;
-const ll N = 1e6+1;
-int n, x;
-int c[101];
-vector<vector<int>> dp(2, vector<int>(N, 0));
-
 void solve(void) {
-    cin >> n >> x;
-    for (int i = 0; i < n; i++) cin >> c[i];
-    for (int i = 0; i <= 1; i++) dp[i][0] = 1;
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 1; j <= x; j++) {
-            dp[1][j] = dp[0][j];
-            if (j - c[i] >= 0) {
-                dp[1][j] += dp[1][j-c[i]];
-            }
-            dp[1][j] %= MOD;
+    int n;
+    cin >> n;
+    int ret = 0;
+    while (n > 0) {
+        int temp = n;
+        int max_val = INT32_MIN;
+        while (temp > 0) {
+            max_val = max(max_val, temp % 10);
+            temp /= 10;
         }
 
-        swap(dp[0], dp[1]);
-        fill(dp[1].begin(), dp[1].end(), 0);
-        dp[1][0] = 1;
+        n -= max_val;
+        ret++;
     }
 
-    cout << dp[0][x] << endl;
+    cout << ret << endl;
 }
   
 int32_t main(void) {
