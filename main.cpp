@@ -10,29 +10,36 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e6+1;
+const ll MOD = 1e9+7;
 
 void solve(void) {
     int n;
     cin >> n;
-    vector<int> dp(n+1, INT32_MAX);
-    dp[0] = 0;
+    vector<string> grid(n);
+    vector<vector<ll>> dp(n, vector<ll>(n, 0));
+    for (int i = 0; i < n; i++) cin >> grid[i];
 
-    for (int i = 1; i <= n; i++) {
-        int temp = i;
-        int min_val = INT32_MAX;
+    if (grid[n-1][n-1] == '*' || grid[0][0] == '*') {
+        cout << 0 << endl;
+        return;
+    } 
 
-        while (temp > 0) {
-            if (i - temp%10 >= 0) {
-                min_val = min(min_val, dp[i-temp%10]);
+    dp[0][0] = 1;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i-1 >= 0 && grid[i-1][j] != '*') {
+                dp[i][j] += dp[i-1][j];
+                dp[i][j] %= MOD;
             }
-            temp /= 10;
-        }
 
-        dp[i] = min_val+1;
+            if (j-1 >= 0 && grid[i][j-1] != '*') {
+                dp[i][j] += dp[i][j-1];
+                dp[i][j] %= MOD;
+            }
+        }
     }
 
-    cout << dp[n] << endl;
+    cout << dp[n-1][n-1] << endl;
 }
   
 int32_t main(void) {
