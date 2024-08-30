@@ -10,36 +10,28 @@ double time1, timedif;
 
 using namespace std;
 
-const ll MOD = 1e9+7;
+const ll N = 1e3+1;
+const ll M = 1e5+1;
+int n, x;
+int h[N], s[N];
+int dp[N][M];
 
 void solve(void) {
-    int n;
-    cin >> n;
-    vector<string> grid(n);
-    vector<vector<ll>> dp(n, vector<ll>(n, 0));
-    for (int i = 0; i < n; i++) cin >> grid[i];
+    cin >> n >> x;
+    for (int i = 1; i <= n; i++) cin >> h[i];
+    for (int i = 1; i <= n; i++) cin >> s[i];
 
-    if (grid[n-1][n-1] == '*' || grid[0][0] == '*') {
-        cout << 0 << endl;
-        return;
-    } 
-
-    dp[0][0] = 1;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (i-1 >= 0 && grid[i-1][j] != '*') {
-                dp[i][j] += dp[i-1][j];
-                dp[i][j] %= MOD;
-            }
-
-            if (j-1 >= 0 && grid[i][j-1] != '*') {
-                dp[i][j] += dp[i][j-1];
-                dp[i][j] %= MOD;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= x; j++) {
+            if (j >= h[i]) {
+                dp[i][j] = max(dp[i-1][j], s[i] + dp[i-1][j-h[i]]);
+            } else {
+                dp[i][j] = dp[i-1][j];
             }
         }
     }
 
-    cout << dp[n-1][n-1] << endl;
+    cout << dp[n][x] << endl;
 }
   
 int32_t main(void) {
