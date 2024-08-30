@@ -10,39 +10,38 @@ double time1, timedif;
 
 using namespace std;
 
+const ll N = 1e6+10;
+const ll M = 8;
 const ll MOD = 1e9+7;
-int n, m;
+ll dp[N][M];
 
-void solve(void) {
-    cin >> n >> m;
-    vector<ll> x(n);
-    vector<vector<ll>> dp(n, vector<ll>(m+2, 0));
-
-    for (int i = 0; i < n; i++) cin >> x[i];
-
-    for (int i = 0; i < n; i++) {
-        if (i == 0) {
-            if (x[i] == 0) {
-                for (int j = 1; j <= m; j++) dp[i][j] = 1;
+void gen(void) {
+    for (int i = 0; i < 8; i++) dp[0][i] = 1;
+    for (int i = 1; i < N; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (j == 0 || j == 2 || j == 3 || j == 5 || j == 7) {
+                dp[i][j] = (
+                    dp[i-1][0] +
+                    dp[i-1][2] +
+                    dp[i-1][3] +
+                    dp[i-1][5] +
+                    dp[i-1][6]
+                ) % MOD;
             } else {
-                dp[i][x[i]] = 1;
-            }
-        } else {
-            if (x[i] == 0) {
-                for (int j = 1; j <= m; j++) {
-                    dp[i][j] = (dp[i-1][j-1] + dp[i-1][j] + dp[i-1][j+1]) % MOD;
-                }
-            } else {
-                dp[i][x[i]] = (dp[i-1][x[i]-1] + dp[i-1][x[i]] + dp[i-1][x[i]+1]) % MOD;
+                dp[i][j] = (
+                    dp[i-1][1] +
+                    dp[i-1][4] +
+                    dp[i-1][7]
+                ) % MOD;
             }
         }
     }
+}
 
-    ll ret = 0;
-    for (int i = 1; i <= m; i++) {
-        ret = (ret + dp[n-1][i]) % MOD;
-    }
-    cout << ret << endl; 
+void solve(void) {
+    int n;
+    cin >> n;
+    cout << (dp[n-1][1] + dp[n-1][7]) % MOD << endl;
 }
   
 int32_t main(void) {
@@ -57,7 +56,12 @@ int32_t main(void) {
 #endif //HOANG_DEBUG
 
     //write your code here
-    solve();
+    int t = 0;
+    cin >> t;
+    gen();
+    while (t--) {
+        solve();
+    }
 
 #ifdef HOANG_DEBUG
     timedif = ( ((double) clock()) / CLOCKS_PER_SEC) - time1;
