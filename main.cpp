@@ -10,28 +10,39 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e3+1;
-const ll M = 1e5+1;
-int n, x;
-int h[N], s[N];
-int dp[N][M];
+const ll MOD = 1e9+7;
+int n, m;
 
 void solve(void) {
-    cin >> n >> x;
-    for (int i = 1; i <= n; i++) cin >> h[i];
-    for (int i = 1; i <= n; i++) cin >> s[i];
+    cin >> n >> m;
+    vector<ll> x(n);
+    vector<vector<ll>> dp(n, vector<ll>(m+2, 0));
 
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= x; j++) {
-            if (j >= h[i]) {
-                dp[i][j] = max(dp[i-1][j], s[i] + dp[i-1][j-h[i]]);
+    for (int i = 0; i < n; i++) cin >> x[i];
+
+    for (int i = 0; i < n; i++) {
+        if (i == 0) {
+            if (x[i] == 0) {
+                for (int j = 1; j <= m; j++) dp[i][j] = 1;
             } else {
-                dp[i][j] = dp[i-1][j];
+                dp[i][x[i]] = 1;
+            }
+        } else {
+            if (x[i] == 0) {
+                for (int j = 1; j <= m; j++) {
+                    dp[i][j] = (dp[i-1][j-1] + dp[i-1][j] + dp[i-1][j+1]) % MOD;
+                }
+            } else {
+                dp[i][x[i]] = (dp[i-1][x[i]-1] + dp[i-1][x[i]] + dp[i-1][x[i]+1]) % MOD;
             }
         }
     }
 
-    cout << dp[n][x] << endl;
+    ll ret = 0;
+    for (int i = 1; i <= m; i++) {
+        ret = (ret + dp[n-1][i]) % MOD;
+    }
+    cout << ret << endl; 
 }
   
 int32_t main(void) {
