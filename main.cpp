@@ -10,32 +10,30 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e3*5 + 1;
-int dp[N][N];
-char f_in[N], s_in[N];
+const ll N = 1e2*5 + 1;
+vector<vector<ll>> dp(N, vector<ll>(N, -1));
+int a, b;
 
-void solve(void) {
-    string str1, str2;
-    cin >> str1 >> str2;
-    copy(str1.begin(), str1.end(), f_in+1);
-    copy(str2.begin(), str2.end(), s_in+1);
+ll dfs(int n, int m) {
+    if (n == m) return 0;
+    if (dp[n][m] != -1) return dp[n][m];
 
-    for (int i = 1; i <= str2.size(); i++) dp[0][i] = i;
-    for (int i = 1; i <= str1.size(); i++) dp[i][0] = i;
-
-    for (int i = 1; i <= str1.size(); i++) {
-        for (int j = 1; j <= str2.size(); j++) {
-            if (f_in[i] == s_in[j]) {
-                dp[i][j] = dp[i-1][j-1];
-            } else {
-                int g_min = min(dp[i-1][j], dp[i-1][j-1]);
-                g_min = min(g_min, dp[i][j-1]);
-                dp[i][j] = g_min + 1;
-            }
-        }
+    ll temp = LLONG_MAX;
+    for (int i = 1; i <= n-1; i++) {
+        temp = min(temp, dfs(n-i, m) + 1 + dfs(i, m));
     }
 
-    cout << dp[str1.size()][str2.size()] << endl;
+    for (int i = 1; i <= m-1; i++) {
+        temp = min(temp, dfs(n, m-i) + 1 + dfs(n, i));
+    }
+
+    return dp[n][m] = temp;
+}
+
+void solve(void) {
+    cin >> a >> b;
+
+    cout << dfs(a,b) << endl;
 }
   
 int main(void) {
