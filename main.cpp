@@ -10,41 +10,35 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e6+10;
-const ll M = 8;
-const ll MOD = 1e9+7;
-ll dp[N][M];
+const ll N = 1e3*5 + 1;
+int dp[N][N];
+char f_in[N], s_in[N];
 
-void gen(void) {
-    for (int i = 0; i < 8; i++) dp[0][i] = 1;
-    for (int i = 1; i < N; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (j == 0 || j == 2 || j == 3 || j == 5 || j == 7) {
-                dp[i][j] = (
-                    dp[i-1][0] +
-                    dp[i-1][2] +
-                    dp[i-1][3] +
-                    dp[i-1][5] +
-                    dp[i-1][6]
-                ) % MOD;
+void solve(void) {
+    string str1, str2;
+    cin >> str1 >> str2;
+    copy(str1.begin(), str1.end(), f_in+1);
+    copy(str2.begin(), str2.end(), s_in+1);
+
+    for (int i = 1; i <= str2.size(); i++) dp[0][i] = i;
+    for (int i = 1; i <= str1.size(); i++) dp[i][0] = i;
+
+    for (int i = 1; i <= str1.size(); i++) {
+        for (int j = 1; j <= str2.size(); j++) {
+            if (f_in[i] == s_in[j]) {
+                dp[i][j] = dp[i-1][j-1];
             } else {
-                dp[i][j] = (
-                    dp[i-1][1] +
-                    dp[i-1][4] +
-                    dp[i-1][7]
-                ) % MOD;
+                int g_min = min(dp[i-1][j], dp[i-1][j-1]);
+                g_min = min(g_min, dp[i][j-1]);
+                dp[i][j] = g_min + 1;
             }
         }
     }
-}
 
-void solve(void) {
-    int n;
-    cin >> n;
-    cout << (dp[n-1][1] + dp[n-1][7]) % MOD << endl;
+    cout << dp[str1.size()][str2.size()] << endl;
 }
   
-int32_t main(void) {
+int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
@@ -56,12 +50,7 @@ int32_t main(void) {
 #endif //HOANG_DEBUG
 
     //write your code here
-    int t = 0;
-    cin >> t;
-    gen();
-    while (t--) {
-        solve();
-    }
+    solve();
 
 #ifdef HOANG_DEBUG
     timedif = ( ((double) clock()) / CLOCKS_PER_SEC) - time1;
