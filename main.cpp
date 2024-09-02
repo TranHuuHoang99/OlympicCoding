@@ -10,33 +10,30 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e2*5 + 1;
-int a, b;
-ll dp[N][N];
+const ll N = 1e5+1;
+ll x[101];
+int n;
+bool dp[101][N];
 
 void solve(void) {
-    cin >> a >> b;
-    for (int i = 1; i <= a; i++) {
-        for (int j = 1; j <= b; j++) {
-            if (i == j) {
-                dp[i][j] = 0;
-                continue;
-            }
-
-            ll temp = LLONG_MAX;
-            for (int k = 1; k < i; k++) {
-                temp = min(temp, dp[k][j] + dp[i-k][j]);
-            }
-
-            for (int l = 1; l < j; l++) {
-                temp = min(temp, dp[i][l] + dp[i][j-l]);
-            }
-
-            dp[i][j] = temp + 1;
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> x[i];
+    for (int i = 0; i <= n; i++) dp[i][0] = 1;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= 1e5; j++) {
+            dp[i][j] |= dp[i-1][j];
+            if (j - x[i] >= 0) dp[i][j] |= dp[i-1][j-x[i]];
         }
     }
 
-    cout << dp[a][b] << endl;
+    set<int> ret;
+    for (int i = 1; i <= 1e5; i++) {
+        if (dp[n][i]) ret.insert(i);
+    }
+
+    cout << ret.size() << endl;
+    for (auto r : ret) cout << r << ' ';
+    cout << '\n';
 }
   
 int main(void) {
