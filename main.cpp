@@ -11,29 +11,32 @@ double time1, timedif;
 using namespace std;
 
 const ll N = 1e2*5 + 1;
-vector<vector<ll>> dp(N, vector<ll>(N, -1));
 int a, b;
-
-ll dfs(int n, int m) {
-    if (n == m) return 0;
-    if (dp[n][m] != -1) return dp[n][m];
-
-    ll temp = LLONG_MAX;
-    for (int i = 1; i <= n-1; i++) {
-        temp = min(temp, dfs(n-i, m) + 1 + dfs(i, m));
-    }
-
-    for (int i = 1; i <= m-1; i++) {
-        temp = min(temp, dfs(n, m-i) + 1 + dfs(n, i));
-    }
-
-    return dp[n][m] = temp;
-}
+ll dp[N][N];
 
 void solve(void) {
     cin >> a >> b;
+    for (int i = 1; i <= a; i++) {
+        for (int j = 1; j <= b; j++) {
+            if (i == j) {
+                dp[i][j] = 0;
+                continue;
+            }
 
-    cout << dfs(a,b) << endl;
+            ll temp = LLONG_MAX;
+            for (int k = 1; k < i; k++) {
+                temp = min(temp, dp[k][j] + dp[i-k][j]);
+            }
+
+            for (int l = 1; l < j; l++) {
+                temp = min(temp, dp[i][l] + dp[i][j-l]);
+            }
+
+            dp[i][j] = temp + 1;
+        }
+    }
+
+    cout << dp[a][b] << endl;
 }
   
 int main(void) {
