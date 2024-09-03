@@ -13,24 +13,25 @@ using namespace std;
 const ll N = 1e3*5 + 1;
 ll x[N];
 int n;
-ll dp[N][N];
+vector<vector<ll>> dp(N, vector<ll>(N, -1));
+
+ll dfs(int i, int j) {
+    if (i == j || dp[i][j] != -1) return dp[i][j];
+    
+    ll temp = max(x[i] - dfs(i+1, j), x[j] - dfs(i, j-1));
+    return dp[i][j] = temp;
+}
 
 void solve(void) {
     cin >> n;
     ll sum = 0;
     for (int i = 0; i < n; i++) {
         cin >> x[i];
-        sum += x[i];
         dp[i][i] = x[i];
+        sum += x[i];
     }
-
-    for (int i = 0; i < n; i++) {
-        for (int j = i-1; j >= 0; j--) {
-            dp[j][i] = max(x[j] - dp[j+1][i], x[i] - dp[j][i-1]);
-        }
-    }
-
-    cout << (dp[0][n-1] + sum) / 2 << endl;
+   
+    cout << (dfs(0, n-1) + sum) / 2 << endl;
 }
   
 int main(void) {
