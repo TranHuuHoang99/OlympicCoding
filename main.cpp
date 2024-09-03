@@ -10,30 +10,27 @@ double time1, timedif;
 
 using namespace std;
 
-const ll N = 1e5+1;
-ll x[101];
+const ll N = 1e3*5 + 1;
+ll x[N];
 int n;
-bool dp[101][N];
+ll dp[N][N];
 
 void solve(void) {
     cin >> n;
-    for (int i = 1; i <= n; i++) cin >> x[i];
-    for (int i = 0; i <= n; i++) dp[i][0] = 1;
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= 1e5; j++) {
-            dp[i][j] |= dp[i-1][j];
-            if (j - x[i] >= 0) dp[i][j] |= dp[i-1][j-x[i]];
+    ll sum = 0;
+    for (int i = 0; i < n; i++) {
+        cin >> x[i];
+        sum += x[i];
+        dp[i][i] = x[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = i-1; j >= 0; j--) {
+            dp[j][i] = max(x[j] - dp[j+1][i], x[i] - dp[j][i-1]);
         }
     }
 
-    set<int> ret;
-    for (int i = 1; i <= 1e5; i++) {
-        if (dp[n][i]) ret.insert(i);
-    }
-
-    cout << ret.size() << endl;
-    for (auto r : ret) cout << r << ' ';
-    cout << '\n';
+    cout << (dp[0][n-1] + sum) / 2 << endl;
 }
   
 int main(void) {
