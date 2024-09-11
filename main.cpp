@@ -3,41 +3,44 @@
 
 using namespace std;
 
-const ll MOD = 1e9 + 7;
-int n, m;
-ll dp[1001][1 << 10];
+ll dp[18+1];
+ll a, b;
 
-void dfs(int col, int cur_mask, int idx, int next_mask) {
-	if (idx == n) {
-		dp[col+1][next_mask] = (dp[col+1][next_mask] + dp[col][cur_mask]) % MOD;
-		return;	
+ll count_func(ll inp) {
+	if (inp < 1) {
+		return inp == 0 ? 1 : 0;
 	}
 
-	if (cur_mask & (1 << idx)) {
-		dfs(col, cur_mask, idx+1, next_mask);
-	} else {
-		// put 1x2 tile to current position which is (idx)
-		dfs(col, cur_mask, idx+1, next_mask | (1 << idx));
-		// put 2x1 tile to current position which is (idx)
-		if (idx + 1 < n && (!(cur_mask & (1 << (idx+1))))) {
-			dfs(col, cur_mask, idx+2, next_mask);
-		}
+	ll ret = 0;
+	string str = to_string(inp);
+	ll prv = 0;
+	
+	for (int i = 0; i < str.size(); i++) ret += dp[i];
+
+	for (int i = 0; i < str.size(); i++) {
+		ll digit = (ll)(str[i]-'0');
+		int idx = str.size() - i - 1;
+		ll numb = digit > prv ? digit-1 : digit;
+		ret += digit == 0 ? 0 : numb * dp[idx];
+
+		if (digit == prv) return ret;
+
+		prv = digit;
 	}
+
+	return ret+1;	
 }
 
 void solve(void) {
-	cin >> n >> m;
-	dp[0][0] = 1;
-
-	for (int col = 0; col < m; col++) {
-		for (int mask = 0; mask < (1 << n); mask++) {
-			if (dp[col][mask] > 0) {
-				dfs(col, mask, 0, 0);
-			}
-		}
+	cin >> a >> b;
+	dp[0] = 1;
+	ll temp = 1;
+	for (int i = 1; i <= 18; i++) {
+		temp *= 9;
+		dp[i] = temp;
 	}
 
-	cout << dp[m][0] % MOD << endl;
+	cout << count_func(b) - count_func(a-1) << endl;
 }
   
 int main(void) {
