@@ -3,44 +3,50 @@
 
 using namespace std;
 
-ll dp[18+1];
-ll a, b;
-
-ll count_func(ll inp) {
-	if (inp < 1) {
-		return inp == 0 ? 1 : 0;
-	}
-
-	ll ret = 0;
-	string str = to_string(inp);
-	ll prv = 0;
-	
-	for (int i = 0; i < str.size(); i++) ret += dp[i];
-
-	for (int i = 0; i < str.size(); i++) {
-		ll digit = (ll)(str[i]-'0');
-		int idx = str.size() - i - 1;
-		ll numb = digit > prv ? digit-1 : digit;
-		ret += digit == 0 ? 0 : numb * dp[idx];
-
-		if (digit == prv) return ret;
-
-		prv = digit;
-	}
-
-	return ret+1;	
-}
+const ll N = 1e3+1;
+int n, m;
+char matrix[N][N];
+bool v[N][N];
+int moves[5] = {1,0,-1,0,1};
 
 void solve(void) {
-	cin >> a >> b;
-	dp[0] = 1;
-	ll temp = 1;
-	for (int i = 1; i <= 18; i++) {
-		temp *= 9;
-		dp[i] = temp;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cin >> matrix[i][j];
+		}
 	}
 
-	cout << count_func(b) - count_func(a-1) << endl;
+	int ret = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (matrix[i][j] == '.' && !v[i][j]) {
+				v[i][j] = true;
+				queue<pair<int,int>> q;
+				q.push({i,j});
+				
+				while (!q.empty()) {
+					auto [x,y] = q.front();
+					q.pop();
+
+					for (int i = 0; i < 4; i++) {
+						int ver = x + moves[i];
+						int hor = y + moves[i+1];
+
+						if (ver < 0 || ver >= n || hor < 0 || hor >= m) continue;
+						if (!v[ver][hor] && matrix[ver][hor] == '.') {
+							v[ver][hor] = true;
+							q.push({ver, hor});
+						}
+					}
+				}
+
+				ret++;
+			}
+		}
+	}
+	
+	cout << ret << endl;	
 }
   
 int main(void) {
