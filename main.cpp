@@ -3,95 +3,68 @@
 
 using namespace std;
 
-const ll N = 1e3+1;
-char matrix[N][N];
-int val[N][N];
-char path[N][N];
-bool v[N][N];
+const ll N = 1e5 + 1;
+vector<pair<int,int>> graph(N, {0, INT32_MAX});
+bool v[N];
 int n, m;
-
-pair<int,int> moves[4] = {
-	{0, -1}, {0, 1}, {-1, 0}, {1, 0}
-};
-
-char str_m[4] = {'L', 'R', 'U', 'D'};
-
-map<char,pair<int,int>> track = {
-	{'L', {0, 1}},
-	{'R', {0, -1}},
-	{'U', {1, 0}},
-	{'D', {-1, 0}}	
-};
+map<int, set<int>> mp;
 
 void solve(void) {
 	cin >> n >> m;
-	pair<int,int> start;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cin >> matrix[i][j];
-			if (matrix[i][j] == 'A') start = {i,j};
-		}
+	for (int i = 0; i < m; i++) {
+		int a, b;
+		cin >> a >> b;
+		mp[a].insert(b);
+		mp[b].insert(a);
 	}
 
-	queue<pair<int,int>> q;
-   	q.push(start);
-	v[start.first][start.second] = true;
-	path[start.first][start.second] = 'X';
-	bool valid = false;
-	pair<int,int> end;
-	while (!q.empty()) {
-		auto [x,y] = q.front();
-		q.pop();
+	queue<int> q;
+	graph[1] = {1,1};
+	for (int i = 1; i <= n; i++) {
+		if (v[i] || graph[i].second == INT32_MAX) continue;
+		q.push(i);
+		v[i] = true;
 
-		if (matrix[x][y] == 'B') {
-			end = {x,y};
-			valid = true;
-			break;
-		}
-
-		for (int i = 0; i < 4; i++) {
-			int ver = x + moves[i].first;
-			int hor = y + moves[i].second;
+		while (!q.empty()) {
+			int temp = q.front();
+			q.pop();
 			
-			if (ver < 0 || ver >= n || hor < 0 || hor >= m) continue;
-			if (!v[ver][hor] && matrix[ver][hor] != '#') {
-				v[ver][hor] = true;
-				val[ver][hor] = val[x][y] + 1;
-				path[ver][hor] = str_m[i];
-				q.push({ver, hor});	
+			for (auto s : mp[temp]) {
+				if (graph[s].second > graph[temp].second + 1) {
+					graph[s].second = graph[temp].second + 1;
+					graph[s].first = temp;
+				}
+
+				if (!v[s]) {
+					v[s] = true;
+					q.push(s);
+				}
 			}
 		}
-	}	
-	
-	if (valid) {
-		queue<pair<int,int>> n_q;
-		stack<char> str_path;
-		n_q.push(end);
-
-		cout << "YES" << endl;
-		cout << val[end.first][end.second] << endl;
-		while (!n_q.empty()) {
-			auto [x,y] = n_q.front();
-			n_q.pop();
-
-			if (path[x][y] != 'X') {
-				str_path.push(path[x][y]);
-				n_q.push({x + track[path[x][y]].first, y + track[path[x][y]].second});
-			}
-		}
-
-		while (!str_path.empty()) {
-			cout << str_path.top();
-			str_path.pop();
-		}
-
-		cout << '\n';
-
-	} else {
-		cout << "NO" << endl;
 	}
 
-	return;
+	if (graph[n].second == INT32_MAX) {
+		cout << "IMPOSSIBLE" << endl;
+	} else {
+		stack<int> ret;
+		queue<int> n_q;
+		n_q.push(n);
+		
+		while (!n_q.empty()) {
+			int temp = n_q.front();
+			n_q.pop();
+			ret.push(temp);
+			if (temp == 1) break;
+			n_q.push(graph[temp].first);	
+		}
+
+		cout << graph[n].second << endl;
+		while (!ret.empty()) {
+			cout << ret.top() << ' ';
+			ret.pop();
+		}
+		cout << '\n';
+	}
 }
   
 int main(void) {
