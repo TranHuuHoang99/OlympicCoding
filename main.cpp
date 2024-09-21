@@ -3,10 +3,32 @@
 
 using namespace std;
 
-const ll N = 1e5+1;
-int ret[N];
+const ll N = 1e5 + 1;
+const ll M = 1e5 * 2 + 1;
 int n, m;
+bool v[N];
 map<int,set<int>> mp;
+int track[N];
+int s_track = -1;
+int e_track = -1;
+
+bool dfs(int i, int p) {
+	v[i] = true;
+	track[i] = p;
+
+	for (int next : mp[i]) {
+		if (next == p) continue;
+		if (!v[next]) {
+			if (dfs(next, i)) return true;
+		} else {	
+			s_track = next;
+			e_track = i;
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void solve(void) {
 	cin >> n >> m;
@@ -16,33 +38,38 @@ void solve(void) {
 		mp[a].insert(b);
 		mp[b].insert(a);
 	}
-
-	queue<int> q;	
+	
+	bool valid = false;
 	for (int i = 1; i <= n; i++) {
-		if (ret[i] != 0) continue;
-		ret[i] = 1;
-		q.push(i);
+		if (v[i]) continue;
+		valid = dfs(i, -1);
+		if (valid) break;
+	}
 
-		while (!q.empty()) {
-			int temp = q.front();
-			q.pop();
+	if (valid) {
+		stack<int> st;
+		queue<int> q;
+		int temp = e_track;
 
-			for (auto s : mp[temp]) {
-				if (ret[s] != 0 && ret[s] == ret[temp]) {
-					cout << "IMPOSSIBLE" << endl;
-					return;
-				}
-
-				if (ret[s] == 0) {
-					ret[s] = ret[temp] == 1 ? 2 : 1;
-					q.push(s);
-				}
-			}
+		st.push(e_track);
+		while (temp != s_track) {
+			st.push(track[temp]);
+			temp = track[temp];
 		}
-	}	
+		st.push(e_track);
 
-	for (int i = 1; i <= n; i++) cout << ret[i] << ' ';
-   	cout << '\n';	
+		cout << st.size() << endl;
+
+		while (!st.empty()) {
+			cout << st.top() << ' ';
+			st.pop();
+		}
+		cout << '\n';
+
+		return;
+	}
+
+	cout << "IMPOSSIBLE" << endl;
 }
   
 int main(void) {
