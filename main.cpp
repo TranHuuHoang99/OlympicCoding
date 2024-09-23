@@ -3,73 +3,127 @@
 
 using namespace std;
 
-const ll N = 1e5 + 1;
-const ll M = 1e5 * 2 + 1;
+const ll N = 1e3+1;
+char matrix[N][N];
+char track[N][N];
+int you[N][N];
+bool v[N][N];
+vector<vector<int>> monster;
 int n, m;
-bool v[N];
-map<int,set<int>> mp;
-int track[N];
-int s_track = -1;
-int e_track = -1;
+pair<int,int> A;
 
-bool dfs(int i, int p) {
-	v[i] = true;
-	track[i] = p;
+bool isEdge(int x, int y) {
+	return x == n-1 || x == 0 || y == m-1 || y == 0;
+}
 
-	for (int next : mp[i]) {
-		if (next == p) continue;
-		if (!v[next]) {
-			if (dfs(next, i)) return true;
-		} else {	
-			s_track = next;
-			e_track = i;
-			return true;
+bool isValid(int x, int y) {
+	return x >= 0 && x < n && y >= 0 && y < m;
+}
+
+vector<pair<int,int>> moves = {
+	{0,-1}, {0,1}, {-1,0}, {1,0}
+};
+char moves_str[4] = {'L', 'R', 'U', 'D'};
+map<char,pair<int,int>> mp = {
+	{'L', {0,1}},
+	{'R', {0,-1}},
+	{'U', {1,0}},
+	{'D', {-1,0}}
+};
+
+pair<int,int> ret(void) {
+	queue<pair<int,int>> q;
+	q.push(A);
+	v[A.first][A.second] = true;
+
+	while (!q.empty()) {
+		auto [x,y] = q.front();
+		q.pop();
+		
+		if (isEdge(x,y)) return {x,y};
+
+		for (int i = 0; i < 4; i++) {
+			int ver = x + moves[i].first;
+			int hor = y + moves[i].second;
+
+			if (isValid(ver,hor) && matrix[ver][hor] != '#') {
+				int temp = you[x][y] + 1;
+				if (temp < monster[ver][hor] && !v[ver][hor]) {
+					track[ver][hor] = moves_str[i];
+					you[ver][hor] = temp;
+					v[ver][hor] = true;
+					q.push({ver,hor});
+				}
+			}
 		}
-	}
+	}	
 
-	return false;
+	return {-1,-1};
 }
 
 void solve(void) {
+	queue<pair<int,int>> monster_q;
 	cin >> n >> m;
-	for (int i = 0; i < m; i++) {
-		int a, b;
-		cin >> a >> b;
-		mp[a].insert(b);
-		mp[b].insert(a);
-	}
 	
-	bool valid = false;
-	for (int i = 1; i <= n; i++) {
-		if (v[i]) continue;
-		valid = dfs(i, -1);
-		if (valid) break;
+	vector<vector<bool>> monster_v(n, vector<bool>(m, false));
+	monster.assign(n, vector<int>(m, INT32_MAX));
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cin >> matrix[i][j];
+			if (matrix[i][j] == 'A') A = {i,j};
+			if (matrix[i][j] == 'M') {
+				monster_q.push({i,j});
+				monster[i][j] = 0;
+				monster_v[i][j] = true;
+			}
+		}
 	}
 
-	if (valid) {
-		stack<int> st;
-		queue<int> q;
-		int temp = e_track;
+	// monster movements;
+	while (!monster_q.empty()) {
+		auto [x,y] = monster_q.front();
+		monster_q.pop();
 
-		st.push(e_track);
-		while (temp != s_track) {
-			st.push(track[temp]);
-			temp = track[temp];
+		for (int i = 0; i < 4; i++) {
+			int ver = x + moves[i].first;
+			int hor = y + moves[i].second;
+				
+			if (isValid(ver, hor) && matrix[ver][hor] != '#') {
+				monster[ver][hor] = min(monster[ver][hor], monster[x][y] + 1);
+				if (!monster_v[ver][hor]) {
+					monster_v[ver][hor] = true;
+					monster_q.push({ver, hor});
+				}
+			}
 		}
-		st.push(e_track);
+	}
 
-		cout << st.size() << endl;
-
-		while (!st.empty()) {
-			cout << st.top() << ' ';
-			st.pop();
-		}
-		cout << '\n';
-
+	pair<int,int> temp = ret();
+	if (temp.first == -1) {
+		cout << "NO" << endl;
 		return;
 	}
 
-	cout << "IMPOSSIBLE" << endl;
+	cout << "YES" << endl;
+	
+	stack<char> st;
+	track[A.first][A.second] = 'X';
+	char temp_c = track[temp.first][temp.second];
+	while (temp_c != 'X') {
+		st.push(temp_c);
+		pair<int,int> next = mp[temp_c];
+		temp.first += next.first;
+		temp.second += next.second;
+		temp_c = track[temp.first][temp.second];
+	}
+	
+	cout << st.size() << endl;
+	while (!st.empty()) {
+		cout << st.top();
+		st.pop();
+	}
+	cout << '\n';
 }
   
 int main(void) {
