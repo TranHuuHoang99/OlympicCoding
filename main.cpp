@@ -1,62 +1,34 @@
 class Solution {
 public:
-    int maximalRectangle(vector<vector<char>>& matrix) {
-		int ret = 0;
-		vector<vector<int>> dp(2, vector<int>(matrix[0].size(), 0));
-
-		for (int i = 0; i < matrix.size(); i++) {
-			for (int j = 0; j < matrix[i].size(); j++) {
-				if (matrix[i][j] == '0') {
-					dp[1][j] = 0;
-				} else {
-					dp[1][j] = dp[0][j] + 1;
-				}
-			}
-
-			stack<int> hs;
-			stack<int> ps;
+    int calculate(string s) {
+ 		int ret = 0;
 		
-			for (int j = 0; j < dp[1].size(); j++) {
-				if (hs.empty() || hs.top() < dp[1][j]) {
-					hs.push(dp[1][j]);
-					ps.push(j);
-					continue;
-				}
-				
-				int temp_pos = -1;
-				while (!hs.empty() && hs.top() > dp[1][j]) {
-					int height = hs.top();
-					hs.pop();
-
-					int width = j - ps.top();
-					temp_pos = ps.top();
-					ps.pop();
-
-					ret = max(ret, height * width);
-				}
-
-				if (temp_pos != -1) {
-					hs.push(dp[1][j]);
-					ps.push(temp_pos);
-				}
+		stack<int> st;
+		int numb = 0;
+		int n_sign = 1;
+		for (char c : s) {
+			if (isdigit(c)) {
+				numb = numb * 10 + static_cast<int>(c-'0');
+			} else if (c == '+' || c == '-') {
+				ret += numb * n_sign;
+				n_sign = c == '+' ? 1 : -1;
+				numb = 0;
+			} else if (c == '(') {
+				st.push(ret);
+				st.push(n_sign);
+				ret = 0;
+				n_sign = 1;
+			} else if (c == ')') {
+				ret += numb * n_sign;
+				ret *= st.top();
+				st.pop();
+				ret += st.top();
+				st.pop();
+				numb = 0;
 			}
+		}		
 
-			cout << i << ' ' << hs.size() << ' ' << ps.size() << endl;	
-
-			const int len = dp[1].size();
-			while (!hs.empty()) {
-				int height = hs.top();
-				hs.pop();
-				int width = len - ps.top();
-				ps.pop();
-
-				ret = max(ret, height * width);
-			}
-
-			swap(dp[1], dp[0]);
-		}
-
-		return ret;
-	}
+		return ret + numb * n_sign;
+    }
 };
 
