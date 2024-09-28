@@ -2,43 +2,43 @@
 #define ll long long
 
 using namespace std;
-
-const ll N = 1e5+1;
-int n, m;
-vector<pair<ll,int>> arr[N];
+ 
+const ll N = 500 + 1;
+int n, m, q;
 
 void solve(void) {
-	cin >> n >> m;
+	cin >> n >> m >> q;
+	vector<vector<ll>> update(n+1, vector<ll>(n+1, LLONG_MAX));
 	for (int i = 0; i < m; i++) {
 		int a, b;
 		ll c;
 		cin >> a >> b >> c;
-		arr[a].push_back({c,b});
+		update[a][b] = min(update[a][b], c);
+		update[b][a] = min(update[b][a], c);
 	}
 
-	vector<ll> update(n+1, LLONG_MAX);
-	priority_queue<pair<ll,int>, vector<pair<ll,int>>, greater<pair<ll,int>>> pq;
-	update[1] = 0;
-	pq.push({0,1});
+	for (int i = 1; i <= n; i++) update[i][i] = 0;
 
-	while (!pq.empty()) {
-		auto [x,y] = pq.top();
-		pq.pop();
-
-		if (x > update[y]) continue;
-		
-		for (pair<ll,int> p : arr[y]) {
-			if (update[p.second] > update[y] + p.first) {
-				update[p.second] = update[y] + p.first;
-				pq.push({update[p.second], p.second});
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			for (int k = 1; k <= n; k++) {
+				if (update[j][i] == LLONG_MAX || update[i][k] == LLONG_MAX) continue;
+				update[j][k] = min(update[j][k], update[j][i] + update[i][k]);
 			}
 		}
 	}
-
-	for (int i = 1; i <= n; i++) cout << update[i] << ' ';
-	cout << '\n';
+	
+	while (q--) {
+		int a, b;
+		cin >> a >> b;
+		if (update[a][b] == LLONG_MAX) {
+			cout << -1 << endl;
+		} else {
+			cout << update[a][b] << endl;
+		}
+	}		
 }
-  
+
 int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
