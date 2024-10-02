@@ -2,76 +2,61 @@
 #define ll long long
 
 using namespace std;
- 
-const ll N = 2500;
-bool v_s[N];
-bool v_e[N];
-vector<int> btoe[N];
-vector<int> etob[N];
-int n, m;
 
-void bfs(vector<int> arr[], int a, bool v[]) {	
-	queue<int> q;
-	q.push(a);
-	v[a] = true;
+const ll N = 1e5+1;
+const ll M = N * 2;
+vector<pair<ll,int>> path1[N];
+vector<pair<ll,int>> path2[N];
+tuple<int,int,ll> tp[M];
+int n,m;
+
+void bfs(vector<ll>& dis, int start, vector<pair<ll, int>> path[]) {
+	priority_queue<pair<ll,int>, vector<pair<ll,int>>, greater<pair<ll,int>>> q;
+	dis[start] = 0;
+	q.push({0,start});
 	while (!q.empty()) {
-		int temp = q.front();
+		auto [x,y] = q.top();
 		q.pop();
-		for (int next : arr[temp]) {
-			if (!v[next]) {
-				q.push(next);
-				v[next] = true;
+		
+		if (x > dis[y]) continue;
+		for (pair<ll,int> p : path[y]) {
+			if (dis[p.second] > p.first + dis[y]) {
+				dis[p.second] = p.first + dis[y];
+				q.push({dis[p.second], p.second});	
 			}
 		}
 	}
 }
 
+
 void solve(void) {
 	cin >> n >> m;
-	vector<tuple<int,int,ll>> tp(m);
+	vector<ll> dis1(n, LLONG_MAX);
+	vector<ll> dis2(n, LLONG_MAX);	
+
 	for (int i = 0; i < m; i++) {
-		int a, b;
+		int a,b;
 		ll c;
 		cin >> a >> b >> c;
 		--a; --b;
-		tp[i] = {a,b,-c};
-		btoe[a].push_back(b);
-		etob[b].push_back(a);
+		path1[a].push_back({c,b});
+		path2[b].push_back({c,a});
+		tp[i] = {a,b,c};
 	}
+	
+	bfs(dis1, 0, path1);
+	bfs(dis2, n-1, path2);
 
-	bfs(btoe, 0, v_s);
-	bfs(etob, n-1, v_e);
-
-	vector<ll> update(n, LLONG_MAX);
-	update[0] = 0;
-	// bellman-ford
-	for (int i = 0; i < n-1; i++) {
-		for (int j = 0; j < m; j++) {
-			int a, b;
-			ll c;
-			tie(a,b,c) = tp[j];
-			if (update[a] == LLONG_MAX) continue;
-			update[b] = min(update[b], update[a] + c);
-		}
-	}
-
-	vector<ll> temp_u = update;
+	ll ret = LLONG_MAX;
 	for (int i = 0; i < m; i++) {
 		int a, b;
 		ll c;
 		tie(a, b, c) = tp[i];
-		if (update[a] == LLONG_MAX) continue;
-		update[b] = min(update[b], update[a] + c);
+		if (dis1[a] == LLONG_MAX || dis2[b] == LLONG_MAX) continue;
+		ret = min(ret, dis1[a] + dis2[b] + c/2);
 	}
 
-	for (int i = 0; i < n; i++) {
-		if (update[i] != temp_u[i] && v_s[i] && v_e[i]) {
-			cout << -1 << endl;
-			return;
-		}
-	}
-
-	cout << -update[n-1] << endl;
+	cout << ret << endl;
 }
 
 int main(void) {
