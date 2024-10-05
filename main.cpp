@@ -4,42 +4,60 @@
 using namespace std;
 
 void solve(void) {
-	string str;
-	int k;
-	cin >> str >> k;
-	
-	string ret;
-	string sub_str;
-	int seq = 1;
-	for (int i = 0; i < str.size(); i++) {
-		if (sub_str.size() < k) {
-			sub_str += str[i];
-		} else {
-			string temp;
-			for (int j = 0; j < sub_str.size(); j++) {
-				char c = sub_str[j] - 'a';
-				c += (26 + k * seq);
-				c %= 26;
-				temp += c + 'a';
-			}
-			ret += temp;
-			sub_str.clear();
-			sub_str += str[i];
-			seq *= -1;
-		}
+	int n;
+	cin >> n;
+	set<pair<int,int>> temp;
+	for (int i = 0; i < n; i++) {
+		int a, b;
+		cin >> a >> b;
+		temp.insert({a,b});
 	}
 
-	if (!sub_str.empty() && sub_str.size() < k) {
-		ret += sub_str;
+	vector<pair<int,int>> path;
+	vector<int> search;
+	vector<bool> v(n, false);
+
+	for (auto t : temp) {
+		path.push_back(t);
+		search.push_back(t.first);
+	}
+
+	pair<int,int> start;
+	int a, b;
+	cin >> a >> b;
+	if (a - b <= 0) {
+		cout << 0 << endl;
+		return;
 	} else {
-		string temp;
-		for (int i = 0; i < sub_str.size(); i++) {
-			char c = sub_str[i] - 'a';
-			c += 26 + k * seq;
-			c %= 26;
-			temp += c + 'a';
+		start = {a-b, 0};
+	}
+
+	int ret = 0;
+	while (start.first > 0) {
+		int pos = lower_bound(search.begin(), search.end(), start.first) - search.begin();
+		if (pos == search.size()) {
+			cout << -1 << endl;
+			return;
 		}
-		ret += temp;
+
+		int index = -1;
+		int max_val = INT32_MIN;
+		for (int i = pos; i < search.size(); i++) {
+			if (!v[i] && max_val < path[i].second) {
+				max_val = path[i].second;
+				index = i;
+			}	
+		}
+
+		if (index == -1) {
+			cout << -1 << endl;
+			return;
+		} else {
+			int get_val = start.first - path[index].second;
+			ret++;
+			v[index] = true;
+			start = {get_val, 0};
+		}	
 	}
 
 	cout << ret << endl;
