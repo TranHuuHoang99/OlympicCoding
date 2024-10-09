@@ -3,70 +3,51 @@
 
 using namespace std;
 
-const ll N = 5000+1;
-int n,m,a,b;
-ll c;
-tuple<int,int,ll> tp[N];
+const ll N = 1e5;
+int n, m, k;
+vector<pair<int,ll>> path[N];
 
 void solve(void) {
-	cin >> n >> m;
+	cin >> n >> m >> k;
 	for (int i = 0; i < m; i++) {
+		int a,b;
+		ll c;
 		cin >> a >> b >> c;
 		--a; --b;
-		tp[i] = {a,b,c};
+		path[a].push_back({b,c});
 	}
 
-	vector<ll> update(n, 1e18);
-	update[0] = 0;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			tie(a,b,c) = tp[j];
-			update[b] = min(update[b], update[a] + c);
+	vector<vector<ll>> update(n, vector<ll>(k, LLONG_MAX));
+	update[0][0] = 0;
+	priority_queue<pair<ll,int>, vector<pair<ll,int>>, greater<pair<ll,int>>> q;
+   	q.push({0,0});
+	while (!q.empty()) {
+		auto [val, cur] = q.top();
+		q.pop();
+
+		if (val > update[cur][k-1]) continue;
+		int idx = 0;
+		while (idx < k) {
+			if (update[cur][idx] >= val) {
+				update[cur][idx] = val;
+				break;
+			}
+			idx++;
 		}
-	}
 
-	bool isValid = false;
-	for (int i = 0; i < m; i++) {
-		tie(a,b,c) = tp[i];
-		if (update[b] > update[a] + c) {
-			isValid = true;
-			break;
-		}
-	}
-
-	if (!isValid) {
-		cout << "NO" << endl;
-		return;
-	}
-
-	cout << "YES" << endl;
-	int start = -1;
-	vector<int> change(n, -1);
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			tie(a,b,c) = tp[j];
-			if (update[b] > update[a] + c) {
-				update[b] = update[a] + c;
-				change[b] = a;
-				start = b;
+		for (auto p : path[cur]) {
+			for (int i = 0; i < k; i++) {
+				if (update[p.first][i] > update[cur][idx] + p.second) {
+					update[p.first][i] = update[cur][idx] + p.second;
+					q.push({update[p.first][i], p.first});
+					break;
+				}
 			}
 		}
 	}
 
-	for (int i = 0; i < change.size(); i++) start = change[start];
-	int cur = start;
-	stack<int> st;
-	do {
-		st.push(cur);
-		cur = change[cur];
-	} while (cur != start);
-
-	st.push(cur);
-	while (!st.empty()) {
-		cout << st.top() + 1 << ' ';
-		st.pop();
-	}
-	cout << endl;
+	for (int i = 0; i < k; i++) cout << update[n-1][i] << ' ';
+	cout << endl;	
 }
 
 int main(void) {
