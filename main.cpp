@@ -3,51 +3,74 @@
 
 using namespace std;
 
-const ll N = 1e5;
-int n, m, k;
-vector<pair<int,ll>> path[N];
+const ll N = 1e5+1;
+set<int> path[N];
+bool v[N];
+bool rs_v[N];
+stack<int> st;
+int n, m;
 
-void solve(void) {
-	cin >> n >> m >> k;
-	for (int i = 0; i < m; i++) {
-		int a,b;
-		ll c;
-		cin >> a >> b >> c;
-		--a; --b;
-		path[a].push_back({b,c});
+bool dfs(int cur) {
+	v[cur] = true;
+	rs_v[cur] = true;
+	st.push(cur);
+	for (int next : path[cur]) {
+		if (!v[next]) {
+			if (dfs(next)) return true;
+		} 
+		if (rs_v[next]) {
+			st.push(next);
+			return true;
+		}
 	}
 
-	vector<vector<ll>> update(n, vector<ll>(k, LLONG_MAX));
-	update[0][0] = 0;
-	priority_queue<pair<ll,int>, vector<pair<ll,int>>, greater<pair<ll,int>>> q;
-   	q.push({0,0});
-	while (!q.empty()) {
-		auto [val, cur] = q.top();
-		q.pop();
+	rs_v[cur] = false;
+	st.pop();
+	return false;
+}
 
-		if (val > update[cur][k-1]) continue;
-		int idx = 0;
-		while (idx < k) {
-			if (update[cur][idx] >= val) {
-				update[cur][idx] = val;
-				break;
+void solve(void) {
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		int a,b;
+		cin >> a >> b;
+		path[a].insert(b);
+	}
+	
+	for (int i = 1; i <= n; i++) {
+		if (!v[i] && dfs(i)) {
+			vector<int> ret;
+			int temp = st.top();
+			st.pop();
+			while (!st.empty()) {
+				ret.push_back(st.top());
+				st.pop();
+				if (temp == ret.back() && st.size() != 1) break;
 			}
-			idx++;
-		}
 
-		for (auto p : path[cur]) {
-			for (int i = 0; i < k; i++) {
-				if (update[p.first][i] > update[cur][idx] + p.second) {
-					update[p.first][i] = update[cur][idx] + p.second;
-					q.push({update[p.first][i], p.first});
+			reverse(ret.begin(), ret.end());
+			ret.push_back(temp);
+
+			int idx = 0;
+			for (int i = 0; i < ret.size(); i++) {
+				if (ret[i] == temp) {
+					idx = i;
 					break;
 				}
 			}
+
+			if (idx != 0) {
+				idx--;
+				ret.erase(ret.begin()+idx);
+			}
+			cout << ret.size() << endl;		
+			for (int r : ret) cout << r << ' ';
+			cout << endl;
+			return;
 		}
 	}
 
-	for (int i = 0; i < k; i++) cout << update[n-1][i] << ' ';
-	cout << endl;	
+	cout << "IMPOSSIBLE" << endl;
 }
 
 int main(void) {
