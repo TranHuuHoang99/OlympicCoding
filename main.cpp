@@ -4,9 +4,8 @@
 using namespace std;
 
 const ll N = 1e5+1;
-vector<int> ret;
-vector<int> path[N];
-int arr[N];
+vector<int> A[N];
+int topo[N];
 int n, m;
 
 void solve(void) {
@@ -14,29 +13,63 @@ void solve(void) {
 	for (int i = 0; i < m; i++) {
 		int a, b;
 		cin >> a >> b;
-		path[a].push_back(b);
-		arr[b]++;
+		A[a].push_back(b);
+		topo[b]++;
 	}
 
+	vector<int> track(n+1, -1);
 	queue<int> q;
-	for (int i = 1; i <= n; i++) if (!arr[i]) q.push(i);
+	track[1] = -1;
+	for (int i = 2; i <= n; i++) if (topo[i] == 0) q.push(i);
 
 	while (!q.empty()) {
-		int temp = q.front();
+		int cur = q.front();
 		q.pop();
-		ret.push_back(temp);
-		
-		for (int next : path[temp]) {
-			arr[next]--;
-			if (!arr[next]) q.push(next);
+
+		for (int next : A[cur]) {
+			topo[next]--;
+			if (topo[next] == 0) {
+				if (next == 1) continue;
+				q.push(next);
+				track[next] = cur;
+			}
 		}
 	}
 
-	if (ret.size() != n) {
+	if (track[n] != -1) {
 		cout << "IMPOSSIBLE" << endl;
 	} else {
-		for (int i = 0; i < ret.size(); i++) cout << ret[i] << ' ';
-		cout << endl;
+		q.push(1);
+		while (!q.empty()) {
+			int cur = q.front();
+			q.pop();
+			for (int next : A[cur]) {
+				topo[next]--;
+				if (topo[next] == 0) {
+					q.push(next);
+					track[next] = cur;
+				}
+			}
+		}
+
+		if (track[n] == -1) {
+			cout << "IMPOSSIBLE" << endl;
+			return;
+		}
+
+		stack<int> ret;
+		int temp = n;
+		while (temp != -1) {
+			ret.push(temp);
+			temp = track[temp];
+		}
+
+		cout << ret.size() << endl;
+		while (!ret.empty()) {
+			cout << ret.top() << ' ';
+			ret.pop();
+		}
+		cout << endl;	
 	}
 }
 
