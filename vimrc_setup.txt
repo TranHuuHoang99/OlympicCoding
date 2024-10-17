@@ -1,0 +1,15 @@
+"show line numbers"
+set number
+set tabstop=4
+set cindent
+"inoremap " ""
+"inoremap ' ''
+"inoremap ( ()
+"inoremap { {}
+"inoremap [ []
+nmap q di{
+nmap  :wq
+nmap <c-a> <Esc>:%y+ <Enter>
+nmap <F1> <Esc>:!g++ --std=c++17 -DHOANG_DEBUG main.cpp && ./a.out <Enter>
+nmap <c-d> <Esc>:%d <Enter>
+
