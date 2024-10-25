@@ -8,8 +8,9 @@ set cindent
 "inoremap { {}
 "inoremap [ []
 nmap q di{
-nmap  :wq
+nmap ␓ :wq
 nmap <c-a> <Esc>:%y+ <Enter>
-nmap <F1> <Esc>:!g++ --std=c++17 -DHOANG_DEBUG main.cpp && ./a.out <Enter>
+nmap <F1> <Esc>:!g++ --std=c++17 -DHOANG_DEBUG % -o %.out && ./%.out <Enter>
 nmap <c-d> <Esc>:%d <Enter>
+
 
