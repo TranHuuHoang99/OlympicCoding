@@ -3,31 +3,33 @@
 
 using namespace std;
 
-ll xor_all(ll n) {
+ll cal1(ll n) {
 	if (n % 4 == 1) return 1;
 	if (n % 4 == 2) return n+1;
 	if (n % 4 == 3) return 0;
-	return n;	
-}	
+	return n;
+}
 
-ll cal(ll n, ll i, ll k) {
-	if (n <= 0) return 0;
-	ll all = xor_all(n);
+ll cal2(ll n, ll i, ll k) {
 	ll temp = n >> i;
-	if (n % (1LL << i) < k) temp--;
-	ll ret = xor_all(temp) << i;
-	if (temp % 2 == 0) ret ^= k;
-	return all ^ ret;
+	temp <<= i;
+	if (temp + k <= n) {
+		temp = n >> i;
+	} else {
+		temp = n >> i;
+		temp -=1;
+	}
+	if (temp < 0) return 0;
+	ll ret = cal1(temp);
+	ret <<= i;
+	if (temp % 2 == 0) ret += k;
+	return ret;
 }
 
 void solve(void) {
 	ll l, r, i, k;
 	cin >> l >> r >> i >> k;
-	if (i == 0) {
-		cout << 0 << endl;
-		return;
-	}
-	cout << (cal(l-1, i, k) ^ cal(r, i, k)) << endl;
+	cout << (cal1(l-1) ^ cal2(l-1,i,k) ^ cal1(r) ^ cal2(r,i,k)) << endl;
 }
   
 int32_t main(void) {
