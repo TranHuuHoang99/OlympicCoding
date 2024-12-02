@@ -1,0 +1,432 @@
+- Lớp Competitive Programming 12 
+- Môi trường học: Skype 
+- Lịch học: Tối thứ 3 và tối thứ 6: 19h00 -> 21h30 
+- Nhiệt tình hỗ trợ khi có câu hỏi liên quan đến khóa học
+- Mỗi buổi học đều sẽ có video để xem lại 
+
+
+Lộ trình khóa học 
+
+- Giai đoạn 1: Các kiến thức mà một học sinh chuyên Tin cần phải biết 
+
+. Tháng 1: (Basic Data Structure) 
+  + Buổi 1: Giới thiệu khóa học, độ phức tạp thuật toán, vector, sorting
+  + Buổi 2: Stack 
+  + Buổi 3: Queue / Deque 
+  + Buổi 4: Heap 
+  + Buổi 5: Binary Search Tree (Set / Multiset)
+  + Buổi 6: Binary Search Tree (Map / Multimap) 
+  + Buổi 7: Bitset
+  + Buổi 8: Contest 
+
+. Tháng 2: (Basic Techniques) 
+  + Buổi 1: Two pointers 
+  + Buổi 2: Binary Search
+  + Buổi 3: Binary Search on the answer
+  + Buổi 4: Binary Search on float number and Ternary Search
+  + Buổi 5: Greedy 
+  + Buổi 6: Recursion / Backtracking 
+  + Buổi 7: Divide And Conquer 
+  + Buổi 8: Contest 
+
+. Tháng 3: (Basic Dynamic Programming) 
+  + Buổi 1: Introduction + Classical Problems 
+  + Buổi 2: Non - classical Problems 
+  + Buổi 3: Advanced Dp (Level 1) 
+  + Buổi 4: Advanced Dp (Level 2) 
+  + Buổi 5: Advanced Dp (Level 3) 
+  + Buổi 6: Đổi biến số trong Qhd
+  + Buổi 7: Làm bài tập về đổi biến số 
+  + Buổi 8: Contest 
+
+. Tháng 4: (Basic Graph Theory)
+  + Buổi 1: Introduction + Dfs algorithm
+  + Buổi 2: Topological Sorting 
+  + Buổi 3: Joints and Bridges 
+  + Buổi 4: Strongly Connected Components 
+  + Buổi 5: Bfs algorithm 
+  + Buổi 6: Dijkstra algorithm 
+  + Buổi 7: Disjoint Set Unions 
+  + Buổi 8: Contest
+
+. Tháng 5: (Basic Mathematics) 
+  + Buổi 1: Combinatorics 
+  + Buổi 2: Làm bài tập về tổ hợp 
+  + Buổi 3: Combinatorics + Dynamic Programming 
+  + Buổi 4: Probabilities 
+  + Buổi 5: Expected Value 
+  + Buổi 6: Game theory (Dynamic Programming) 
+  + Buổi 7: Some theorems 
+  + Buổi 8: Contest 
+
+. Tháng 6: (Practice) 
+
+- Giai đoạn 2 (Những kiến thức nâng cao)
+
+. Tháng 7: (Advanced Data Structure) 
+  + Buổi 1: Segment Tree + Merge Sort Tree 
+  + Buổi 2: Lazy Update on segment tree 
+  + Buổi 3: Persistent Segment tree 
+  + Buổi 4: Fenwick tree + Fenwick 2D 
+  + Buổi 5: Trie 
+  + Buổi 6: Sparse Table 
+  + Buổi 7: Suffix Array 
+  + Buổi 8: Contest 
+
+. Tháng 8: (Advanced Techinques) 
+  + Buổi 1: Bit manipulation  
+  + Buổi 2: Solving problems base on Merge sort algorithm 
+  + Buổi 3: Square Root Decomposition 
+  + Buổi 4: Hashing 
+  + Buổi 5: Sweep line 
+  + Buổi 6: Randomized Techinques 
+  + Buổi 7: Meet in the middle 
+  + Buổi 8: Contest 
+
+. Tháng 9: (Advanced Dynamic Programming) 
+  + Buổi 1: Dp + bitmask 
+  + Buổi 2: SOS 
+  + Buổi 3: Digit + Dp 
+  + Buổi 4: Dp + Matrix multiplication 
+  + Buổi 5: Dp on tree 
+  + Buổi 6: Convexhull Trick + Optimize Dp 
+  + Buổi 7: Optimize Dp by Divide and conquer 
+  + Buổi 8: Contest 
+
+. Tháng 10: (Advanced Graph Theory) 
+  + Buổi 1: Maximum Flow + Maximium Matching 
+  + Buổi 2: Minimum Cut 
+  + Buổi 3: Eulerian Tour 
+  + Buổi 4: Lowest Common Ancestor 
+  + Buổi 5: Heavy Light Decomposition 
+  + Buổi 6: Centroid Decomposition
+  + Buổi 7: 2-Sat 
+  + Buổi 8: Contest 
+
+. Tháng 11: (Advanced Mathematics)
+  + Buổi 1: Game Theory (Grundy function) 
+  + Buổi 2: Euler totient function 
+  + Buổi 3: Inclusive - Exclusive and Mobius function 
+  + Buôi 4: Extended Euclide Algorithm 
+  + Buổi 5: Geometry + Convex hull 
+  + Buổi 6: Calculus
+  + Buổi 7: FFT 
+  + Buổi 8: Contest 
+
+. Tháng 12: (Practice)  
+
+---------------------------------------------------------------------------------------------------------------------------------- 
+
+Thuật toán là gì ??????? 
+
+Thuật toán là một quá trình để ta suy nghĩ ra phương án giải quyết một vấn đề nào đó 
+
+Input ----> Thuật toán ----> Output 
+
+
+
+Độ phức tạp thuật toán 
+
+Độ phức tạp thuật toán là một đại lượng để phân định thuật toán A sẽ tốt hơn thuật toán B khi nào
+
+Xét giai đoạn ngày xưa 
+
+Những chiếc máy tính khi đó dung lượng bộ nhớ rất ít, những sản phẩm của ngày xưa thường tập trung vào việc tiết kiệm bộ nhớ 
+
+
+Ngày nay 
+
+Với sự phát triển của khoa học, bộ nhớ máy tính đã được nâng cấp lên rất nhiều =====> con người quan tâm đến tốc độ vận hành của sản phẩm 
+
+Một ông A thiết kế một sản phẩm tìm kiếm từ khóa. Với một từ khóa được nhập vào, ta mất 10 giây để liệt kê ra được các gợi ý có liên quan đến từ khóa đó. 
+
+Google có thể tìm kiếm 1 từ khóa chỉ trong 0.01s 
+
+
+
+Sự khác nhau giữa 2 sản phẩm có tốt hay không nằm ở vấn đề thuật toán bên dưới của sản phẩm đó. 
+
+
+Nhìn ở góc độ của lập trình thi đấu 
+
+Trong 1 giây, một máy tính bình thường có thể chạy tầm 100.000.000 phép tính 
+
+Khi ta thiết kế một thuật toán để giải quyết một bài toán X, với input đầu vào, giả sử ta được yêu cầu trong 2 giây phải ra được output 
+
+=========> Số lượng phép tính ta thực hiện trong bài toán <= 200.000.000 phép tính 
+
+Một số độ phức tạp cơ bản
+
+. Độ phức tạp hằng số: O(1) 
+
+Đây là độ phức tạp của những thuật toán có số phép tính rất nhỏ 
+
+Ví dụ: Nhập số N, kiểm tra N có phải là số chẵn hay không 
+
+nhập số N 
+nếu N chẵn thì in ra YES 
+else: in ra NO 
+
+
+Nhập 3 số a, b, c, hỏi 3 số có phải là độ dài 3 cạnh tam giác hay không ?? 
+
+. Độ phức tạp tuyến tính: O(N) 
+
+Đây là độ phức tạp tăng một cách tuyến tính dựa vô số N đầu vào 
+
+Ví dụ: 
+
+nhập số N 
+for i: 1 -> N, i = i + 1 
+  sum = sum + i 
+
+
+N = 100  
+
+
+. Độ phức tạp đa thức: O(N^c) 
+
+Đây là độ phức tạp gồm c vòng lặp tuyến tính lồng nhau 
+
+for i: 1 -> N, i = i + 1 
+  for j: 1 -> N, j = j + 1 
+    sum = sum + i + j 
+
+O(N^2) 
+
+
+Giả sử để giải bài toán A, ta được quy định sau 2 giây phải đưa ra kết quả. 
+
+for i: 1 -> 100000 
+  for j: 1 -> 100000 
+    sum = sum + i + j 
+
+3 * 100000 * 100000 = 30.000.000.000 phép tính 
+
+
+for i: 1 -> 5000: 
+  sum2 = sum2 + i 
+
+2 * 5000 = 10000 phép tính 
+
+xuất (sum + sum2) 
+
+1 phép tính 
+
+
+====> 30.000.010.001 phép tính 
+
+Xét bài toán A  : 100.000 giây 
+
+
+Độ phức tạp là O(N^2) 
+
+Nếu N = 1.000.000 ====> O(N^2) là một thuật toán rất tệ
+
+O(N) : là một thuật toán rất đẹp với N = 1.000.000 
+
+Những đại lượng BigO  (O (?) ) là những đại lượng ước lượng độ phức tạp thuật toán trong thời gian tệ nhất 
+
+Trường hợp trung bình: 
+
+Đây là độ phức tạp xét trong trường hợp trung bình 
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+vector 
+
+Mảng tĩnh: 
+
+int a[100]; // ta tạo ra mảng a và mảng a có 100 phần tử được đánh số từ 0 .. 99, mỗi phần tử là kiểu dữ liệu int (4 bytes)
+
+a[0], a[1], a[5]
+
+
+Mảng động: 
+
+vector là kiểu dữ liệu mảng nhưng có thể thay đổi kích thước một cách tùy ý theo yêu cầu đầu vào. 
+
+Khai báo: 
+
+#include <vector> 
+
+Cú pháp: 
+
+vector < <kiểu dữ liệu> > <tên vector>; 
+
+Ví dụ: 
+
+vector <long long> myvector;  // ta vừa tạo một mảng gồm các phần tử kiểu dữ liệu long long (8 byte) 
+
+Một số hàm trong vector 
+
+. Hàm resize(<kích thước vector>): Ta thực hiện tạo ra vector với số lượng phần tử tương ứng với kích thước truyền vào. 
+
+Ví dụ: 
+
+vector <long long> myvector; 
+myvector.resize(10);  // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+. Hàm push_back(<giá trị>): Thêm một phần tử có giá trị tương ứng vào cuối vector 
+
+Ví dụ: 
+
+vector <long long> myvector; 
+myvector.resize(10);  // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+myvector.push_back(15); // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15]
+
+. Hàm pop_back(): Xóa phần tử cuối cùng ra khỏi vector. LƯU Ý !!! Hàm sẽ báo lỗi nếu vector rỗng 
+
+vector <long long> myvector; 
+myvector.resize(10);  // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+myvector.push_back(15); // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15]
+
+myvector.pop_back(); // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+
+
+. Hàm back(): Trả về phần tử có giá trị cuối của dãy. LƯU Ý !!!! Hàm sẽ báo lỗi nếu vector rỗng 
+
+
+vector <long long> myvector; 
+myvector.resize(10);  // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+myvector.push_back(15); // myvector = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15]
+
+cout << myvector.back(); // xuất ra 15 
+
+
+. Operator [<chỉ số>]: truy vập đến giá trị phần tử có chỉ số tương ứng. 
+
+
+vector <long long> myvector = {5, 9, 2, 2, 4, 6, 8, 1, 7}; 
+
+cout << myvector[5] << "    " << myvector[2] + myvector[4];  // 6     6 
+
+
+. Hàm size(): Trả về kích thước của vector 
+
+vector <long long> myvector = {5, 9, 2, 2, 4, 6, 8, 1, 7}; 
+cout << (int) myvector.size(); // xuất ra số 9 
+
+
+. Hàm empty(): Trả về true / false tương ứng là vector có rỗng hay không ? 
+
+vector <long long> myvector = {5, 9, 2, 2, 4, 6, 8, 1, 7}; 
+if (myvector.empty() == true) {
+    cout << "vector rong"; 
+}
+else {
+    cout << "vector khong rong"; 
+}
+
+Các hàm bên trên đều thực hiện với số thao tác chỉ 1 thao tác 
+
+
+vector <long long> myvector = {5, 9, 2, 4, 6, 8, 1, 7}; 
+
+myvector.erase(myvector.begin() + 2);   // Mất ~ O(N) thao tác 
+
+--------------------------------------------------------------------------------------------------------------------
+
+Hàm sort 
+
+Đây là hàm dùng để sắp xếp bộ dữ liệu theo chiều tăng dần (mặc định) hoặc theo một mong muốn nào đó của người dùng. 
+
+Hàm sort được tổ chức bên dưới bằng thuật toán Tim Sort (Heap Sort và Merge Sort) 
+
+Độ phức tạp của hàm sort: O(N.logN)    log(1024) ~ 10  (2^10 <= 1024) 
+
+Nếu dãy số có 1.000.000 phần tử, số thao tác khi ta thực hiện hàm sort: 1.000.000 * log(1.000.000) ~ 18.000.000 phép tính 
+
+Khai báo: 
+
+#include <algorithm> 
+
+
+Cách thực hiện hàm sort: 
+
+sort(<con trỏ đầu>, <con trỏ cuối>, <hàm mục tiêu nếu có>); 
+
+Ví dụ: 
+
+vector <int> a = {5, 9, 2, 4, 6, 8, 1, 7}; 
+
+Ví dụ ta muốn sắp xếp dãy số a từ 2 .. 6 
+
+sort(a.begin() + 2, a.begin() + 7);  // a = {5, 9, 1, 2, 4, 6, 8, 7}; 
+
+sort(a.begin(), a.end()); // a = {1, 2, 4, 5, 6, 7, 8, 9}; 
+
+
+Nếu ta viết hàm compare(a, b) = true nếu ta mong muốn a đứng trước b, = false trong trường hợp ngược lại 
+
+Ví dụ: 
+
+Sắp xếp dãy a sao cho số lẻ thì đứng trước, số chẵn thì đứng sau. Và các số lẻ tăng dần, số chẵn cũng tăng dần. 
+
+#include <iostream> 
+#include <vector> 
+#include <algorithm> 
+
+using namespace std;
+bool compare(int x, int y) {
+    if (x % 2 == y % 2) {
+        if (x < y) {
+            return true; 
+        }
+        else {
+            return false; 
+        }
+    }
+    if (x % 2 == 1) {
+        return true; 
+    }
+    return false; 
+}
+
+int main () {
+    vector <int> a = {5, 9, 2, 4, 6, 8, 1, 7}; 
+    sort(a.begin(), a.end(), compare); 
+    for (int i = 0; i < (int) a.size(); i++) {
+        cout << a[i] << "    "; 
+    }
+    return 0; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
