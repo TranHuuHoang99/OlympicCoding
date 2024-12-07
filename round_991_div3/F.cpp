@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 06.12.2024 22:37:17
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,28 +9,33 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
+const ll N = 2e5+10;
+ll A[N];
+int n, q;
 
 void solve(void) {
-	int n;
-	cin >> n;
-	int ret = 0;
-	int cnt = 0;
-	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
-	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	cin >> n >> q;
+	for (int i = 0; i < n; i++) cin >> A[i];
+	while (q--) {
+	 	int a, b;
+	 	cin >> a >> b;
+	 	--a;
+	 	--b;
+	 	vector<ll> temp;
+	 	for (int i = a; i < b; i++) {
+	 	 	temp.push_back(abs(A[i]-A[i+1]));
+	 	}
+	 	if (temp.empty()) {
+	 	 	cout << 0 << ' ';
+	 	 	continue;
+	 	}
+	 	ll ret = temp[0];
+	 	for (int i = 1; i < temp.size(); i++) {
+			ret = __gcd(ret,temp[i]);         	
+        }
+        cout << ret << ' ';
 	}
-	cout << ret << endl;
+	cout << endl;
 }
 
 int main(void) {
@@ -42,8 +47,6 @@ int main(void) {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-	
-	generate();
 
 	int t;
 	cin >> t;

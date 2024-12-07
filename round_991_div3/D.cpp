@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 06.12.2024 19:24:47
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,28 +9,25 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
-
 void solve(void) {
-	int n;
-	cin >> n;
-	int ret = 0;
-	int cnt = 0;
-	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
-	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	string str;
+	cin >> str;
+	vector<int> ret;
+	for (int i = 0; i < str.size(); i++) {
+	 	int temp = int(str[i]-'0');
+	 	ret.push_back(temp);
 	}
-	cout << ret << endl;
+	for (int i = 1; i < ret.size(); i++) {
+	 	int idx = i;
+	 	while (idx >= 1 && ret[idx] > 0 && ret[idx] > ret[idx-1]+1) {
+	 	 	int temp = ret[idx];
+	 	 	ret[idx] = ret[idx-1];
+	 	 	ret[idx-1] = temp-1;
+	 	 	idx--;
+	 	}
+	}
+	for (int i = 0; i < ret.size(); i++) cout << ret[i];
+	cout << endl;
 }
 
 int main(void) {
@@ -42,8 +39,6 @@ int main(void) {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-	
-	generate();
 
 	int t;
 	cin >> t;

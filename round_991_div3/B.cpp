@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 05.12.2024 21:53:51
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,29 +9,35 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
+const ll N = 2e5+1;
+ll A[N];
+ll n;
 
 void solve(void) {
-	int n;
 	cin >> n;
-	int ret = 0;
-	int cnt = 0;
-	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
-	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	ll sum = 0;
+	for (int i = 1; i <= n; i++) {
+	 	cin >> A[i];
+	 	sum += A[i];
 	}
-	cout << ret << endl;
+	if (sum % n != 0) {
+	 	cout << "NO" << endl;
+	 	return;
+	}
+	sum /= n;
+	ll temp = 0;
+	ll cnt = 0;
+	for (int i = 1; i <= n; i+=2) {
+	 	temp += A[i];
+	 	cnt++;
+	}
+	if (temp % cnt != 0 || temp / cnt != sum) {
+	 	cout << "NO" << endl;
+	 	return;
+	}
+	cout << "YES" << endl;
 }
+
 
 int main(void) {
 	ios_base::sync_with_stdio(false);
@@ -42,8 +48,6 @@ int main(void) {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-	
-	generate();
 
 	int t;
 	cin >> t;

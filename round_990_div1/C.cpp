@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 04.12.2024 22:26:23
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,26 +9,22 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
+const ll N = 5e3+1;
+int A[2][N];
+int n;
 
 void solve(void) {
-	int n;
 	cin >> n;
-	int ret = 0;
-	int cnt = 0;
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < n; j++) cin >> A[i][j];         	
+	}
+	int ret = INT32_MIN;
 	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
-	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	 	int temp = A[0][i] + A[1][i];
+	 	for (int j = 0; j < n; j++) {
+	 	 	if (i != j) temp += max(A[0][j], A[1][j]);
+	 	}
+	 	ret = max(ret, temp);
 	}
 	cout << ret << endl;
 }
@@ -37,14 +33,7 @@ int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-
-#ifdef HOANGPRODN_DEBUG
-	freopen("input.in", "r", stdin);
-	freopen("output.out", "w", stdout);
-#endif // HOANGPRODN_DEBUG
 	
-	generate();
-
 	int t;
 	cin >> t;
 	while (t--) {

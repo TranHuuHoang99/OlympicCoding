@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 05.12.2024 23:28:39
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,29 +9,29 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
-
 void solve(void) {
-	int n;
-	cin >> n;
+	string str;
+	cin >> str;
 	int ret = 0;
-	int cnt = 0;
-	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
-	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	int n = 0;
+	int m = 0;
+	for (int i = 0; i < str.size(); i++) {
+	 	int temp = int(str[i]-'0');
+	 	ret += temp;
+	 	if (temp == 2) n++;
+	 	if (temp == 3) m++;
 	}
-	cout << ret << endl;
-}
+	for(int i = 0; i <= n; i++) {
+	 	for (int j = 0; j <= m; j++) {
+	 	 	int temp = i*2 + j *6;
+	 	 	if ((ret+temp) % 9 == 0) {
+	 	 	 	cout << "yes" << endl;
+	 	 	 	return;
+	 	 	}
+		}
+	}
+	cout << "no" << endl;
+}    	
 
 int main(void) {
 	ios_base::sync_with_stdio(false);
@@ -42,8 +42,6 @@ int main(void) {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-	
-	generate();
 
 	int t;
 	cin >> t;

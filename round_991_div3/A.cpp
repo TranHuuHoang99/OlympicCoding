@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 05.12.2024 21:41:27
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,26 +9,19 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
-
 void solve(void) {
-	int n;
-	cin >> n;
+	int n, m;
+	cin >> n >> m;
 	int ret = 0;
 	int cnt = 0;
 	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
+	 	string str;
+	 	cin >> str;
+	 	int temp = (int)str.size();
 	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	 	if (cnt <= m) {
+	 	 	ret++;
+	 	}
 	}
 	cout << ret << endl;
 }
@@ -42,8 +35,6 @@ int main(void) {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-	
-	generate();
 
 	int t;
 	cin >> t;

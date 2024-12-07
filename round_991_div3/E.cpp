@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 05.12.2024 20:41:21
+ *      * CREATED: 06.12.2024 22:29:58
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,28 +9,28 @@
 
 using namespace std;
 
-set<int> check;
-
-void generate(void) {
- 	for (int i = 1; i <= 99; i+=2) {
- 	 	int temp = i*i;
- 	 	check.insert(temp);
- 	}
-}
-
 void solve(void) {
-	int n;
-	cin >> n;
-	int ret = 0;
-	int cnt = 0;
-	for (int i = 0; i < n; i++) {
-	 	int temp;
-	 	cin >> temp;
-	 	cnt += temp;
-	 	auto it = check.find(cnt);
-	 	if (it != check.end()) ret++;
+	string a, b, c;
+	cin >> a >> b >> c;
+	int n = a.size();
+	int m = b.size();
+	vector<vector<int>> dp(n+1, vector<int>(m+1, INT32_MAX));
+	dp[0][0] = 0;
+	for (int i = 0; i <= n; i++) {
+	 	for (int j = 0; j <= m; j++) {
+	 	 	int k = i+j;
+	 	 	if (k > c.size()) continue;
+	 	 	if (i < n) {
+	 	 	 	int temp = int(a[i] != c[k]);
+	 	 	 	dp[i+1][j] = min(dp[i+1][j], dp[i][j]+temp);
+	 	 	}
+	 	 	if (j < m) {
+	 	 	 	int temp = int(b[j] != c[k]);
+	 	 	 	dp[i][j+1] = min(dp[i][j+1], dp[i][j]+temp);
+	 	 	}
+	 	}
 	}
-	cout << ret << endl;
+	cout << dp[n][m] << endl;
 }
 
 int main(void) {
@@ -42,8 +42,6 @@ int main(void) {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-	
-	generate();
 
 	int t;
 	cin >> t;
