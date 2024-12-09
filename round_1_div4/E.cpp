@@ -1,7 +1,7 @@
 /*
  ******************************************************************************************
  *      * AUTHOR : hoangprodn
- *      * CREATED: 06.12.2024 22:37:17
+ *      * CREATED: 10.12.2024 18:13:54
  ******************************************************************************************
 */
 #include <bits/stdc++.h>
@@ -9,36 +9,24 @@
 
 using namespace std;
 
-const ll N = 2e5+10;
-ll A[N];
-int n, q;
-
 void solve(void) {
-	cin >> n >> q;
+	int n;
+	cin >> n;
+	vector<int> A(n+1);
+	vector<int> update(9000);
 	for (int i = 1; i <= n; i++) cin >> A[i];
-	vector<ll> arr(n);
-	for (int i = 1; i <= n-1; i++) {
-	 	arr[i] = abs(A[i]-A[i+1]);
-	}
-	vector<vector<ll>> st(18, vector<ll>(n));
-	for (int i = 1; i <= n-1; i++) st[0][i] = arr[i];
-	for (int i = 1; i <= 17; i++) {
-	 	for (int j = 1; j+(1<<i)-1 <= n-1; j++) {
-	 	 	st[i][j] = __gcd(st[i-1][j], st[i-1][j+(1<<(i-1))]);
+	for (int i = 1; i <= n; i++) {
+		int temp = A[i];
+	 	for (int j = i+1; j <= n; j++) {
+			temp += A[j];
+			if (temp <= n) update[temp]++;	 	 	
 	 	}
 	}
-	for (int i = 0; i < q; i++) {
-	 	int l, r;
-	 	cin >> l >> r;
-	 	r--;
-	 	if (r < l) {
-	 	 	cout << 0 << ' ';
-	 	 	continue;
-	 	}
-	 	int k = __lg(r-l+1);
-	 	cout << __gcd(st[k][l], st[k][r-(1<<k)+1]) << ' ';
+	int ret = 0;
+	for (int i = 1; i <= n; i++) {
+	 	ret += int(update[A[i]]>0);
 	}
-	cout << endl;
+	cout << ret << endl;
 }
 
 int main(void) {
