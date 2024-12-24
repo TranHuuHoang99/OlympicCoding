@@ -9,46 +9,57 @@
 
 using namespace std;
 
-const ll N = 2e5+10;
+const ll N = 2e5+1;
 double A[N];
 double update[N];
 int n;
 
-double func(double mid) {
-	double ret = 0.0f;
-	for (int i = 0; i < n; i++) {
-	 	ret = max(ret, abs(A[i] - mid));
+double f(double mid) {
+ 	for (int i = 1; i <= n; i++) update[i] = A[i]-mid;
+ 	double ret = 0.0f;
+ 	double min_val = 0.0f;
+	double max_val = 0.0f;
+	double sum = 0.0f;
+	for (int i = 1; i <= n; i++) {
+	 	sum += update[i];
+	 	ret = max(ret, sum - min_val);
+	 	ret = max(ret, max_val - sum);
+	 	min_val = min(min_val, sum);
+	 	max_val = max(max_val, sum);
+	}
+	min_val = 0.0f;
+	max_val = 0.0f;
+	sum = 0.0f;
+	for (int i = n; i >= 1; i--) {
+	 	sum += update[i];
+	 	ret = max(ret, sum - min_val);
+	 	ret = max(ret, max_val - sum);
+	 	min_val = min(min_val, sum);
+	 	max_val = max(max_val, sum);
 	}
 	return ret;
 }
 
 void solve(void) {
 	cin >> n;
-	for (int i = 0; i < n; i++) {
-	 	cin >> A[i];
-	}
-	if (n == 1) {
-		double ret = 0.0f;
-		cout << fixed << setprecision(15) << ret << endl;
-		return;
-	}
-	double left = 0.0f;
-	double right = 1000000.0f;
-	for (int i = 1; i <= 100; i++) {
-		double mid = (left+right) / 2.0f;
-		if (func(left) > func(right)) {
-		 	left = mid;
-		} else {
-		 	right = mid;
-		}
-	}
-	update[0] = 0.0f;
-	for (int i = 0; i < n; i++) {
-		update[i+1] = update[i] + A[i] - left;	
-	}
+	for (int i = 1; i <= n; i++) cin >> A[i];
+	double left = -20000.0f;
+	double right = 20000.0f;
 	double ret = 0.0f;
-	for (int i = 1; i <= n; i++) ret = max(ret, abs(update[i]));
-	cout << fixed << setprecision(15) << ret << endl;
+	for (int i = 1; i <= 200; i++) {
+	 	double u = (left*2+right)/3.0f;
+	 	double v = (left+right*2)/3.0f;
+	 	double fu = f(u);
+	 	double fv = f(v);
+	 	if (fu >= fv) {
+	 	 	ret = fu;
+	 	 	left = u;
+	 	} else {
+	 	 	ret = fv;
+	 	 	right = v;
+	 	}
+	}
+	cout << fixed << setprecision(12) << ret << endl;
 }
 
 int main(void) {
