@@ -1,0 +1,345 @@
+Kinh nghiệm: 
+
+Định nghĩa hàm isValid(xA, yA, xB, yB) = true / false nếu vị trí An và Bình đang đứng có hợp lệ hay không  
+
+Nếu xA == n && yA == m && xB == n && yB == m: 
+  return true 
+nếu xA == xB && yA == yB: 
+  return false 
+return true     
+
+
+Gọi f[xA][yA][xB][yB] là tổng điểm lớn nhất khi An đứng tại (xA, yA) và Bình đứng tại (xB, yB) 
+
+bài toán cơ sở: f[1][1][1][1] = 0, khởi tạo các f[xA][yA][xB][yB] còn lại = -inf 
+
+đáp án bài toán: f[n][m][n][m] 
+
+khi ta có f[xA][yA][xB][yB] != -inf 
+
+  . Tình huống 1: An sang phải, Bình cũng sang phải: 
+    điều kiện: yA + 1 <= m và yB + 1 <= m và isValid(xA, yA + 1, xB, yB + 1) == true 
+    
+    f[xA][yA + 1][xB][yB + 1] = max(f[xA][yA + 1][xB][yB + 1], f[xA][yA][xB][yB] + score[xA][yA + 1] + score[xB][yB + 1]) 
+
+  . Tình huống 2: An sang phải, Bình đi xuống dưới 
+
+    điều kiện: yA + 1 <= m && xB + 1 <= n và isValid(xA, yA + 1, xB + 1, yB) == true 
+
+
+  . Tình huống 3  
+  . Tình huống 4 
+
+
+
+for xA: 1 -> n 
+  for yA : 1 -> m 
+    for xB : 1 -> n 
+      for yB : 1 -> m 
+        nếu f[xA][yA][xB][yB] != -inf .... 
+
+
+1 <= n, m <= 200 
+
+
+Nhận xét: 
+
+Nếu ta biết 1 người đã di chuyển được i bước và biết được hàng người đó đang đứng là x 
+
+====> x - 1 + y - 1 = i 
+
+<=> y = i + 2 - x 
+
+
+Ta gọi f[i][xA][xB] là tổng điểm lớn nhất mà 2 anh em có được khi cả 2 đều đã di chuyển i bước, An đứng tại hàng xA và Bình đứng tại hàng xB 
+
+====> yA = i + 2 - xA,   yB = i + 2 - xB 
+
+bài toán cơ sở: f[0][1][1] = 0 ,  khởi tạo các f[i][xA][xB] = -inf 
+
+đáp án bài toán: f[n + m - 2][n][n] 
+
+Khi ta có f[i][xA][xB] != -inf 
+
+. Tình huống 1: An và Bình cùng sang phải: 
+
+  nếu yA + 1 <= m và yB + 1 <= m và isValid(xA, yA + 1, xB, yB + 1) == true : 
+    
+  f[i + 1][xA][xB] = max(f[i + 1][xA][xB], f[i][xA][xB] + score[xA][yA + 1] + score[xB][yB + 1]) 
+
+. Tình huống 2: An sang phải, Bình xuống dưới: 
+
+  nếu y1 + 1 <= m và xB + 1 <= n và isValid(xA, yA + 1, xB + 1, yB) == true: 
+
+  f[i + 1][xA][xB + 1] = max(f[i + 1][xA][xB + 1], f[i][xA][xB] + score[xA][yA + 1] + score[xB + 1][yB])
+
+. Tình huống 3, 4 : tương tự 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Love charm 
+
+Ta có một chuỗi s gồm các ký tự 'O' và 'K' 
+
+Xét các cặp s[i] và s[i + 1] 
+
+Nếu có a cặp tạo thành 'OK' thì kết quả cộng thêm a^2 
+
+Nếu có b cặp tạo thành 'KO' thì kết quả bị trừ đi b^2 
+
+Ta được phép thực hiện tối đa k phép biến đổi, mỗi phép biến đổi ta có quyền lấy 2 ký tự bất kỳ và đổi chỗ chúng cho nhau. 
+
+Hỏi: Tổng a^2 - b^2 lớn nhất là bao nhiêu ?????? 
+
+
+k = 2 
+
+KOOKOKKKOO
+
+
+5^2 - 4^2 = 9 
+
+Nhận xét 1: Nếu ta thực hiện 1 phép hoán đổi, ta phải hoán đổi 2 vị trí có 2 ký tự khác nhau cho nhau 
+
+Nhận xét 2: 1 <= k <= 10 
+
+Nhận xét 3: 
+
+
+Khi ta có a vị trí 'OK' và b vị trí 'KO" 
+
+a^2 - b^2 = (a - b) * (a + b) 
+
+Để ý: a - b = -1 hoặc 0 hoặc 1  ====> 0 hoặc 1 hoặc 2 
+
+Nếu ta cố định a - b =====> bài toán đưa về: Hãy hoán đổi sao cho a + b lớn nhất có thể ???? 
+
+Gọi f[i][changeK][changeO][diff][last] :Tổng số lượng 'OK' và 'KO' lớn nhất. Khi ta xét i ký tự đầu tiên, số lượng vị trí = K ta đã thực hiện thay đổi là changeK, số lượng vị trí = O ta đã thực hiện 
+
+thay đổi là changeO, diff : số lượng 'OK' - số lượng 'KO' + 1 , last = 0 nếu ký tự cuối là 'O', = 1 nếu ký tự cuối là 'K', last = 2 nếu đang là vị trí đầu tiên 
+
+
+bài toán cơ sở: f[0][0][0][1][2] = 0 , khởi tạo các f[i][changeK][changeO][diff][last] còn lại = -1 
+
+đáp án bài toán: Max( (diff - 1) * f[n][changeK][changeO][diff][last]) với changeK == changeO 
+
+công thức qhd: 
+
+Khi ta có f[i][changeK][changeO][diff][last] != -1 
+
+. Nếu vị trí i + 1 ta điền chữ 'O': 
+
+  Nếu s[i + 1] == 'K' && changeK + 1 <= k: 
+     newdiff = diff 
+     nếu last == 1: 
+       newdiff-- 
+       
+     f[i + 1][changeK + 1][changeO][newdiff][0] = max( f[i + 1][changeK + 1][changeO][newdiff][0], f[i][changeK][changeO][diff][last] + (last == 1))
+
+  Nếu s[i + 1] == 'O'
+     newdiff = diff 
+     nếu last == 1: 
+       newdiff-- 
+    
+    f[i + 1][changeK][changeO][newdiff][0] = max( f[i + 1][changeK][changeO][newdiff][0], f[i][changeK][changeO][diff][last] + (last == 1))
+
+
+
+
+. Nếu vị trí i + 1 ta điền chữ 'K': 
+
+----------------------------------------------------------------------------------------------------------------------
+
+Bugged Sort 
+
+Cho 2 dãy số a và b có cùng số lượng số là N 
+
+Các số từ 1 -> 2 * N, mỗi số sẽ được xuất hiện 1 lần và xuất hiện tại một phần tử nào đó trong dãy a hoặc dãy b 
+
+
+N = 5 
+
+a = [5, 9, 1, 10, 4]
+
+b = [3, 2, 6, 8, 7]
+
+Ta được thực hiện các phép hoán đổi, mỗi phép hoán đổi ta chọn vị trí i và j bất kỳ, ta đổi a[i] và b[j] cho nhau, đổi a[j] và b[i] cho nhau 
+
+Hỏi có thể làm cho cả 2 dãy cùng tăng dần hay không ????? 
+
+
+a = [5, 9, 1, 10, 4]
+
+b = [3, 2, 6, 8, 7]
+
+
+
+1 2 3 4 10  
+6 9 5 7 8 
+
+Thứ tự của 2 dãy số phải là thứ tự khi min(ai, bi) tăng dần 
+
+Với một cặp (ai, bi) và (aj, bj) bất kỳ, có thể chỉ đơn giản hoán đổi 2 cặp này cho nhau mà không phải đảo hay không ??? 
+
+Vì ta có thể đảo 2 cặp (ai, bi) và (aj, bj) cho nhau mà không cần đảo ai và bi cho nhau =====> ta có thể đưa ra thứ tự xuất hiện của các cặp (ai, bi) theo thứ 
+
+tự mà ta mong muốn 
+
+
+=====> sắp xếp các cặp (ai, bi) tăng dần theo min(ai, bi) 
+
+Với cặp (ai, bi) và (aj, bj), ta có thể đảo (ai, bi) cho nhau và đảo (aj, bj) cho nhau mà không cần thay đổi vị trí 
+
+
+ai   aj 
+bi   bj 
+
+
+bi   bj 
+ai   aj 
+
+
+Gọi f[i][flipped][state] = true / false với ý nghĩa: Ta xét i cặp đầu tiên, flipped = 1 nếu hiện tại đang có 1 sự kiện đảo "đang chờ", state = 0 nếu i là không đảo, 
+
+state = 1 nếu i là đảo 
+
+bài toán cơ sở: f[1][0][0] = true,  f[1][1][1] = true 
+
+đáp án bài toán: f[n][0][0] == true || f[n][0][1] == true 
+
+công thức qhd: 
+
+Khi ta có f[i][flipped][state] == true 
+
+   nếu state == 0: 
+     
+     Nếu cặp (ai+1, bi+1) vẫn giữ nguyên:
+       điều kiện ai < ai+1 và bi < bi+1: 
+         f[i + 1][flipped][0] = true   
+
+     Nếu cặp (ai+1, bi+1) đảo:
+       điều kiện ai < bi+1 và bi < ai+1: 
+         f[i + 1][1 - flipped][1] = true   
+
+
+   nếu state == 1: 
+  
+   Nếu cặp (ai+1, bi+1) giữ nguyên:
+       điều kiện bi < ai+1 và ai < bi+1: 
+         f[i + 1][flipped][0] = true   
+
+     Nếu cặp (ai+1, bi+1) đảo:
+       điều kiện bi < bi+1 và ai < ai+1: 
+         f[i + 1][1 - flipped][1] = true   
+
+--------------------------------------------------------------------------------------------------------------------
+
+Exam cheating 
+
+Gọi f[i][j][kA][kB] là số lượng câu trắc nghiệm tối đa ta có thể chép được khi ta có i câu trắc nghiệm đầu tiên, ta đã có j đợt chép bài và bên phía người A, ta chép 
+
+được kA câu liên tục, bên phía người B ta chép được kB câu liên tục 
+
+
+kA, kB = 0: tại câu thứ i ta không chép của người A, người B 
+
+bài toán cơ sở: f[0][0][0][0] = 0, khởi tạo các f[i][j][kA][kB] còn lại = -1 
+
+đáp án bài toán: Max(f[n][j][kA][kB]) với j: 0 -> p, kA: 0 -> k, kB: 0 -> k 
+
+
+
+Ta thiết kế một hàm score(i, flagA, flagB) với ý nghĩa: 
+
+Tại cấu thứ i, nếu flagA == true thì ta có chép câu i của bạn A, flagB == true thì ta có chép câu i của bạn B. 
+
+score(i, flagA, flagB) trả về số điểm ta nhận được 
+
+công thức qhd: 
+
+Khi ta có f[i][j][kA][kB] != -1 
+
+Xét câu i + 1 
+
+Đặt newkA = (kA == 0 || kA == k ? 0 : kA + 1)
+Đặt newkB = (kB == 0 || kB == k ? 0 : kB + 1)
+
+. Nếu ta không muốn mở thêm đợt chép bài: 
+
+  f[i + 1][j][newkA][newkB] = max( f[i + 1][j][newkA][newkB], f[i][j][kA][kB] +  score(i + 1, newkA > 0, newkB > 0))
+
+
+. Nếu ta muốn mở thêm 1 đợt chép bài và đợt chép bài này bên phỉa bạn A 
+
+  f[i + 1][j + 1][1][newkB] = max( f[i + 1][j + 1][1][newkB], f[i][j][kA][kB] +  score(i + 1, true, newkB > 0))
+
+
+. Nếu ta muốn mở thêm 1 đợt chép bài và đợt chép bài này bên phỉa bạn B
+
+  f[i + 1][j + 1][newkA][1] = max( f[i + 1][j + 1][newkA][1], f[i][j][kA][kB] +  score(i + 1, newkA > 0, true))
+
+
+. Nếu ta muốn mở 2 đợt chép bài mới cho cả 2 bạn 
+ 
+  f[i + 1][j + 2][1][1] = max( f[i + 1][j + 2][1][1], f[i][j][kA][kB] + score(i + 1, true, true))   
+
+
+Độ phức tạp: 
+
+O(N * P * K * K) = O(N * P * K^2)
+
+1 <= N, P <= 1000 
+
+1 <= K <= 50 
+
+
+Nhận xét: 
+
+Giả sử ta có 1000 câu trắc nghiệm, mỗi đợt chép bài ta được phép chép 50 câu liên tục =======> ta chỉ cần mất 20 đợt chép bài là chép được toàn bộ câu của 1 bạn 
+
+====> Ta mất ~ 40 đợt chép bài là có thể chép được toàn bộ các câu trắc nghiệm của cả 2 
+
+
+
+Ta mất ~ N / K + 1 lần chép bài là chép được của 1 bạn ====> Ta mất 2 * (N / K + 1) lần là có thể chép được toàn bộ bài của các bạn 
+
+Nếu p >=  2 * (N / K + 1) =====> Duyệt toàn bộ các câu và tiến hành chép chúng 
+
+
+Nếu p <  2 * (N / K + 1)  ====> quy hoạch động 
+
+
+Độ phức tạp: 
+
+O(N * P * K * K)  < O(N * 2 * (N / K) * K^2) = O(N * N * K) = O(N^2 * K) ~ 50.000.000 phép tính  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
