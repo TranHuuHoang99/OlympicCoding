@@ -1,0 +1,292 @@
+Ant Stack : 
+
+1 <= N <= 100000 
+
+Xét trường hợp nhiều kiến nhất có thể. 
+
+1 1 1 1 1 1 6 6 6 6 6 6 36 36 36 36 36 36 216 216 216 216 216 216 ....... 
+
+1 <= W[i] <= 10^9 
+
+Số lượng "lô" : log6(10^9) ~ 12 ====> chỉ có tối đa ~ 72 con kiến trên 1 chồng 
+
+====> số kiến tối đa <= 100 con 
+
+
+Gọi f[i][j] là tổng trọng lượng nhỏ nhất có thể khi ta có i con kiến và chồng kiến đã có j con 
+
+bài toán cơ sở: f[0][0] = 0 ,   f[i][j] còn lại = inf 
+
+đáp án bài toán: số j lớn nhất có thể (j: 0 -> 100) sao cho f[n][j]  != inf 
+
+công thức qhd: 
+
+Khi ta có f[i][j] != inf 
+
+Xét con kiến thứ i + 1 
+
+. Bỏ qua kiến i + 1 : f[i + 1][j] = min(f[i + 1][j], f[i][j]) 
+
+. Ta chấp nhận kiến i + 1 vào chồng  (điều kiện: f[i][j] <= 6 * w[i + 1]) : f[i + 1][j + 1] = min(f[i + 1][j + 1], f[i][j] + w[i + 1]) 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+SPC1 (Spring Contest 2020) 
+
+Cho 2 dãy số nguyên a và b, hãy xác định độ dài của dãy con chung dài nhất 
+
+1 <= N <= 2000000 
+1 <= M <= 2000 
+
+Nhận xét : độ dài dãy con chung dài nhất <= M 
+
+a = [0, 5, 3, 2, 1, 4, 6, 5, 2, 3, 2, 4, 1, 1, 1, 1, 3, 3]
+
+b = [0, 5, 4, 3, 2, 5, 5, 1, 6, 9, 3]
+
+
+Lưu trữ các danh sách v[x] với ý nghĩa: 
+
+v[x] là tập hợp các vị trí = x trong dãy a 
+
+v[3] = {2, 9, 16, 17
+v[2] = {3, 7, .... }
+
+
+
+f[2][2] = 5
+
+
+
+Gọi f[i][j] là VỊ TRÍ NHỎ NHẤT có thể sao cho khi ta có i số đầu tiên của dãy b, ta có thể tạo được với dãy a gồm f[i][j] số đầu tiên thành dãy con chung dài nhất 
+
+có độ dài là j 
+
+
+
+bài toán cơ sở: f[0][0] = 0,  f[i][j] còn lại = inf 
+
+đáp án bài toán: số j lớn nhất có thể sao cho f[M][j] <= N 
+
+công thức qhd: 
+
+Khi ta có f[i][j] != inf 
+
+. Xét phần tử b[i + 1] 
+
+  + Tình huống 1: Ta bỏ qua phần tử b[i + 1]: f[i + 1][j] = min(f[i + 1][j], f[i][j]) 
+
+  + Tình huống 2: Ta chấp nhận b[i + 1] vào dãy con chung: 
+   
+    Nếu tồn tại một vị trí p bên dãy a sao cho a[p] == b[i + 1] và p > f[i][j]: 
+      
+    f[i + 1][j + 1] = min(f[i + 1][j + 1], p)
+
+
+    Để tìm số p, ta hãy truy cập vào v[b[i + 1]] và tìm p nhỏ nhất có thể thỏa mãn p > f[i][j] bằng tìm kiếm nhị phân 
+
+-----------------------------------------------------------------------------------------------------------------------
+
+SC1 (Summer Contest 2021) 
+
+Sau tết, ta có được a[1] tờ 1000, a[2] tờ 2000, a[3] tờ 5000, ....., a[9] tờ 500000. Ta sẽ đi mua trà sữa, ly trà sữa có giá tiền là C (C chia hết cho 1000)
+
+Cửa hàng trà sữa có b[1] tờ 1000, b[2] tờ 2000, b[3] tờ 5000, ....., b[9] tờ 500000. Giả sử ta trả cho cửa hàng số tiền là X  (X >= C, X chia hết cho 1000) thì cửa hàng
+
+sẽ thối tiền cho chúng ta là X - C 
+
+Ta sẽ muốn đẩy đi càng nhiều tờ tiền càng tốt. Ngược lại về phía cửa hàng, vì cửa hàng cần nhiều tiền lẻ, nên cửa hàng sẽ muốn thối tiền lại cho khách càng ít tờ tiền 
+
+càng tốt 
+
+Hỏi: Số tờ tiền nhỏ nhất ta có thể nhận được sau thương vụ mua trà sữa là bao nhiêu ?????? 
+
+
+Vì các mệnh giá và giá tiền đều chia hết cho 1000 
+
+====> chia các mệnh giá cho 1000 và C cho 1000 
+
+cost = {1, 2, 5, 10, 20, 50, 100, 200, 500} 
+
+Gọi fmax[i][j] là số TỜ TIỀN tối đa mà người mua trà sữa có thể chi trả khi có i mệnh giá đầu tiên và tổng tiền là j 
+
+bài toán cơ sở: fMax[0][0] = 0,  khởi tạo các fMax[i][j] = -1 
+
+công thức qhd: 
+
+Khi ta có fMax[i][j] != -1 
+
+Nếu ta quyết định chi trả x tờ tiền có mệnh giá cost[i + 1] 
+
+fMax[i + 1][j + x * cost[i + 1]] = max(fMax[i + 1][j + x * cost[i + 1]], fMax[i][j] + x)   (x : 0 -> a[i + 1])
+
+
+
+
+Tương tự ta gọi fMin[i][j] là số TỜ TIỀN tối thiểu mà chủ cửa hàng sẽ chi trả 
+
+
+
+Ta duyệt X : C -> Tổng tiền của ta 
+
+====> Lượng tiền cửa hàng có thể thối lại: X - C 
+
+Điều kiện: fMax[9][X] != -1 và fMin[9][X - C] != inf : 
+
+Số tờ tiền còn lại của chúng ta sau 1 cuộc giao dịch: 
+
+Min (a[1] + a[2] + .... + a[9] - fMax[9][X] + fMin[9][X - C]) 
+
+----------------------------------------------------------------------------------------------------------------------
+
+SPC4 (Spring Contest 2022) 
+
+Có 2 người thợ cắt tóc, người 1 muốn phục vụ vị khách thứ i sẽ mất b[i] thời gian, người 2 muốn phục vị khách thứ i sẽ mất d[i] thời gian 
+
+Ngày hôm đó có N vị khách, ta sẽ phân 1 vài người khách cho người 1, những người còn lại cho người 2 
+
+Thời gian đóng cửa tiệm = Max thời gian hoàn thành của 2 người 
+
+Hỏi thời gian đóng cửa tiệm sớm nhất là bao nhiêu ???? 
+
+N = 5 
+
+b = [4, 1, 5, 2, 5]
+d = [1, 6, 2, 8, 3] 
+
+Người 1:  khách 3 + 5          5 + 5 = 10 
+
+Người 2:  Khách 1, 2, 4        1 + 6 + 8 = 15 
+
+
+
+Ta cố định thời gian người 1 phục vụ là t, nếu ta tính được f(t) là tổng thời gian tối thiểu mà người 2 có thể phục vụ khi người 1 đã phục vụ trong t phút 
+
+===> thời gian đóng cửa tiệm là max(t, f(t)) 
+
+
+Giả sử t = 7 
+
+Tình huống 1: 
+
+Người 1: 1, 2, 4    
+Người 2: 3, 5         : 5 
+
+
+Tình huống 2: 
+
+Người 1: 3, 4
+Người 2: 1 2 5        : 10 
+
+
+Tình huống 3 
+
+Người 1: 4, 5 
+Người 2: 1 2 3        : 9 
+
+f(7) = 5 
+
+====> thời gian đóng cửa tiệm khi t = 7: max(t, f(t)) = max(7, 5) = 7
+
+
+Gọi f[i][t] là tổng thời gian nhỏ nhất người 2 phục vụ khi có i vị khách và tổng thời gian người 1 phục vụ là t 
+
+bài toán cơ sở: f[0][0] = 0,   f[i][t] = inf 
+
+đáp án bài toán:  Min { Max(t, f[n][t]) với t: 0 -> 10000 và f[n][t] != inf  }
+
+công thức qhd: 
+
+Khi ta có f[i][t] != inf 
+
+. Người i + 1 được phục vụ bởi người 1: f[i + 1][t + b[i + 1]] = min(f[i + 1][t + b[i + 1]], f[i][t]) 
+
+. Người i + 1 được phục vụ bởi người 2: f[i + 1][t] = min(f[i + 1][t], f[i][t] + d[i + 1]) 
+
+----------------------------------------------------------------------------------------------------------------------
+
+Mububa 
+
+Cho 1 dãy số nguyên dương a. Hãy xác định có thể phân dãy a thành tối đa bao nhiêu đoạn con liên tục sao cho sau khi lấy tổng các số trong đoạn con, ta được dãy số 
+
+không giảm 
+
+
+a = |1|, |3, 1|, 2, 1
+
+f[3][2] = 2 
+
+1 <= N <= 3000 
+
+
+Sử dụng prefix sum, đặt sum[i] = a1 + a2 + .... + ai 
+
+
+Số đoạn ta tạo ra <= N 
+
+
+nextPosition[i][j] : Khi ta có đoạn con cuối cùng là đoạn [i .. j] thì vị trí tiếp theo gần nhất sao cho có tổng >= sum(i .. j) là vị trí nào ???? 
+
+Ví dụ: nextPosition[1][2] = 5 
+
+nextPosition[i][j] ,  tìm vị trí p nhỏ nhất sao cho: sum[p] - sum[j] >= sum[j] - sum[i] 
+
+
+Gọi f[i][j] là vị trí bắt đầu nhỏ nhất của đoạn cuối cùng khi ta có i phần tử đầu tiên và đã chia được thành j đoạn liên tục  
+
+bài toán cơ sở: f[1][1] = 1,   khởi tạo các f[i][j] = inf 
+
+đáp án bài toán: Ta tìm j lớn nhất sao cho: f[n][j] <= n 
+
+Khi ta có f[i][j] != inf 
+
+Xét phần tử a[i + 1] 
+
+
+. Cho a[i + 1] gia nhập đoạn cuối cùng : f[i + 1][j] = min(f[i + 1][j], f[i][j]) 
+
+. Ta muốn a[i + 1] là một sự bắt đầu của đoạn mới: 
+
+  Đặt p = nextPosition[f[i][j]][i], nếu p != -1 
+
+  f[p][j + 1] = min(f[p][j + 1], i + 1) 
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
