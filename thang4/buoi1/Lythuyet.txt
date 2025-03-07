@@ -1,0 +1,160 @@
+Tháng 4 (Graph Theory Basic) 
+
+- Buổi 1: Giới thiệu về đồ thị + Dfs algorithm 
+- Buổi 2: Topo Sorting 
+- Buổi 3: Joints and Bridges 
+- Buổi 4: Strongly Connected Components 
+- Buổi 5: Bfs 
+- Buổi 6: Dijkstra algorithm 
+- Buổi 7: Disjoint Set union + Kruskal algorithm 
+- Buổi 8: Contest 
+
+
+Lý thuyết đồ thị là một chuyên đề nghiên cứu trong lĩnh vực toán rời rạc dùng để nghiên cứu về các sự vật, sự việc và giữa chúng có mối quan hệ với nhau. 
+
+Một số khái niệm căn bản trong lý thuyết đồ thị 
+
+1. Đỉnh: Đỉnh đại diện cho một sự vật, sự việc nào đó 
+
+2. Cạnh: Cạnh thể hiện mối liên hệ giữa 2 đỉnh trên đồ thị 
+
+   + Cạnh vô hướng : Khi ta đứng tại đỉnh u, ta có thể đến được đỉnh v thông qua cạnh này hoặc ngược lại 
+
+   + Cạnh có hướng : Khi ta có cạnh có hướng nối từ u -> v thì ta có thể từ u sang v dựa vào cạnh này nhưng không có chiều ngược lại 
+
+3. Đường đi : Là một danh sách các đỉnh s -> u1 -> u2 -> .... -> t, trong đó khi ta có 2 đỉnh x và y xuất hiện kề nhau trên đường đi thì chúng phải có cạnh nối với nhau
+
+4. Trọng số : Là một con số được gán lên cạnh (hoặc lên đỉnh) thể hiện một thông tin nào đó (tùy thuộc vào bài toán ta đang xét) 
+
+
+Thuật toán Dfs 
+
+Cho một đồ thị G gồm N đỉnh và M cạnh, các cạnh là cạnh có hướng. Cho một đỉnh S là đỉnh xuất phát, hãy xác định xem nếu ta xuất phát từ S, ta có thể đến những đỉnh 
+
+nào. Hãy liệt kê các đỉnh đó 
+
+
+Với mỗi đỉnh u, ta xét visited[u] = true / false với ý nghĩa: Nếu ta xuất phát từ S, visited[u] = true nếu ta có thể đặt chân đến u 
+
+Nguyên tắc: Khi ta đứng tại đỉnh u, xét các lựa chọn tiếp theo có thể đi đến, với lựa chọn mà visited = false, ta hãy đi đến đó. 
+
+
+
+Danh sách kề 
+
+Ta sẽ có N vector, trong đó vector adj[i] chứa danh sách những đỉnh mà i có thể đến MỘT CÁCH TRỰC TIẾP 
+
+
+Khi ta có một cạnh có hướng nối từ u -> v 
+
+
+vector <int> adj[100005]; 
+
+Khi ta có cạnh u -> v 
+    adj[u].push_back(v); 
+
+
+dfs(u): 
+  visited[u] = true 
+  for (int i = 0; i < (int) adj[u].size(); i++) {
+    int v = adj[u][i] 
+    nếu visited[v] == false: 
+      dfs(v) 
+  }
+
+Độ phức tạp của thuật Dfs là ????? 
+
+O(V + E) với V là số lượng đỉnh, E là số lượng cạnh trên đồ thị 
+
+
+Make maze: 
+
+
+Giả sử ta có 2 đỉnh (startx, starty)  và  (endx, endy) 
+
+
+Ta gọi visited[x][y] = true / false với ý nghĩa: Xuất phát tại (startx, starty), có thể đến được đỉnh (x, y) hay không ???? 
+
+
+(x, y)   kề  (x, y + 1),  (x + 1, y),   (x, y - 1),  (x - 1, y) 
+
+dx[4] = {0, 0, 1, -1}
+dy[4] = {1, -1, 0, 0} 
+
+
+(x, y)    kề   (x + dx[i], y + dy[i]) 
+
+
+i = 0  : (x, y)  kề với (x + dx[0], y + dy[0]) = (x, y + 1) 
+i = 1  : (x, y)  kề với (x + dx[1], y + dy[1]) = (x, y - 1)
+i = 2 
+i = 3 
+
+
+
+
+dfs(x, y): 
+  visited[x][y] = true 
+  for i: 0 - > 3 
+    đặt nxtx = x + dx[i],  nxty = y + dy[i] 
+    nếu nxtx >= 1 && nxtx <= n && nxty >= 1 && nxty <= m && a[nxtx][nxty] == '.' && visited[nxtx][nxty] == false: 
+      dfs(nxtx, nxty) 
+
+
+-----------------------------------------------------------------------------------------------------
+
+Mail Delivery 
+
+Đồ thị Euler: 
+
+Một đồ thị gọi là đồ thị Euler nếu tồn tại một đường đi xuất phát tại 1 đỉnh bất kỳ, đi qua hết toàn bộ các cạnh, mỗi cạnh đúng 1 lần và quay trở lại đỉnh đó 
+
+Đặc điểm nhận biết đồ thị Euler: Với mỗi đỉnh u trong đồ thị, nếu bậc của đỉnh u đều là số chẵn thì đó sẽ là đồ thị Euler 
+
+
+Ta lưu trữ danh sách kề dưới dạng set <int> 
+
+set <int> adj[100005] 
+
+Khi có cạnh u - v 
+
+adj[u].insert(v)
+adj[v].insert(u) 
+
+
+dfs(u) 
+  while (adj[u].empty() == false) {
+    đặt v = *adj[u].begin() 
+    adj[u].erase(adj[u].find(v))
+    adj[v].erase(adj[v].find(u))
+    dfs(v) 
+  }
+  đưa u vào đáp án 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

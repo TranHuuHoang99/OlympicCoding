@@ -1,0 +1,147 @@
+Round Trip II 
+
+Cho một đồ thị có hướng gồm N đỉnh. Hãy xác định đồ thị trên có chu trình hay không ? Nếu có hãy in ra bất kỳ một chu trình nào của đồ thị. 
+
+Đồ thị DAG (Directed Acyclic Graph) 
+
+
+Thuật toán: 
+
+dfs(u): 
+  visited[u] = true 
+  Duyệt các đỉnh v kề với u 
+    nếu visited[v] == true 
+      =====> kết luận đây là đồ thị có chu trình. 
+
+
+Với một đỉnh u, ta định nghĩa state[u] = 0 / 1 hoặc 2 với ý nghĩa: 
+
+state[u] = 0: đỉnh u chưa được thăm 
+state[u] = 1: đỉnh u đã được thăm và vẫn chưa kết luận được gì 
+state[u] = 2: đỉnh u đã được thăm và ta kết luận rằng nếu ta tiếp tục đi vào đỉnh u thì sẽ không thể phát hiện được chu trình. 
+
+
+Gọi trace[u] với ý nghĩa: trước khi đến đỉnh u, ta phải đứng ở đỉnh v 
+
+isCycle = false 
+
+dfs(u) 
+  state[u] = 1 
+  Duyệt mọi v kề u 
+    nếu state[v] == 0:
+      trace[v] = u  
+      dfs(v) 
+    else nếu state[v] == 1
+      isCycle = true 
+      In ra chu trình 
+      DỪNG THUẬT TOÁN 
+  state[u] = 2 
+
+
+main () : 
+  Duyệt u: 1 -> n 
+    nếu state[u] == 0: 
+      dfs(u) 
+  
+--------------------------------------------------------------------------------------------------------------------------------
+
+SC5 (Summer Contest 2021) 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Sắp xếp Topo : 
+
+
+Course Schedule 
+
+Cho N công việc và M mối quan hệ 
+
+Với một mối quan hệ u -> v : Công việc u phải được hoàn thành trước công việc v 
+
+Hãy đưa ra một thứ tự làm việc sao cho khi ta thực hiện theo trình tự từ trái sang phải thì thỏa mãn toàn bộ mối quan hệ trên. 
+
+
+
+dfs(u): 
+  visited[u] = true 
+  Duyệt mọi v kề u 
+    nếu visited[v] == false 
+      dfs(v) 
+  store.push(u)     
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Longest path 
+
+Cho một đồ thị và đã bảo đảm đây là đồ thị DAG. Hãy cho biết độ dài đường đi dài nhất trong đồ thị có độ dài là bao nhiêu ???? 
+
+
+Gọi f[u] là độ dài đường đi dài nhất khi ta kết thúc tại đỉnh u 
+
+với đỉnh u, duyệt mọi đỉnh v kề với u : f[v] = max(f[v], f[u] + 1) 
+
+Kết quả : max(f[u]) 
+
+
+
+for u: 1 -> n 
+  Duyệt mọi v kề với u 
+    f[v] = max(f[v], f[u] + 1) 
+
+
+Ta cần đưa ra một thứ tự để bảo đảm nếu u -> v thì u xuất hiện trước trong thứ tự, sau đó mới tới v 
+
+Duyệt i: 0 -> topo.size() 
+  đặt u = topo[i] 
+  Duyệt mọi v kề với u 
+    f[v] = max(f[v], f[u] + 1) 
+
+Lấy max {f[u]} với u: 1 -> n 
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Stable Wall 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
