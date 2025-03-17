@@ -1,0 +1,156 @@
+Joints And Bridges 
+
+Cây Dfs 
+
+Là một cây được hình thành trong quá trình duyệt Dfs 
+
+
+Cầu là gì ? 
+
+Cầu là cạnh sao cho nếu xóa cạnh đó đi thì đồ thị sẽ tách thành 2 tplt rời rạc nhau. 
+
+Thuật toán Tarjan 
+
+Ta định nghĩa numb[u] và low[u] là 2 giá trị sao cho: 
+
+numb[u] là thứ tự duyệt đỉnh u trong quá trình duyệt Dfs 
+
+low[u] : Giá trị numb[v] nhỏ nhất có thể trong những đỉnh v mà u có thể gặp được ngoại trừ đỉnh liền trước trong quá trình duyệt Dfs 
+
+
+
+Khớp là gì ? 
+
+Khớp là đỉnh sao cho khi xóa đỉnh đó ra khỏi đồ thị (cùng với các cạnh đi kèm), đồ thị sẽ tách thành nhiều tplt 
+
+
+timeDfs = 0 
+
+dfs(u, prev) : 
+  timeDfs++ 
+  numb[u] = low[u] = timeDfs 
+  numbChildren = 0 
+  Duyệt mọi v kề với u: 
+    nếu v == prev : 
+      continue 
+    nếu numb[v] == 0 : 
+      numbChildren++ 
+      nếu u == 1 && numbChildren > 1: 
+        isJoint[u] = true 
+      dfs(v, u) 
+	  nếu u != 1 && low[v] >= numb[u] : 
+        isJoint[u] = true 
+      nếu low[v] == numb[v] : 
+        ghi nhận u - v là cầu 
+      low[u] = min(low[u], low[v]) 
+    else : 
+      low[u] = min(low[u], numb[v]) 
+    
+Độ phức tạp: O(V + E) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
