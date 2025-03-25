@@ -1,0 +1,157 @@
+Suspected and witness: 
+
+Nhận xét: 
+
+Xét 1 thành phần liên thông mạnh, nếu đỉnh u là đỉnh nói thật thì tất cả các đỉnh trong tplt mạnh đó đều sẽ nói thật 
+
+nếu đỉnh u là một đỉnh nói dối thì tất cả các đỉnh trong tplt mạnh đó đều sẽ nói dối. 
+
+
+--------------------------------------------------------------------------------------------------------------------------------- 
+
+
+Bfs  (Breadth First Search) 
+
+Cho một đồ thị G không có trọng số gồm V đỉnh và E cạnh. 
+
+Cho một đỉnh xuất phát S, thuật toán Bfs sẽ cho ta độ dài đường đi ngắn nhất từ S đến mọi đỉnh còn lại trong đồ thị.  
+
+
+Gọi bảng distance[u] với ý nghĩa: Độ dài đường đi ngắn nhất từ S đến u 
+
+
+Khởi tạo distance[u] = -1, distance[S] = 0 
+
+Tạo một hàng đợi Q là hàng đợi chứa các đỉnh mà ta đang xét. 
+
+Đưa S vào hàng đợi.
+
+Với một đỉnh u được lấy ra khỏi hàng đợi, xét các đỉnh v kề với u, nếu distance[v] == -1: 
+  distance[v] = distance[u] + 1 
+  đưa v vào hàng đợi 
+
+
+Độ phức tạp của BFS là O(V + E) 
+
+
+for u: 1 -> N 
+  distance[u] = -1 
+
+Q.push(S) 
+distance[S] = 0 
+
+while Q khác rỗng 
+  đặt u = Q.front() 
+  DUyệt mọi v kề u 
+    nếu distance[v] == -1: 
+      distance[v] = distance[u] + 1 
+      đưa v vào hàng đợi 
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+MOVE 
+
+Cho 2 dãy số a và b, ta có số M 
+
+Ta có một số S. Ta có thể biến đổi số S như sau: 
+
+Ta chọn một vị trí i bất kỳ, và biến đổi S -> (S * a[i] + b[i]) % M 
+
+Hỏi mất tối thiểu bao nhiêu phép biến đổi thì S sẽ trở thành 0 
+
+
+
+
+Nhận xét: M <= 1000000 
+
+Ta thấy các con số chỉ nằm trong đoạn 0 ..... 999999 
+
+
+Giả sử ta có M con số 0, 1, 2 ....., M - 1 
+
+
+
+
+
+M = 6 
+
+a = [3, 1, 2]
+b = [4, 1, 8] 
+
+
+S = 4 
+
+
+
+4 ---> 4 
+4 ---> 5 
+
+
+dist[S] = 0 
+Đưa S vào hàng đợi 
+
+với u, duyệt các v kề với u 
+
+  for i: 1 -> N 
+    v = (u * a[i] + b[i]) % M 
+    nếu dist[v] == -1 
+      dist[v] = dist[u] + 1 
+      đưa v vào hàng đợi 
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+SPC6 (Spring Contest 2021) 
+
+Ta xét một "đỉnh" của đồ thị gồm 4 thông tin 
+
+(xR, yR, xB, yB) tương ứng là tọa độ của rô bốt đỏ đứng ở hiện tại là (xR, yR), tọa độ rô bốt xanh đứng ở hiện tại là (xB, yB) 
+
+dist[xR][yR][xB][yB] là khoảng cách ngắn nhất từ đỉnh xuất phát cho đến đỉnh hiện tại. 
+
+(xR, yR) và (xB, yB), ta xét đỉnh tiếp theo (nxR, nyR, nxB, nyB) 
+
+dist[nxR][nyR][nxB][nyB] = dist[xR][yR][xB][yB] + 1 
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Bitmap 
+
+Xét 2 điểm (x1, y1) và (x2, y2), khoảng cách Mahathan giữa 2 điểm này được định nghĩa = |x1 - x2| + |y1 - y2| 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
