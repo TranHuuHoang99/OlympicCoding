@@ -1,0 +1,231 @@
+Bitmap: 
+
+
+Ý tưởng ngây thơ: 
+
+Với mỗi ô (i, j) là ô trắng, ta duyệt các ô (x, y) là ô đen, và ta tính khoảng cách Mahathan nhỏ 
+
+1 <= n, m <= 200 =====> 40.000 ô 
+
+
+
+Ý tưởng chuẩn: 
+
+Sử dụng Bfs nhiều nguồn 
+
+Sử dụng một queue <pair <int, int> > Q 
+
+Duyệt các nguồn <x, y>, đưa tất cả nguồn này vào Q 
+
+Với một đỉnh (i, j), ta duyệt các đỉnh kề 
+
+------------------------------------------------------------------------------------------------------------------------- 
+
+Blue graph 
+
+
+1 - 2 - 3 - 4 - 5 - 6 - .............- 100000
+
+
+
+1 50000   : đánh dấu 1 -> 49999 
+2 50000 
+3 50000 
+4 50000 
+.....
+
+50000 50000 
+
+Ta tạo hàng đợi Q dưới dạng priority_queue và ta ưu tiên khoảng cách lớn nhất cho tới đỉnh u 
+
+
+
+1 - 2 - 3 - 4 - 5 - 6 - 7 - 8 - 9 - 10 
+
+1 5 
+2 5
+3 5
+
+
+
+
+<2, 6> 
+
+---------------------------------------------------------------------------------------------------------------------------------- 
+
+Thuật toán Dijkstra 
+
+Thuật toán Dijkstra là thuật toán tìm độ dài đường đi ngắn nhất khi có một điểm start đến tất cả các điểm còn lại trên đồ thị. 
+
+Lưu ý: Thuật toán Dijkstra chỉ áp dụng trên đồ thị có trọng số không âm. 
+
+Độ phức tạp của Dijkstra: O(E.logV) với E là số lượng cạnh, V là số lượng đỉnh. 
+
+
+
+Xét bài toán sau: 
+
+Cho một đồ thị G(V, E), các cạnh u -> v có trọng số w(u, v) : độ dài của cạnh u -> v là w(u, v) 
+
+Cho một điểm start, hãy tìm độ dài đường đi ngắn nhất từ start đến mọi điểm còn lại. Độ dài đường đi được xác định = tổng  trọng số của các cạnh trên đường đi đó. 
+
+
+
+Gọi distance[u] : Độ dài đường đi ngắn nhất từ start -> u 
+
+Gọi pq là kho (min heap) để chứa các cặp <distance, u> : distance là độ dài đường đi ngắn nhất tới u và đỉnh u
+
+
+Ta khởi tạo các distance[u] = inf 
+distance[start] = 0, đưa <0, start> vào pq 
+
+Với một cặp <distance, u>, duyệt các đỉnh v kề với u. Nếu distance[v] > distance[u] + w(u, v) : 
+  distance[v] = distance[u] + w(u, v) 
+  đưa <distance[v], v> vào pq 
+
+
+
+
+adj[u] lưu cặp <v, w> : đỉnh u kề với v và có trọng số là w 
+
+Khi ta đọc u, v, w: adj[u].push_back(make_pair(v, w)) 
+
+
+for u: 1 -> V 
+  distance[u] = inf 
+
+distance[start] = 0 
+đưa <0, start> vào pq 
+
+while pq khác rỗng: 
+  pair <int, int> pqTop = pq.top(); 
+  pq.pop()
+  nếu pqTop.first != distance[pqTop.second] 
+    continue 
+  đặt u = pq.second
+  duyệt mọi <v, w> kề với u: 
+    nếu distance[v] > distance[u] + w: 
+      distance[v] = distance[u] + w 
+      đưa <distance[v], v> vào pq 
+
+Duyệt mọi v: 1 -> N 
+  xuất distance[v]       
+
+----------------------------------------------------------------------------------------------------------------------
+
+Trafficn 
+
+Ý tưởng ngây thơ: 
+
+Duyệt cạnh vô hướng u - v có trọng số là w(u, v) 
+
+   Gọi dijkstra từ S 
+
+
+
+Ý tưởng chuẩn 
+
+Một cạnh u - v khi được thêm vào chỉ có ý nghĩa khi ??????? 
+
+Đường đi ngắn nhất có đi qua cạnh u - v 
+
+
+Nhận xét: 
+
+Đường đi ngắn nhất mà BUỘC phải băng qua cạnh u - v có dạng: 
+
+S -> x1 -> x2 -> x3 -> ... -> u -> v <- y1 <- y2 <- y3 <- ..... <- T 
+S -> x1 -> x2 -> x3 -> ... -> v -> u <- y1 <- y2 <- y3 <- ..... <- T 
+
+
+distance[u]  +   w(u, v)  +    rev_distance[v] 
+
+
+Nếu ta tạo thêm một đồ thị revert, với cạnh u -> v sẽ được đổi thành v -> u với trọng số w(u, v) 
+
+v <- y1 <- y2 <- y3 <- ..... <- T  :   rev_distance[v] : độ dài đường đi ngắn nhất từ T -> v  (trên đồ thị revert) 
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Rendez Vouis: 
+
+Một đỉnh (u, state) với ý nghĩa: Ta đang đứng tại u và state = 0 nếu ta chưa cưỡi ngựa, state = 1 nếu ta đã ở trên lưng ngựa 
+
+Đỉnh xuất phát: (1, 0)
+
+Ta xây dựng đồ thị 
+
+
+(u, 0) ---->  (v, 0)    :   w(u, v) 
+
+(u, 1) ---->  (v, 1)    :   w(u, v) / 2 
+
+(u, 0) ---->  (u, 1)    :   0   (nếu u có chuồng ngựa)
+
+
+Đáp án: min(distance[n][0], distance[n][1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
