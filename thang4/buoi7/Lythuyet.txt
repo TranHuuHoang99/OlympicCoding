@@ -1,0 +1,136 @@
+Disjoint Set union (Dsu) 
+
+
+Disjoint set là một cấu trúc dữ liệu nhằm mục đích kiểm tra 2 đỉnh u và v có cùng thuộc tplt hay không và có thể kết nối 2 tplt với nhau. 
+
+
+root[u] : đỉnh đại diện "tạm thời" cho tplt có chứa u 
+
+
+for u: 1 -> n 
+  root[u] = u 
+
+int findRoot(u): 
+  nếu u == root[u] : 
+    return u 
+  int rootu = findRoot(root[u])
+  root[u] = rootu
+  return rootu      
+
+
+void union(u, v): 
+  đặt rootu = findRoot(u) 
+  đặt rootv = findRoot(v) 
+  nếu rootu  == rootv: 
+    báo cáo u và v đã kết nối 
+  else: 
+    root[rootu] = rootv   
+
+------------------------------------------------------------------------------------------------------------------
+
+Anabsi Cobweb 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
