@@ -1,0 +1,478 @@
+Tháng 5 (Basic Mathematics) 
+
+- Buổi 1: Combinatorics 
+- Buổi 2: Làm bài tập về tổ hợp 
+- Buổi 3: Quy hoạch động + Tổ hợp 
+- Buổi 4: Xác suất 
+- Buổi 5: Kỳ vọng 
+- Buổi 6: Lý thuyết trò chơi 
+- Buổi 7: Một số định lý trong toán học 
+- Buổi 8: Contest 
+
+
+Tổ hợp là gì ? 
+
+Tổ hợp là một ngành trong toán học chuyên nghiên cứu về các phép đếm các cầu hình của sự vật, sự việc 
+
+
+
+2 phép toán cơ bản trong tổ hợp 
+
++ Phép cộng 
+
+Một công việc P, để giải quyết ta có k khả năng độc lập có thể xử lý 
+
+. Khả năng 1: P1 cách 
+. Khả năng 2: P2 cách 
+.....
+
+. Khả năng k: Pk cách 
+
+
+Số cách để giải quyết công việc P: P1 + P2 + P3 + .... + Pk 
+
++ Phép nhân 
+
+Một công việc P, để giải quyết ta phải chia thành k giai đoạn độc lập 
+
+. Giai đoạn 1: P1 cách 
+. Giai đoạn 2: P2 cách 
+
+.....
+
+. Giai đoạn k: Pk cách 
+
+Số cách để giải quyết công việc P: P1 x P2 x P3 x ..... x Pk 
+
+
+
+Để giải quyết bài toán đi từ nhà đến trường 
+
+. Tình huống 1: Đi trực tiếp : 1 cách 
+
+. Tình huống 2: Nhà -> nhà bà 2 -> trường : 2 x 3 = 6 cách 
+
+. Tình huống 3: Nhà -> nhà bà 3 -> nhà bà 6 -> nhà ông 7 -> trường: 1 x 2 x 4 x 2 = 16 
+
+
+Tổng số cách để giải quyết công việc P: 1 + 6 + 16 = 23 cách 
+
+
+Ball in Berland 
+
+Có N bạn trai và M bạn gái 
+
+Có K cặp chịu nhảy với nhau. Cặp thứ i gồm bạn trai b[i] - g[i] 
+
+Nhà trường cần chọn ra 2 cặp để nhảy cùng nhau. Đếm số cách chọn ra 2 cặp 
+
+
+Ví dụ: 
+
+N = 6, M = 8
+K = 10 
+
+
+
+1 3  
+1 1    x 
+2 1    
+2 7    
+2 6 
+4 1    
+4 3   
+5 2
+6 2 
+3 8
+
+
+
+Thuật toán ngây thơ: 
+
+
+for i: 1 -> K 
+  for j: i + 1 -> K 
+    nếu b[i] != b[j] và g[i] != g[j]: 
+      ans++ 
+
+
+Tối ưu: 
+
+countBoy[x] : số cặp mà có bạn trai là x 
+
+countGirl[x] : số cặp mà có bạn gái là x 
+
+
+for i: 1 -> K 
+  đặt invalid = countBoy[b[i]] + countGirl[g[i]] 
+  ans += i - 1 - inValid 
+  countBoy[b[i]]++ 
+  countGirl[g[i]]++ 
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Hoán vị - chỉnh hợp - Tổ hợp 
+
+
+Hoán vị: 
+
+Xét N số tự nhiên {1, 2, 3 ....., N}, có bao nhiêu dãy số có N số được tạo nên từ các số tự nhiên trên, sao cho các số trong dãy hoàn toàn khác nhau ? 
+
+Ví dụ: 
+
+N = 3  =====> 3 x 2 x 1 = 6 
+
+[1, 2, 3]
+[1, 3, 2]
+[2, 1, 3]
+[2, 3, 1]
+[3, 1, 2]
+[3, 2, 1] 
+
+
+Giả sử dãy số của ta : [?, ?, ?, ?, ......, ?] 
+
+? đầu tiên: N lựa chọn 
+? số 2    : N - 1 lựa chọn 
+? số 3    : N - 2 lựa chọn 
+
+.....
+
+? số N    : 1 lựa chọn 
+
+Số cách tạo ra dãy số (số lượng hoán vị): N x (N - 1) x (N - 2) x (N - 3) x ..... x 1  
+
+N! = N x (N - 1) x (N - 2) x .... x 1 
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+SPC2 (Spring Contest 2020) 
+
+Cho một dãy số a gồm N số nguyên dương. 
+
+Ta xét tất cả các hoán vị của dãy số a, ta tính tổng chi phí như sau: 
+
+Giả sử hoán vị là a[p1], a[p2], a[p3], ...., a[pN] 
+
+Chi phí = |a[p1] - 0| + |a[p2] - a[p1]| + |a[p3] - a[p2]| + ...... + |a[pN] - a[pN-1]| 
+
+Hỏi trung bình cộng của chi phí là bao nhiêu ????? 
+
+Ví dụ: 
+
+
+a = [2, 4, 5] 
+
+
+[2, 4, 5] : |2 - 0| + |4 - 2| + |5 - 4| = 5 
+[2, 5, 4] : |2 - 0| + |5 - 2| + |4 - 5| = 6
+[4, 2, 5] : |4 - 0| + |2 - 4| + |5 - 2| = 9 
+[4, 5, 2] : |4 - 0| + |5 - 4| + |2 - 5| = 8 
+[5, 2, 4] : |5 - 0| + |2 - 5| + |4 - 2| = 10 
+[5, 4, 2] : |5 - 0| + |4 - 5| + |2 - 4| = 8 
+
+
+
+46 / 6 = 23 / 3 
+
+
+1 <= N <= 100000 
+
+Nhận xét: Tổng của tất cả các trường hợp rất lớn, mẫu cũng rất lớn 
+
+Xét tổng làm 2 phần 
+
+phần 1 : Tổng các giá trị |a[pi] - 0| = a[pi] 
+
+Ta cố định một số a[pi] đứng đầu hoán vị 
+
+Có bao nhiêu hoán vị nhận a[pi] đứng đầu ???????? 
+
+
+[a[pi], ?, ?, ?, ....., ? ] ====> (N - 1)! 
+
+
+Phần 1 = (N - 1)! * (a[1] + a[2] + a[3] + ........ + a[N]) 
+
+
+
+Phần 2 : 
+
+
+[?,  ?,  ?, ?, ........,a[i], a[j], ?, ?, ?, ?, ....., ? ]
+[?,  ?,  ?, ?, ........,a[j], a[i], ?, ?, ?, ?, ....., ? ]
+
+
+= |a[i] - a[j]| * (N - 2)! * (N - 1) * 2 =  |a[i] - a[j]| * 2 * (N - 1)! 
+
+
+Phần 2 =  (Tổng |a[i] - a[j]|) * 2 * (N - 1)!  với mọi i < j 
+
+
+
+Phần 1 + Phần 2 = (N - 1)! * (a[1] + a[2] + a[3] + ........ + a[N])    +    (Tổng |a[i] - a[j]|) * 2 * (N - 1)!  với mọi i < j 
+
+
+(Phần 1 + Phần 2) / N! = [(N - 1)! * (a[1] + a[2] + a[3] + ........ + a[N])    +    (Tổng |a[i] - a[j]|) * 2 * (N - 1)!  với mọi i < j ] / N! 
+
+
+
+=  [ (a[1] + a[2] + a[3] + ........ + a[N])    +    (Tổng |a[i] - a[j]|) * 2 ]   /  N 
+
+
+
+for i: 1 -> N 
+  for j: i + 1 -> N 
+    tổng = tổng + |a[i] - a[j]| 
+
+
+
+Nếu dãy a được sắp xếp: 
+
+
+a[1] <= a[2] <= a[3] <= ......... <= a[N] 
+
+
+Khi ta có i < j ====> |a[i] - a[j]| = a[j] - a[i] 
+
+Với một vị trí a[i] 
+
+
+a[1] <= a[2] <= a[3] <= ......... <= a[i]  <= a[i + 1] <= ....... <= a[n] 
+
+
+Khi a[i] ghép với các a[j]   (j < i) thì a[i] đều mang dấu dương 
+
+a[i] sẽ có i - 1 lần mang dấu dương 
+
+a[i] sẽ có n - i lần mang dấu âm 
+
+
+"Sự đóng góp" của a[i] :  (i - 1) - (n - i) = 2 * i - n - 1  
+
+
+Tổng |a[i] - a[j]| với i < j  =   Tổng (2 * i - n - 1) * a[i]  với i: 1 -> n 
+
+
+
+Chỉnh hợp : 
+
+Xét N số tự nhiên {1, 2, 3, ....., N}, có bao nhiêu dãy số có K phần tử khác nhau được tạo nên từ N số tự nhiên trên. 
+
+
+
+N = 4, K = 2 
+
+[1, 2]
+[1, 3]
+[3, 4]
+[4, 3]
+[2, 4]
+[4, 1]
+.....
+
+
+
+Giả sử dãy số là [?, ?, ?, ?, ....., ?]  : K dấu ? 
+
+Số lượng dãy: N x (N - 1) x (N - 2) x ........ x (N - K + 1) 
+
+A(N, K) = N x (N - 1) x (N - 2) x ........ x (N - K + 1) 
+
+        = N x (N - 1) x (N - 2) x ........ x (N - K + 1) x (N - K) x (N - K - 1) x ....... x 1 / [(N - K) x (N - K - 1) x ..... x 1]
+
+        = N! / [(N - K)!] 
+
+
+Tổ hợp: 
+
+Cho N số tự nhiên {1, 2, 3, ...., N}, có bao nhiêu TẬP HỢP có k phần tử được chọn từ các số trên 
+
+
+N = 4, K = 3 
+
+[1, 2, 3]
+[1, 3, 2]
+[2, 1, 3] 
+
+......
+
+
+
+{1, 2, 3}
+{1, 2, 4}
+{1, 3, 4} 
+{2, 3, 4}
+
+
+C(N, K) = A(N, K) / K! = N! / [ (N - K)! * K! ] 
+
+------------------------------------------------------------------------------------------------------------
+
+Binomial Coffcient : 
+
+Cho T test case, mỗi test case cho 2 số N và K, xuất ra C(N, K) 
+
+Ta xuất ra kết quả C(N, K) % 1000000007 
+
+
+Các phép toán có liên quan đến phép mod !!! 
+
+
+Phép cộng: 
+
+(a + b) % M =  (a % M + b % M) % M 
+
+Ví dụ: 
+
+(12 + 58) % 7 = 70 % 7 = 0 
+
+(12 % 7 + 58 % 7) = (5 + 2) % 7 = 0 
+
+
+
+(a - b) % M = (a % M - b % M + M) % M 
+
+Ví dụ
+
+
+(58 - 12) % 7 = 46 % 7  = 4 
+
+(58 % 7 - 12 % 7) = (2 - 5 + 7) % 7 = 4 
+
+
+
+(a * b) % M = (a % M * b % M) % M 
+
+Ví dụ: 
+
+(12 * 58) % 7 = 696 % 7 = 3 
+
+(12 % 7   *   58 % 7) =  (5 * 2) % 7 = 3 
+
+
+
+(a / b) % M = ((a % M) / (b % M)) % M ....................................... !!!! TÀO LAO !!!!!!! 
+
+Tuy nhiên: Nếu M là số nguyên tố 
+
+b^(M - 1) % M = 1   (nếu M là số nguyên tố và b != M)
+
+
+(a / b) % M = (a * b^-1 * 1) % M =   a * b^-1 * b^(M - 1) = a * b^(M - 2) % M 
+
+
+
+C(N, K) = N! / (K! * (N - K)!) = fact[N] * inv_fact[K] * inv_fact[N - K]  % M 
+
+đặt ans = fact[N],  (ans *= inv_fact[K]) %= mod , (ans *= inv_fact[N - K]) %= mod 
+
+
+Tạo bảng fact[i] = i!  %  M 
+
+fact[0] = 1 
+
+fact[i] = (fact[i - 1] * i) % M 
+
+
+Tạo bảng inv_fact[i] = 1/fact[i] % M   =  fact[i]^(M - 2) % M 
+
+-----------------------------------------------------------------------------------------------------------------
+
+Distributing Apples 
+
+
+Có N quả táo và K đứa trẻ. Đếm số cách chia N quả táo trên cho K đứa trẻ. Biết rằng có thể không chia táo cho một bạn nào đó. 
+
+
+Ví dụ: 
+
+N = 5,  K = 3 
+
+[0, 0, 5] 
+[1, 1, 3]
+[2, 1, 2] 
+...... 
+
+
+
+Chia kẹo euler: 
+
+Có N viên kẹo, có K đứa trẻ. Có bao nhiêu cách chia kẹo cho K đứa trẻ sao cho mỗi đứa có ít nhất 1 viên 
+
+
+N = 5, K = 3 
+
+C(2, 4) = 6 
+
+[1, 1, 3]
+[1, 2, 2]
+[1, 3, 1]
+[2, 2, 1]
+[3, 1, 1]
+[2, 1, 2] 
+
+
+
+o o | o o | o 
+
+o | o o o | o
+
+
+o o o o o
+
+
+
+Đáp án: C(K - 1, N - 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
