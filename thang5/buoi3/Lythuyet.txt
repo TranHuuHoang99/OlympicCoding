@@ -1,0 +1,325 @@
+She knows: 
+
+Cho một bảng hình chữ nhật gồm n hàng và m cột. 
+
+Ban đầu các ô có thể là màu đỏ, xanh hoặc trắng. 
+
+Có M ô đã có màu xanh hoặc đỏ 
+
+Đếm có bao nhiêu cách điền vào các ô trắng sao cho số lượng cặp ô kề cạnh nhau mà khác màu phải là số chẵn 
+
+
+1 <= n, m <= 10^9 
+
+
+
+Ta hãy đếm số lượng ô đã được tô màu sẵn và nằm trên biên và ta đếm có bao nhiêu ô đỏ được tô sẵn mà đang nằm trên biên 
+
+
+Nếu số lượng ô đã được tô sẵn == 2 * (n - 2) + 2 * (m - 2)  và  số lượng ô đỏ được tô sẵn nằm trên biên mà là số lẻ =====> kết quả là 0 
+
+trong tình huống ngược lại 
+
+Đếm có bao nhiêu ô không nằm trên biên mà là ô trắng 
+
+Giả sử số lượng ô đó là numb
+
+====> số cách tô : 2^numb 
+
+Ta gọi numbBorders là số lượng ô nằm trên biên mà đang là màu trắng 
+
+ta có 2 tình huống: 
+
+1. Số lượng ô đỏ đã được tô sẵn nằm trên biên là số lẻ : C(1, numbBorders) + C(3, numbBorders) + C(5, numbBorders) + ........   = 2^(numbBorders - 1) 
+
+1. Số lượng ô đỏ đã được tô sẵn nằm trên biên là số chẵn : C(0, numbBorders) + C(2, numbBorders) + C(4, numbBorders) + ........  = 2^(numbBorders - 1)
+
+
+Kết quả bài toán:  2^numb  * 2^(numbBorders - 1) = 2^(numb + numbBorders - 1) 
+
+Nhị thức new ton 
+
+2^N = (1 + 1)^n = C(0, n) + C(1, n) + C(2, n) + ...... + C(n, n)     (1) 
+
+0^N = (1 - 1)^n = C(0, n) - C(1, n) + C(2, n) - C(3, n) + .......    (2) 
+
+
+
+(1) + (2) : 2^N = 2 * C(0, n) + 2 * C(2, n) + 2 * C(4, n) + ......
+ 
+
+2^(N - 1) = C(0, n) + C(2, n) + C(4, n) + ...... 
+
+
+Với phương trình (1) 
+
+2^n = C(0, n) + C(1, n) + C(2, n) + .... + C(n, n)
+
+===> C(1, n) + C(3, n) + C(5, n) + .... = 2^n - 2^(n - 1)
+
+C(1, n) + C(3, n) + C(5, n) + ..... = 2^(n - 1) 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Greatest Common Divisor 
+
+Cho một dãy số nguyên dương a gồm N số. 
+
+Ta xét tất cả các tập hợp không rỗng của dãy a, ta tính ước chung lớn nhất của các số trong tập hợp đó. 
+
+Hỏi tổng của tất cả các ước chung lớn nhất là bao nhiêu ?????? 
+
+
+N = 4 
+a = [1, 2, 2, 6]
+
+
+{1}  : 1 
+{2}  : 2 
+{2}  : 2
+{6}  : 6 
+{1, 2} : 1 
+{1, 2} : 1 
+{1, 6} : 1 
+{2, 2} : 2 
+{2, 6} : 2 
+
+.......
+
+
+1 + 2 + 2 + 6 + 1 + ..... 
+
+
+
+{2}, {2}, {2, 2},  {2, 6},  {2, 6}, {2, 2, 6} 
+
+g = 2  ====> 6 tập hợp nhận g = 2 làm ước chung lớn nhất  =====> kết quả += 2 * 6
+
+
+Nhận xét: 1 <= a[i] <= 70  ,  1 <= N <= 100000 
+
+Giả sử với một ước là g, nếu ta có được f(g) là số lượng tập hợp mà có ước chung lớn nhất là g 
+
+=====> kết quả = Tổng các g * f(g) 
+
+
+
+N = 4 
+a = [1, 2, 2, 6]
+
+
+{2},  {2} ,   {2, 2} 
+
+f[3][2] = 3 
+
+Gọi f[i][g] là số lượng cách chọn ra tập hợp mà ta có ước chung lớn nhất là g khi ta xét i phần tử đầu tiên 
+
+Lưu ý nếu g = 0 =====> ta chưa chọn phần tử nào 
+
+
+Bài toán cơ sở: f[0][0] =  1 
+
+
+đáp án bài toán: Tổng các g * f[n][g]
+
+công thức qhd: 
+
+
+Khi ta có f[i][g] > 0 
+
+Xét phần tử a[i + 1] 
+
+. Nếu không bỏ a[i + 1] vào tập hợp: f[i + 1][g] += f[i][g] 
+
+. Nếu chấp nhận a[i + 1] : new_g = (g == 0 ? a[i + 1] : gcd(g, a[i + 1])) : f[i + 1][new_g] += f[i][g] 
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+WC4 (Winter Contest 2019) : 
+
+Xét N số tự nhiên {1, 2, 3, ...., N}. Có bao nhiêu cách chia N số tự nhiên này thành các tập hợp sao cho mỗi số phải vào đúng 1 tập hợp ? 
+
+
+N = 3 
+
+{1} ,  {2},   {3} 
+
+{1, 2},  {3} 
+
+{1, 3},  {2} 
+
+{2, 3},  {1} 
+
+{1, 2, 3} 
+
+===> 5 cách 
+
+
+1 <= N <= 1000 
+
+
+
+
+1 2 3 4 5 
+
+
+{2} {4}   { 1, 3, 5 }
+
+
+{2, 4}  {1, 3, 5} 
+
+
+
+
+{1, 3, 5}   { 2, 4 }
+
+
+f[5] = f[2] * C(3, 5) 
+
+
+
+
+{1} ,  {2},   {3} 
+
+{1, 2},  {3} 
+
+ {2}  , {1, 3} 
+
+{1}  ,  {2, 3}
+
+{1, 2, 3} 
+
+
+
+
+...................................   {?, ?, ?, ?, ......, ?, i}
+
+
+
+
+Gọi f[i] là số lượng cách để phân chia i số tự nhiên đầu tiên thành các tập hợp 
+
+bài toán cơ sở: f[0] = 1 
+
+đáp án : f[n] 
+
+công thức qhd: 
+
+Giả sử tập hợp cuối cùng có j phần tử và BUỘC phải có số i 
+
+Tổng quát: f[i] = Tổng C(j - 1, i - 1) * f[i - j] 
+
+
+-----------------------------------------------------------------------------------------------------------
+
+SPC1 (Spring Contest 2020) 
+
+Có n người mẹ, người mẹ thứ i có a[i] người con 
+
+Nhà hàng có K bàn có sức chứa vô hạn
+
+Ta sẽ xếp các bà mẹ và các người con vào các bàn sao cho thỏa mãn: 
+
+1. Các bà mẹ có thể ngồi bất kỳ nơi nào 
+
+2. Những người con, nếu như bàn không có người lớn thì có thể ngồi. Nhưng nếu bàn có người lớn thì phải có mẹ của chúng 
+
+Có bao nhiêu cách xếp ? 
+
+
+
+N = 2, 
+
+[1, 2] 
+
+K = 3 
+
+
+Bàn 1: {A, B, b2},   Bàn 2: { },  Bàn 3 : {a1, b1} 
+
+Bàn 1: {b1, b2, a1},   Bàn 2: {A, B},   Bàn 3 : { }
+
+............
+
+
+Giả sử ta đã có j bàn có người lớn =====> có k - j bàn trống 
+
+Mỗi đứa trẻ sẽ có bao nhiêu sự lựa chọn 
+
+Mỗi đứa trẻ sẽ có k - j + 1 sự lựa chọn
+
+
+Gọi totalChildren là số lượng trẻ 
+
+=====> số cách để xếp các đứa trẻ = (k - j + 1) x (k - j + 1) x (k - j + 1) x ..... = (k - j + 1)^totalChildren 
+
+
+Khi ta xếp N bà mẹ vào j bàn , giả sử số cách xếp là f[N][j] 
+
+
+Kết quả = Tổng các f[N][j] * (k - j + 1)^totalChildren
+
+
+Gọi f[i][j] là số cách xếp i bà mẹ đầu tiên vào j bàn 
+
+bài toán cơ sở: f[0][0] = 1 
+
+công thức qhd: 
+
+Khi ta có f[i][j] > 0 
+
+
+Xét bà mẹ thứ i + 1 
+
+. Tình huống 1: Bà mẹ i + 1 muốn ngồi vào 1 bàn mới 
+
+  Bà mẹ i + 1 có K - j sự lựa chọn 
+
+  f[i + 1][j + 1] += (K - j) * f[i][j] 
+
+
+. Tình huống 2: Bà mẹ i + 1 muốn ngồi chung bàn với những bà mẹ hiện tại 
+
+  Bà mẹ i + 1 có j sự lựa chọn  
+
+  f[i + 1][j] += j * f[i][j]  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

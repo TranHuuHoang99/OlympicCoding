@@ -1,0 +1,367 @@
+Distributing Apples 
+
+Bài toán chia kẹo Euler: 
+
+Có N viên kẹo, đếm số cách chia N viên kẹo cho K bạn, sao cho mỗi bạn phải có ít nhất 1 viên. 
+
+====> số cách: C(K - 1, N - 1) 
+
+
+
+Giả sử ta có N + K quả táo, ta đếm số cách chia N + K quả táo cho K đứa trẻ sao cho mỗi đứa có ít nhất 1 quả 
+
+
+Ví dụ: 
+
+N = 5, K = 3 
+
+
+
+Ta có 8 quả táo 
+
+[1, 2, 5]     ----->   [0, 1, 4]
+[1, 1, 6]     ----->   [0, 0, 5] 
+[6, 1, 1]     ----->   [5, 0, 0]
+[2, 4, 2]     ----->   [1, 3, 1] 
+
+..... 
+
+
+C(K - 1, N + K - 1) 
+
+------------------------------------------------------------------------------------------------------------------------------
+
+ZeroOne 
+
+Có bao nhiêu chuỗi s chỉ gồm ký tự '0' và '1' sao cho: 
+
+. Tổng số lượng số 0 không vượt quá n0 
+. Tổng số lượng số 1 không vượt quá n1 
+. Nếu ta xét số lượng số 0 LIÊN TỤC và số lượng số 1 LIÊN TỤC, thì số lượng số 0 liên tục không được ít hơn k0, số lượng số 1 liên tục không được ít hơn k1 
+
+
+
+
+n0 = 4, n1 = 7 
+
+k0 = 2,  k1 = 3 
+
+
+
+
+
+
+  1111111111111111 0000000 111111 00000000 111 00000000000000 1111111 0000000000000000 
+  0000000 1111111111111111  00000000000000  111111 00000000  111 0000000000000000 1111111   
+
+
+Nếu ta có G nhóm 0 thì số lượng nhóm 1 hoặc = G - 1, hoặc = G, hoặc = G + 1 
+
+
+
+Giả sử ta có G0 nhóm 0 =====> ít nhất k0 * G0 số 0 được sử dụng 
+
+
+Điều kiện: k0 * G0 <= n0 
+
+Xét 3 trường hợp 
+
+  . Số nhớm 1 : G1 = G0 - 1 
+       ans += C(G0, n0 - G0 * k0 + G0) *  C(G1, n1 - G1 * k1 + G1) 
+  . Số nhớm 1 : G1 = G0 
+       ans += 2 * C(G0, n0 - G0 * k0 + G0) *  C(G1, n1 - G1 * k1 + G1) 
+  . Số nhớm 1 : G1 = G0 + 1 
+       ans += C(G0, n0 - G0 * k0 + G0) *  C(G1, n1 - G1 * k1 + G1) 
+       
+       
+
+
+
+
+Giả sử ta có G0 nhóm 0 và G1 nhóm 1 
+
+Có bao nhiêu cách để tạo ra G0 nhóm 0, mỗi nhóm có ít nhất k0 số 0 
+
+
+
+Giả sử ta có n0 = 20, k0 = 2 
+
+G0 = 4 
+
+
+[ 00 ]        [ 00 ]                  [ 00 ]                         [ 00 ]            [   ]
+
+Số lượng số 0 còn lại: n0 - G0 * k0 
+
+
+====> Số cách để phân chia tối đa n0 - G0 * k0 quả táo cho G0 đứa trẻ : C(G0, n0 - G0 * k0 + G0)  
+
+
+====> Số cách để phân chia tối đa n1 - G1 * k1 quả táo cho G1 đứa trẻ : C(G1, n1 - G1 * k1 + G1) 
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+Planning The Trees 
+
+Nhận xét: Ta hãy đếm số cách đặt N cây thỏa mãn và - cho số cách đặt cây mà chặn đường đi. 
+
+
+[?, ?, ?, ?, ....., ?]
+
+====> Số cách đặt cây = N! 
+
+
+Số cách thỏa mãn = N! - số cách không thỏa mãn 
+
+
+Số cách không thỏa mãn =
+
+Giả sử ta đặt đường chéo có độ dài là i  (1 <= i < N )
+
+Tổng các 2 * (N - i)!  với i: 1 -> N - 1     +   1     -    Tổng số cách mà ta "vô tình" chặn 2 đường chéo độ dài i và j 
+
+
+Tổng số cách chặn 2 đường chéo = Tổng các (N - i - j)!   với mọi i + j <= N   (i >= 1, j >= 1 )
+
+
+
+Ta gọi bảng fact[N] với ý nghĩa: fact[N] = N! 
+
+fact[0] = 1 
+for i: 1 -> 10^7 
+  fact[i] = fact[i - 1] * i 
+
+
+N! tương đương với fact[N] 
+
+
+Tổng các 2 * (N - i)!  với i: 1 -> N - 1     +   1
+
+
+i = 1 ====> (N - 1)! : fact[N - 1] 
+i = 2 ====> (N - 2)! : fact[N - 2] 
+.....
+
+i = N - 1 ====> 1!   : fact[1] 
+
+
+Đặt bảng sum_fact[i] = fact[0] + fact[1] + fact[2] + ..... + fact[i] 
+
+sum_fact[i] = sum_fact[i - 1] + fact[i] 
+
+
+
+2 *   (sum_fact[N - 1] - fact[0])   +   1 =  2 * sum_fact[N - 1] - 1 
+
+
+
+Tổng (N - i - j)! 
+
+
+j = 1 ===> Tổng (N - 1 - i)! = (N - 2)! + (N - 3)! + (N - 4)! + ..... + 0! = sum_fact[N - 2] 
+
+j = 2 ===> Tổng (N - 2 - i)! = (N - 3)! + (N - 4)! + ..... + 0! = sum_fact[N - 3] 
+
+.......
+
+j = N - 1 ====> Tổng (1 - i)! = sum_fact[0] 
+
+
+Đặt sum_sum_fact[i] = sum_fact[0] + sum_fact[1] + ..... + sum_fact[i] 
+
+Tổng (N - i - j)! = sum_sum_fact[N - 2] 
+
+
+Đọc số N:
+
+Kết quả = fact[N] - ( 2 * sum_fact[N - 1] - 1 ) + sum_sum_fact[N - 2]  
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Divisor Analysis 
+
+Một số nguyên dương N nào đó được phân tích thừa số nguyên tố như sau: 
+
+N = p1^x1 * p2^x2 * p3^x3 * ....... 
+
+Hãy trả lời 3 câu hỏi 
+
+1 . Số N có bao nhiêu ước số ? 
+2 . Tổng các ước số là bao nhiêu ? 
+3 . Tích các ước số là bao nhiêu ??? 
+
+
+
+N = 2^3 * 3^1 * 5^2 
+
+X = 2^2 * 3^1 * 5^1 
+
+
+
+1 <= xi <= 10^9 
+
+
+
+
+Một số X = p1^y1 * p2^y2 * p3^y3 * ..... là ước của N nếu: 
+
+y1 <= x1, y2 <= x2, y3 <= x3, ....... 
+
+
+
+
+Số lượng cách tạo ra số X 
+
+y1 có (x1 + 1) cách 
+y2 có (x2 + 1) cách 
+y3 có (x3 + 1) cách 
+
+...... 
+
+
+(x1 + 1) * (x2 + 1) * (x3 + 1) * ...... 
+
+
+
+
+
+
+p1^0 * p2^0 * p3^0 * .... * pK^0 + p1^0 * p2^0 * p3^0 * .... * pK^1 + ...... + p1^1 * p2^0 * p3^0 * ..... * pK^0 
+
+
+
+(A1 + A2 + A3) * (B1 + B2) 
+
+= A1 * B1 + A1 * B2 + A2 * B1 + A2 * B2 + A3 * B1 + A3 * B2 
+
+
+(A1 + A2 + A3) * (B1 + B2) * (C1 + C2 + C3) 
+
+= A1 * B1 * C1 + A1 * B1 * C2 + A1 * B1 * C3 + A1 * B2 * C1 + A1 * B2 * C2 + ..... 
+
+
+
+Nhận xét: Các "bộ" (p1^0, p1^1, p1^2, ...., p1^x1)  ,  (p2^0, p2^1, p2^2, ...., p2^x2) , ...... đều được ghép đều với nhau 
+
+Tổng các ước = (p1^0 + P1^1 + p1^2 + ... + p1^x1) * (p2^0 + p2^1 + p2^2 + ... + p2^x2) * ......... 
+
+
+
+Si = pi^0 + pi^1 + pi^2 + ... + pi^xi               (1) 
+
+
+Si * pi = pi^1 + pi^2 + pi^3 + .... + pi^(xi + 1)   (2) 
+
+
+(2) - (1) 
+
+
+Si * (pi - 1) = pi^(xi + 1) - 1 
+
+
+Si = [ pi^(xi + 1) - 1  ] / (pi - 1) 
+
+
+
+Kết quả số 3 
+
+p1^0 * p2^0 * p3^0 * .... * pK^0 * p1^0 * p2^0 * p3^0 * .... * pK^1 * ...... * p1^1 * p2^0 * p3^0 * ..... * pK^0  * ...... 
+
+
+p1^0 có bao nhiêu lần xuất hiện  :  (x2 + 1) * (x3 + 1) * ..... * (xK + 1) 
+p1^1, p1^2 , ...., cũng có số lần xuất hiện tương đương. 
+
+
+
+Khi ta nhân lại, sự phân bố của các số có cơ số p1: 
+
+
+
+
+[ (p1^0 * p1^1 * p1^2 * ..... * p1^x1) ] ^ [(x2 + 1) * (x3 + 1) * ..... * (xK + 1) ] 
+
+* 
+
+[ (p2^0 * p2^1 * ..... * p2^x2)] ^ [ (x1 + 1) * (x3 + 1) * (x4 + 1) * ..... * (xK + 1)] 
+
+* ..... 
+
+
+
+= 
+
+
+p1 ^   [ (x1 * (x1 + 1) / 2) * (x2 + 1) * (x3 + 1) * ..... * (xK + 1) ] 
+
+* 
+
+p2 ^  [(x1 + 1) * (x2 * (x2 + 1) / 2) * (x3 + 1) * (x4 + 1) * ..... * (xK + 1)]
+
+* 
+
+p3 ^ 
+
+* 
+
+p4 ^ 
+
+...... 
+
+
+
+
+a^b % M 
+
+
+= [a ^ (b % M)] % M   !!!! TÀO LAO !!!!!!!!!!! 
+
+
+
+
+
+Với số M là số nguyên tố, nếu a là số khác M thì ta có: 
+
+a^(M - 1) % M = 1 
+
+
+
+
+a^b 
+
+
+
+b = d * (M - 1) + r 
+
+
+a^b = a^ (d * (M - 1) + r) 
+
+= a^ (d * (M - 1))  *   a^r 
+
+= [ a^(M - 1) ] ^ d   * a^r  % M  = a^r % M 
+
+
+
+
+prefix[i] =  (x1 + 1) * (x2 + 1) * .... * (xi + 1)   %  (M - 1) 
+
+suffix[i] =  (xK + 1) * (xK-1 + 1) * .... * (xi + 1) %  (M - 1) 
+
+
+với pi, số mũ =    prefix[i - 1] * suffix[i + 1]  *    (xi * (xi + 1) / 2) % (M - 1) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
