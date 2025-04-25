@@ -1,0 +1,4 @@
+compiler: 
+g++ -std=c++17 -DHOANGPRODN_DEBUG !.! -o !.exe && pause
+execute: 
+.\!.exe && pause

@@ -1,0 +1,99 @@
+Macro {
+  area = "Shell";
+  key = "CtrlShiftN";
+  description = "New C++ file from template (disk-write fallback)";
+  action = function()
+    local templates = {
+      { text = "Empty file", content = "" },
+      {
+        text = "Single test case",
+        content = [[
+#include <bits/stdc++.h>
+#define ll long long
+
+using namespace std;
+
+void solve(void) {
+	
+}
+
+int main(void) {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	
+	solve();
+
+	return 0;
+}
+
+]]
+      },
+      {
+        text = "Multiple test cases",
+        content = [[
+#include <bits/stdc++.h>
+#define ll long long
+
+using namespace std;
+
+void solve(void) {
+	
+}
+
+int main(void) {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+#ifdef HOANGPRODN_DEBUG
+	freopen("input.in", "r", stdin);
+	freopen("output.out", "w", stdout);
+#endif // HOANGPRODN_DEBUG
+
+	int t;
+	cin >> t;
+	for (int i = 1; i <= t; i++) {
+	 	solve();
+	}
+
+	return 0;
+}
+
+]]
+      },
+    }
+
+    -- build menu
+    local items = {}
+    for _, t in ipairs(templates) do
+      table.insert(items, { text = t.text })
+    end
+
+    -- pick one
+    local _, idx = far.Menu({ Title = "Select template" }, items)
+    if not idx then return end
+
+    -- ask filename
+    local name = far.InputBox(nil, "C++ file name", "Enter name (no .cpp):", nil, "", 100)
+    if not name or name == "" then return end
+
+    local dir = far.GetCurrentDirectory()
+    local path = dir .. "\\" .. name .. ".cpp"
+
+    -- prepare content
+    local tmpl = templates[idx].content:gsub("${NAME}", name:upper())
+
+    -- write directly to disk
+    local f, err = io.open(path, "w")
+    if not f then
+      far.Message("Error creating file:\n" .. err, "Error", nil, "w")
+      return
+    end
+    f:write(tmpl)
+    f:close()
+
+    -- now open in Far’s editor
+    editor.Editor(path)
+  end;
+}
