@@ -1,0 +1,295 @@
+Wilbur and trees 
+
+Có N cây có chiều cao = nhau và cùng bằng độ cao là h 
+
+Cây thứ i sẽ ở vị trí p[i] 
+
+Gió sẽ thổi để các cây đổ, mỗi lần đổ chỉ đổ cây bên trái ngoài cùng hoặc cây bên phải ngoài cùng 
+
+Khi một cây đổ, xác suất để cây đó đổ sang bên trái là probFallen, bên phải 1 - probFallen 
+
+Khi một cây đổ, chúng có thể kéo thêm một số cây khác cũng đổ theo 
+
+Hãy tính kỳ vọng của tổng các phần phủ bởi N cây sau khi toàn bộ được đổ 
+
+
+
+
+Sử dụng qhd: 
+
+Gọi f[i][j][stateLeft][stateRight] : Tổng kỳ vọng khi ta có danh sách các cây từ i ... j và 2 trạng thái đổ của cây i - 1 và cây j + 1 
+
+. stateLeft = 0 hoặc 1 nếu cây i - 1 đổ sang trái hoặc phải 
+
+. stateRight = 0 hoặc 1 nếu cây j + 1 đổ sang trái hoặc phải 
+
+
+Nếu stateLeft == 1 và pos[i] - pos[i - 1] < h : không hợp lệ 
+
+Nếu stateRight == 0 và pos[j + 1] - pos[j] < h : không hợp lê 
+
+
+bài toán cơ sở: Khi i > j : f[i][j][stateLeft][stateRight] = 0.0 
+
+đáp án bài toán: f[1][n][0][1]  
+
+
+Bảng nextRight[i]: cho biết vị trí của cây j gần i nhất ở phía bên phải mà KHÔNG BỊ ẢNH HƯỞNG nếu cây i đổ sang bên phải 
+
+
+Bảng nextLeft[i]: cho biết vị trí của cây j gần i nhất ở phía bên trái mà KHÔNG BỊ ẢNH HƯỞNG nếu cây i đổ sang bên trái 
+
+Linear Progression: 
+
+Ta cần tính kỳ vọng của tổng 2 biến cố X và Y ĐỘC LẬP 
+
+E(X + Y) = E(X) + E(Y) 
+
+
+f[i][j][stateLeft][stateRight]
+
+
+Xét cây i đổ : 0.5 
+
+   . Đổ sang trái : 0.5 
+
+     đặt more: phần diện tích thêm 
+
+     f[i][j][stateLeft][stateRight] += (f[i + 1][j][stateLeft][stateRight] + more) * 0.5 * probFallen
+
+   . Đổ sang phải : 0.5 
+
+     đặt more: phần diện tích thêm 
+
+     f[i][j][stateLeft][stateRight] += (f[nextRight[i]][j][stateLeft][stateRight] + more) * 0.5 * (1 - probFallen) 
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Leafall 
+
+Cho một đồ thị dạng cây gồm N đỉnh. 
+
+Mỗi đỉnh u sẽ có xác suất "rụng" là p[u] / q[u] ====> xác suất không rụng là: (1 - p[u] / q[u]) 
+
+
+Hãy tính kỳ vọng của số lượng cặp đỉnh (u, v) sao cho sau khi các đỉnh hoặc rụng, hoặc giữ nguyên thì cặp (u, v) là lá. 
+
+
+Ta tính kết quả khi lấy phần dư cho số 998244353 
+
+
+
+Ví dụ: 
+
+Giả sử kết quả là 
+
+4/5 ====> (4 * 5^(998244351)) % 998244353 
+
+
+
+
+Với mỗi cặp (u, v), ta tính kỳ vọng để u và v trở thành 2 lá 
+
+
+Với mỗi cặp (u, v) ====> số lượng cặp là 1 
+
+====> kỳ vọng để cặp (u, v) trở thành lá = 1 * xác suất để (u, v) trở thành lá = xác suất để (u, v) trở thành lá 
+
+
+=====> với mỗi cặp (u, v), hãy tính xác suất các đỉnh x còn lại trên cây sao cho u và v trở thành 2 lá trên cây. 
+
+
+
+. Tình huống 1: u và v là 2 đỉnh trên cùng một cạnh 
+
+  Delete[u] : xác suất để u còn trên cây nhưng các đỉnh xung quanh u biến mất 
+
+  Delete[u] = p[u] / q[u] * Tích (1 - p[v] / q[v]) với v kề u 
+
+  Khi ta xét một cạnh u - v: 
+
+  Delete[u] * Delete[v] / [ 1 - (p[v] / q[v])] / [1 - (p[u] / q[u])] 
+
+
+. Tình huống 2: u và v có kết nối với 1 đỉnh s 
+
+  
+  Xác suất để u và v trở thành lá: 
+
+  Delete[u] * Delete[v] / [ 1 - p[s] / q[s]]^2 * p[s] / q[s] 
+
+  
+
+  Duyệt từng đỉnh s, ta có danh sách các đỉnh u kề với s 
+
+  for u: trong danh sách của s 
+    for v: trong danh sách của s 
+
+
+  Với một đỉnh s, ta có danh sách các đỉnh u kề với s {u1, u2, u3, ......, uk} 
+
+  Với một cặp (ui, uj) thì sẽ tính Delete[ui] * Delete[uj] * C    (C = 1 / [ 1 - p[s] / q[s]]^2 * p[s] / q[s] )
+
+  
+  (a1 + a2 + a3 + .... + an) * (a1 + a2 + .... + an) = a1^2 + a1 * a2 + a1 * a3 + ...... 
+
+
+  =====> Tổng Delete[ui] * Delete[uj] = ((Tổng (Delete[ui]))^2 - Delete[u1]^2 - Delete[u2]^2 - ..... - Delete[uk]^2) / 2 
+
+
+. Tình huống 3: u và v chẳng có mối quan hệ nào. 
+
+  ===> Lấy tổng các Delete[u] * Delete[v] 
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Stones: 
+
+Có K viên đá và có N ràng buộc. 
+
+Mỗi ràng buộc sẽ có một giá trị a[i]
+
+Có 2 người chơi lần lượt, mỗi người sẽ chọn một chỉ số i và bốc trong đống đá đúng a[i] viên  (đống đá phải còn đủ đá để bốc a[i]) 
+
+Người nào không bốc được nữa thì thua 
+
+Giả sử 2 người đều đưa ra được chiến thuật tối ưu. Hỏi ai sẽ thắng, đưa ra người 1 nếu người 1 thắng, người 2 nếu người 2 thắng. Giả sử người 1 là người chơi đầu. 
+
+
+
+
+N = 2 
+
+{2, 3} 
+
+K = 5 
+
+
+====> người 2 thắng 
+
+
+
+
+N = 3
+
+{1, 2, 3} 
+
+K = 5 
+
+
+
+Người 1 bốc 1, còn 4 viên 
+
+  ====> người 1 thắng 
+
+
+Lý thuyết trò chơi 
+
+Là một ngành trong lĩnh vực toán rời rạc chuyên nghiên cứu về các bài toán trò chơi đối kháng. Trong đó trò chơi gồm 2 người là đối thủ của nhau và lần lượt thực 
+
+hiện các nước đi tương ứng. Ta luôn giả sử cả 2 người đều đưa ra được nước đi tối ưu. 
+
+
+
+
+Quy hoạch động: 
+
+Gọi f[i] = true / false khi ta có i viên đá, NGƯỜI HIỆN TẠI nếu chơi vào trạng thái có i viên đá, hỏi người đó có thắng hay không ? 
+
+bài toán cơ sở: f[0] = false 
+
+đáp án bài toán: f[K] = true ===> người 1, ngược lại thì người 2 
+
+
+Khi ta xét i viên đá, giả sử người hiện tại chọn a[j] viên để bốc (a[j] <= i)  
+
+Nếu tồn tại một trạng thái chọn a[j] sao cho f[i - a[j]] == false ====> f[i] = true 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+K = 10 
+
+N = 3 
+
+{1, 3, 4} 
+
+=====> f[10] = 6 
+
+
+Candy 
+
+Gọi f[i] là số lượng viên đá tối đa mà người hiện tại có thể lấy được khi có i viên 
+
+bài toán cơ sở: f[0] = 0 
+
+đáp án bài toán: f[K] 
+
+công thức qhd: 
+
+Khi ta có i viên đá, người hiện tại quyết định bốc a[j] viên (a[j] <= i) 
+
+Đối thủ sẽ rơi vào trạng thái khi có i - a[j] viên ====> f[i - a[j]] là số viên đá tối đa mà đối thủ lấy được 
+
+f[i] = Max {i - f[i - a[j]]} 
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Deque 
+
+Cho N lá bài, lá thứ i có giá trị là a[i] 
+
+Ta có 2 người lần lượt bốc bài, mỗi lượt người hiện tại sẽ bốc lá đầu tiên hoặc lá cuối cùng trong N lá. 
+
+Mỗi người đều sẽ muốn tối ưu tổng điểm mà mình nhận được. 
+
+Gọi X là tổng điểm người 1 có được, Y là tổng điểm người 2 có được 
+
+Hỏi X - Y = bao nhiêu ??????? 
+
+
+
+
+Gọi f[i][j] là tổng lượng điểm lớn nhất mà người hiện tại chơi vào trạng thái có các lá bài từ i -> j 
+
+bài toán cơ sở: f[i][i] = a[i] 
+
+đáp án bài toán: 
+
+X = f[1][n], Y = a[1] + a[2] + .... + a[n] - X 
+
+công thức qhd: 
+
+. Nếu người hiện tại lấy lá i: 
+
+f[i][j] = a[i] + a[i + 1] + .... + a[j] - f[i + 1][j]
+
+
+
+. Nếu người hiện tại lấy lá j: 
+
+f[i][j] = a[i] + a[i + 1] + .... + a[j] - f[i][j - 1] 
+
+
+f[i][j] = max {   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
