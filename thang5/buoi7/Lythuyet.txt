@@ -1,0 +1,346 @@
+SPC4 (Spring Contest 2020) 
+
+
+Cho một chồng bài gồm N lá và các lá bài xếp từ 1 đến N theo thứ tự từ trên xuống dưới, lá thứ i có giá trị là c[i] 
+
+Có 2 người chơi lần lượt, tới lượt của người hiện tại, người hiện tại BẮT BUỘC phải bốc lá cuối cùng của chồng bài. Mỗi người có một lượng lá "addition", người này 
+
+nếu sử dụng lá "addition" thì có thể bốc thêm một vài lá ở dưới cùng. Nếu ta sử dụng x lá "addition" thì có thể bốc thêm x lá nữa. Sau đó tới lượt của đối thủ. 
+
+Nếu ta sử dụng lá "addition" thì lá đó sẽ bị biến mất. 
+
+
+Người thứ 1 có K lá addition, người thứ 2 có T lá addition. Hãy cho biết trận đấu thắng hay hòa hay thua đối với người thứ 1. 
+
+
+
+Gọi f[i][a][b] là tổng điểm mà NGƯỜI HIỆN TẠI có thể có được lớn nhất khi ta có i lá bài, người hiện tại còn a lá addition, đối thủ có b lá addition 
+
+bài toán cơ sở: f[0][a][b] = 0 
+
+đáp án bài toán: Tổng điểm người số 1 có: f[n][K][T], tổng điểm người số 2 có: a[1] + a[2] + ..... + a[n] - f[n][K][T] 
+
+công thức qhd: 
+
+f[i][a][b] = ???? 
+
+Giả sử người hiện tại quyết định lấy thêm x lá bài nữa: x : 0  ----> min(a, i - 1) 
+
+Trạng thái của người hiện tại là (i, a, b) 
+
+(i - 1 - x, b, a - x) : trạng thái của đối thủ 
+
+
+
+f[i][a][b] = Max { a[1] + a[2] + .... + a[i] - f[i - 1 - x][b][a - x] }
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Một số định lý, phương pháp trong toán học 
+
+Modulo Sum: 
+
+Cho một dãy số nguyên dương a gồm N số. 
+
+Cho một số nguyên dương K. Hay cho biết có thể chọn ra một vài số trong dãy a sao cho tổng các số trong dãy a có chia hết cho K 
+
+
+1 <= N <= 1000000,
+
+1 <= K <= 1000 
+
+
+
+
+Gọi f[i][r][state] = true / false khi ta có i số đầu tiên của dãy a, tổng các số khi chia cho K dư r và trạng thái state 
+
+. state = 0: ta chưa chọn bất kỳ số nào trong dãy 
+
+. state = 1: ta đã chọn ít nhất 1 số trong dãy 
+
+
+bài toán cơ sở: f[0][0][0] = true 
+
+đáp án bài toán: f[n][0][1] == true ? YES : NO 
+
+
+công thức qhd: 
+
+Khi ta có f[i][r][state] == true 
+
+Xét phần tử a[i + 1]  
+
+. Ta không lấy a[i + 1] vào trong tập hợp: 
+
+f[i + 1][r][state] = true 
+
+. Ta lấy a[i + 1] vào trong tập hợp 
+
+f[i + 1][(r + a[i + 1]) % K][1] = true 
+
+Vấn đề !!!! 
+
+O(N * K)
+
+
+Nguyên lý Dirichclet: 
+
+Có 4 con thỏ và ta muốn nhốt chúng vào 3 chuồng =====> chắc chắn có ít nhất 1 chuồng phải có từ 2 con thỏ trở lên 
+
+
+Nếu N >= K  ======> CHẮC CHẮN IN RA YES 
+
+Ta xét các tổng sum[i] = a[1] + a[2] + ..... + a[i] 
+
+sum[0], sum[1], sum[2], ....., sum[N] 
+
+Xét các số dư sum[0] % K, sum[1] % K, sum[2] % K, ......, sum[N] % K, mỗi giá trị đều nằm trong đoạn [0 .... K - 1] 
+
+
+Theo nguyên lý Dirichclet: 
+
+Tồn tại 2 giá trị sum[i] và sum[j] nào đó có cùng số dư   (giả sử i < j)
+
+====> (sum[j] - sum[i]) chia hết cho K 
+
+a[i + 1] + a[i + 2] + ..... + a[j]   sẽ chia hết cho K 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Mushroom Scientist: 
+
+Cho một số S và 3 số nguyên không âm a, b, c 
+
+Hãy xác định 3 giá trị thực không âm x, y, z sao cho: 
+
+x + y + z <= S 
+
+x^a * y^b * z^c lớn nhất 
+
+
+
+Nhắc lại về bất đẳng thức trung bình cộng và trung bình nhân 
+
+Xét N số thực không âm a1, a2, a3, ......, an 
+
+(a1 + a2 + .... + an) / n  >= căn bậc n (a1 * a2 * a3 * ..... * an) 
+
+
+Trường hợp để 2 vế = nhau: 
+
+a1 = a2 = a3 = ...... = an 
+
+
+
+x + y + z = x / a + x / a + ..... + x / a + y / b + y / b + ..... + y / b + z / c + z / c + .... + z / c   <=   S 
+
+
+
+Áp dụng bdt trung bình cộng - trung bình nhân: 
+
+(x / a + x / a + ..... + x / a + y / b + y / b + ..... + y / b + z / c + z / c + .... + z / c) / (a + b + c) >= căn bậc (a + b + c) ( (x / a)^a * (y / b)^b * (z / c)^c )
+
+
+
+x^a * y^b * z^c = (a * x/a)^a  *  (b * y/b)^b   *  (c * z/c)^c = a^a * b^b * c^c * (x/a)^a * (y/b)^b * (z/c)^c = K * (x/a)^a * (y/b)^b * (z/c)^c 
+
+Ta đặt K = a^a * b^b * c^c  
+
+
+====> (x/a)^a * (y/b)^b * (z/c)^c = x^a * y^b * z^c  / K 
+
+
+căn bậc (a + b + c) ( (x / a)^a * (y / b)^b * (z / c)^c )
+
+= căn bậc (a + b + c) ( x^a * y^b * z^c  / K ) <= (x + y + z) / (a + b + c) <= S / (a + b + c)
+
+
+Dấu "=" xảy ra khi ???? 
+
+x/a = x/a = x/a = .... = y/b = y/b = ..... = z/c = z/c = ......  
+
+
+x/a = y/b = z/c  = t 
+
+x = t * a 
+y = t * b 
+z = t * c 
+
+Để dấu "=" xảy ra thì x + y + z = S 
+
+====> t * a + t * b + t * c = S ====> t = S / (a + b + c) 
+
+
+x = S * a / (a + b + c) 
+y = S * b / (a + b + c) 
+z = S * c / (a + b + c) 
+
+------------------------------------------------------------------------------------------------------------------------
+
+AC6 (Autumn Contest 2021) 
+
+Cho 2 số nguyên dương N và M 
+
+Xét các số 0, M, 2M, 3M, ...., (N - 1) * M, với mỗi số này ta xét số dư khi chia cho N. Hãy cho biết các giá trị trên có khác nhau hay không ? 
+
+
+
+Nếu gcd(N, M) = 1 ====> Xuất ra là CORRECT 
+
+
+Phương pháp phản chứng 
+
+
+Nếu gcd(N, M) = 1 =====> các số 0, M, 2M, 3M, ...., (N - 1) * M sẽ có các số dư khác nhau khi cùng chia cho số N 
+
+
+Giả sử gcd(N, M) = 1 nhưng các số 0, M, 2M, 3M, ....., (N - 1) * M chưa chắc có các số dư khác nhau 
+
+
+Giả sử 2 số có cùng số dư khi chia cho N là i * M và j * M   (giả sử i < j) 
+
+====> j * M - i * M chia hết cho N 
+
+
+(j - i) * M chia hết cho N 
+
+
+vì gcd(N, M) = 1 
+
+====> để (j - i) * M chia hết cho N thì j - i phải chia hết cho N 
+
+
+j - i = N, 2N, 3N ......  vô lý 
+
+vì j - i tối đa chỉ có N - 1 
+
+---------------------------------------------------------------------------------------------------------------
+
+Subsequence Addition 
+
+Cho một dãy số a, ban đầu chỉ có số [1] 
+
+Ta có thể thực hiện liên tục các phép toán như sau: 
+
+Chọn một vài số trong dãy a hiện tại, tính tổng của chúng và đưa tổng vào bất kỳ vị trí nào đang có trong dãy a 
+
+
+
+Cho một dãy b, hỏi có thể tạo ra được dãy b bằng việc thực hiện các phép toán trên hay không ???? 
+
+
+
+a = [1] 
+
+
+[1, 1] 
+
+[1, 1, 1],   [1, 2, 1],   [2, 1, 1] 
+
+
+[2, 1, 3, 1] 
+
+[2, 4, 1, 1] 
+
+
+[7, 2, 4, 1, 1]
+
+
+
+b = [7, 2, 4, 1, 1] 
+
+
+b = [1, 1, 2, 4, ] 
+
+
+
+Phương pháp chứng minh quy nạp 
+
+
+Giả sử ta khẳng định mệnh đề P đúng với mọi số tự nhiên n 
+
+Xét trường hợp nhỏ nhất, ta cần chứng minh trường hợp này đúng 
+
+
+Giả sử mệnh đề P đúng với n 
+
+Nếu mệnh đề P cũng đúng với n + 1 =====> mệnh đề P sẽ đúng với mọi n 
+
+
+
+
+Mệnh đề ta đang xét: 
+
+Xét một dãy số b tăng dần, b[1] = 1. Nếu b[i] <= b[1] + b[2] + .... + b[i - 1] thì chắc chắn b[i] được tạo nên từ việc lựa chọn một vài số trong các số {b1, b2, ...
+
+b[i - 1] } 
+
+
+. Trường hợp cơ sở: b[2] = 1 
+
+. Giả sử với b[i] hiện tại, mệnh đề trên đúng 
+
+Ta cần chứng minh với b[i + 1], nếu b[i + 1] <= b[1] + b[2] + .... + b[i] thì b[i + 1] CHẮC CHẮN được biểu diễn bởi việc lựa chọn một vài số để ra được b[i + 1] 
+
+
+Trường hợp 1: b[i + 1] <= b[1] + b[2] + .... + b[i - 1] =====> chắc chắn có cách tạo ra b[i + 1] 
+
+
+Trường hợp 2: b[1] + b[2] + .... + b[i] >= b[i + 1] > b[1] + b[2] + .... + b[i - 1]
+
+
+
+b[i + 1] = b[i] + x 
+
+
+
+b[1] + b[2] + .... + b[i] >= b[i + 1]
+
+b[1] + b[2] + .... + b[i] >= b[i] + x 
+
+x <= b[1] + b[2] + .... + b[i - 1] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
