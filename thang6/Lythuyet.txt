@@ -1,0 +1,305 @@
+Trailing Zeroes: 
+
+Cho số nguyên dương N, nếu ta tính số N! tường minh, hỏi tận cùng của số N! có bao nhiêu chữ số 0 ????? 
+
+1 <= N <= 10^9 
+
+
+
+67800000 = 678 * 10 * 10 * 10 * 10 * 10 
+
+
+6000 = 2^4 * 3^1 * 5^3 
+
+Ta chỉ cần quan tâm số N! khi phân tích, ta sẽ được bao nhiêu thừa số 5 ???? 
+
+
+Công thức: 
+
+Giả sử ta muốn phân tích số N! thành tích các thừa số nguyên tố. 
+
+Xét thừa số nguyên tố p, số lượng thừa số p: N/p + N/p^2 + N/p^3 + N/p^4 + ...... 
+
+
+100! 
+
+p = 7 
+
+
+100 = 1 x 2 x 3 x .... x 100 
+
+
+Số lượng thừa số 7 nằm trong: 7, 14, 21, 28, ..... 
+
+100 / 7 = 14 
+
+
+Trong các số 49, 98 : có 2 thừa số 7 
+
+
+100 / 49 = 2 
+
+
+Trong các số 343, 686, ....: có 3 thừa số 7 
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Reachable Nodes: 
+
+
+Với đỉnh u, giả sử u có thăm được v1, v2, ...., vk. Tập hợp các đỉnh mà u thăm được được hợp bởi tập các đỉnh v1, v2, ...., vk thăm được cùng với đỉnh u. 
+
+Ta sử dụng bitset 
+
+
+Với mỗi đỉnh u, ta tạo một bitset set[u] gồm n bit, mỗi bit mang giá trị 0 hoặc 1 với ý nghĩa: 
+
+set[u]: bit v = 1: Từ u có thể thăm được v 
+
+
+dfs(u): 
+  bật bit u trong set[u] lên 1 
+  Duyệt mọi v kề với u: 
+    nếu v chưa được thăm: 
+      dfs(v) 
+      set[u] |= set[v] 
+
+
+Chi phí để hợp 2 set: O(V / 64)
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Video cards: 
+
+Cho một dãy số a gồm N số nguyên dương. 
+
+Ta chọn một giá trị a[i] bất kỳ làm mốc, các số a[j] còn lại, mỗi số ta phải biến đổi về thành số gần nhất <= a[j] sao cho số đó là bội của a[i] 
+
+Hỏi tổng của dãy a tối đa là bao nhiêu ???? 
+
+
+N = 6 
+
+a = [4, 2, 2, 8, 3, 5] 
+
+
+
+4 0 0 8 0 4  ====> 12 
+
+4 2 2 8 2 4  ====> 22 
+
+
+
+
+d = 3   
+
+[0 .. 2],   [3 .. 5],   [6 .. 8] ,   [9 ... 11] 
+
+
+
+
+Ta chọn a[i] = d làm mốc 
+
+Giả sử ta có bội i * d =======> các số từ i * d ..... (i + 1) * d - 1 đều sẽ phải chuyển thành i * d 
+
+
+1 <= a[i] <= 200000 
+
+Gọi count[x]: số lượng số trong dãy a mà <= x 
+
+
+a = [4, 2, 2, 8, 3, 5] 
+
+
+count[2] = 2, count[3] = 1 , count[4] = 1, count[5] = 1, count[8] = 1 
+
+
+
+for i: 1 -> 200000 
+  count[i] += count[i - 1] 
+
+
+Xét đoạn [l ..... r] : số lượng số = count[r] - count[l - 1] 
+
+
+Ta duyệt số d = a[i], nếu a[i] chưa từng được chọn làm mốc 
+
+   Duyệt mọi bội j * d 
+
+
+
+
+for i: 1 -> n 
+  nếu a[i] chưa được chọn 
+    d = a[i] 
+    đặt sum = 0
+    for j: d -> 200000, j += d 
+      numb: count[j + d - 1] - count[j - 1]    
+      sum += numb * j 
+    ans = max(ans, sum)   
+
+
+
+
+
+
+
+a = 2 5 4 4 2 7 5 
+
+
+
+d = 1: j lặp 200000 lần 
+d = 2: j lặp 200000 / 2 lần 
+d = 3: j lặp 200000 / 3 lần 
+....... 
+
+
+Tổng số thao tác lặp: 200000 + 200000/2 + 200000/3 + .......   ~  200000.ln(200000)
+
+Bổ sung thêm: 
+
+Sàng nguyên tố Erathones
+
+Bài toán: Cho một danh sách các số nguyên, hỏi số nào là số nguyên tố.    (1 <= a[i] <= 1000000)
+
+
+Gọi isPrime[x] = true / false: x có là số nguyên tố hay không ????? 
+
+Ta khởi tạo toàn bộ isPrime[x] = true  (x: 2 -> 1000000) 
+
+for x: 2 -> 1000000 
+  nếu isPrime[x] == true 
+    for y = 2 * x -> 1000000, y += x 
+      isPrime[y] = false 
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+ADN 
+
+
+AGGCG???GCAX?XGG?CCAC??GAAAAAAA 
+
+Giả sử chuỗi ADN có N ký tự 
+
+j = 1, i = 1 
+j = 2, i = 1, 2 
+j = 3, i = 1, 2, 3 
+j = 4, i = 1, 2, 3, 4
+...... 
+
+
+Số đoạn [i ...j] : 1 + 2 + 3 + 4  +.... + n = n * (n + 1) / 2 
+
+
+Nhận xét: Các dấu ? liên tục với nhau chỉ nên biến về thành 1 ký tự 
+
+
+
+A   GG   CC   ???    GG  ????   GG   ?   CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC  AC  ??   G        AAAAAAA
+
+
+Nhận xét: Một "nhóm" gồm các dấu ? chỉ nên biến đổi về thành nhóm có ký tự liền trước hoặc liền sau 
+
+
+Gọi f[i] là tổng lớn nhất của  số lượng đoạn "đơn giản" khi ta có i nhóm đầu tiên 
+
+bài toán cơ sở: f[0] = 0 
+
+đáp án bài toán: n * (n + 1) / 2 - f[sz]
+
+f[i] = 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------- 
+
+Baggage: 
+
+Trên một mặt phẳng tọa độ, ta có 2 * k + 1 điểm hoàn toàn khác nhau. Điểm i và điểm i + 1 sẽ có khoảng cách Mahathan = 1  
+
+Điểm (x1, y1) có khoảng cách Mahathan đến (x2, y2) = |x2 - x1| + |y1 - y2| 
+
+Vì một lý do nào đó, vị trí của các điểm có thứ tự lẻ được giữ lại, các điểm có thứ tự chẵn bị biến mất. 
+
+Hãy đếm có bao nhiêu cách để khôi phục lại các điểm có thứ tự chẵn. 
+
+
+2 4 k = 2
+1 1
+2 2
+2 4
+
+
+---> 2 
+
+
+
+p1 = (1, 1)
+p3 = (2, 2)
+p5 = (2, 4) 
+
+
+
+(1, 1) -> (1, 2) -> (2, 2) -> (2, 3) -> (2, 4) 
+
+(1, 1) -> (2, 1) -> (2, 2) -> (2, 3) -> (2, 4)
+
+
+
+
+Nhận xét: 
+
+Xét các điểm được giữ lại, nếu 2 điểm liên tục có khoảng cách Mahathan != 2 ====> đáp án là 0 
+
+
+(1, 1) và (2, 2)
+
+Ta có 2 sự lựa chọn là (1, 2) và (2, 1) 
+
+
+1 2
+     (2, 2)  hoặc  (1, 1) 
+2 1
+     (3, 1)  hoặc  (2, 2) 
+3 2
+     (3, 3)  hoặc  (3, 3) 
+3 4 
+     (3, 3)  hoặc  (2, 4) 
+3 4
+
+Bài toán đưa về: Các điểm ở vị trí chẵn, nếu có 2 sự lựa chọn, ta phải chọn 1 trong 2 và lựa chọn này sẽ ảnh hưởng đến lựa chọn khác nếu lựa chọn khác cũng có phương 
+
+án giống với lựa chọn hiện tại. 
+
+
+
+Xét 1 tplt, ta đếm số đỉnh và số cạnh trong tplt đó. 
+
+Nếu số cạnh > số đỉnh ====> 0  (theo nguyên lý Dirichclet)
+
+Nếu số cạnh = số đỉnh 
+
+   + Nếu có tồn tại đỉnh sao cho cạnh đi vào chính đỉnh đó: Số cách chọn = 1 
+
+   + Nếu không tồn tại đỉnh có vòng cung: số cách chọn = 2 
+
+
+Nếu số cạnh = số đỉnh - 1 , số cách = số lượng đỉnh 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
