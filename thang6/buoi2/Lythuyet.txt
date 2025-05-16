@@ -1,0 +1,167 @@
+WC5 (Winter Contest 2020) 
+
+Phản ứng este là một phản ứng hóa học, trong đó gồm một chất axit R1COOH và ancol R2OH 
+
+R1COOH + R2OH  -->  R1COOR2  + H2O 
+
+
+CH3COOH + C2H5OH ---> CH3COOC2H5 + H2O 
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+WC6 (Winter Contest 2020) 
+
+Cho một chuỗi s, ta tiến hành lặp đi lặp lại điều này vô tận như sau: 
+
+Ta tạo một chuỗi rev_s là chuỗi s mà đảo ngược
+
+Nối s và rev_s với nhau 
+
+Thực hiện bước trên tiếp tục vô hạn lần 
+
+Cho một vị trí p, hãy cho biết ký tự tại vị trí p là ký tự nào ??? 
+
+
+
+s = "abc" 
+
+rev_s = "cba" 
+
+
+abccba
+
+rev_s = abccba 
+
+abccbaabccba 
+
+p = 9 
+
+----> c 
+
+Nhận xét: Từ lần reverse số 1 trở đi, chuỗi đã là chuỗi đối xứng. 
+
+abccba  abccba abccba abccba abccba abccba abccba abccba   
+
+
+s, ta tạo rev_s và ghép s và rev_s 
+
+Vị trí p sẽ tương ứng với vị trí p % l trong chuỗi s đầu tiên   (l là độ dài chuỗi s) 
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+WC3 (Winter Contest 2020) 
+
+Đề đã cho ta S máy tính đã có dữ liệu =====> N - S máy tính chưa có dữ liệu. 
+
+Chi phí cố định = M * (N - S) 
+
+
+Ta sắp xếp các đoạn cáp tăng dần theo chi phí 
+
+Ta sẽ nối cạnh u - v khi nào ???? 
+
+u và v phải khác tplt 
+
+1 trong 2 tplt chứa u hoặc v phải chưa có máy tính đã có dữ liệu 
+
+
+Khi ta có 2 tplt nối lại với nhau 
+
+u có đỉnh đại diện là rootu 
+v có đỉnh đại diện là rootv 
+
+haveData[root] = true nếu tplt của root đã có máy tính có dữ liệu rồi 
+
+
+
+Nối u - v khi ??? 
+
+rootu != rootv và (haveData[rootu] == false || haveData[rootv] == false) 
+   root[rootu] = rootv 
+   nếu haveData[rootu] == true || haveData[rootv] == true 
+     haveData[rootv] = true 
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+SC6 (Summer Contest 2020) 
+
+Khi ta có i đỉnh, mỗi đỉnh trong i đỉnh trên sẽ thuộc 1 trong 4 loại sau 
+
+
+odd white: những đỉnh màu trắng có số lượng đường đi đen trắng kết thúc tại đỉnh đó là số lẻ 
+
+even white: những đỉnh màu trắng có số lượng đường đi đen trắng kết thúc tại đỉnh đó là số chẵn 
+
+odd black 
+
+even black 
+
+
+
+Gọi f[i][ow][ew][ob] số lượng cách vẽ cạnh khi ta có i đỉnh đầu tiên, tập odd white có ow đỉnh, tập even white có ew đỉnh, tập odd black có ob đỉnh 
+
+====> eb = i - ow - ew - ob 
+
+
+bài toán cơ sở: f[0][0][0][0] = 1 
+
+đáp án bài toán: Tổng f[n][ow][ew][ob]  thỏa  (ob + ow) % 2 == p 
+
+công thức qhd: 
+
+Khi ta có f[i][ow][ew][ob] > 0 
+
+
+Xét đỉnh i + 1 
+
+
+Giả sử đỉnh i + 1 là đỉnh màu trắng 
+
+  . Nếu ta muốn đỉnh i + 1 thuộc bên tập odd white 
+
+  Xét các đỉnh màu trắng trong i đỉnh, mỗi đỉnh có quyền nối hoặc không nối cạnh vào đỉnh i + 1 
+
+  Những đỉnh thuộc tập odd white, even white, even black, dù có nối hay không nối, tính chẵn lẻ của số đường đi kết thúc tại i + 1 không thay đổi 
+
+  ====> số cách: 2^(ow + ew + eb) 
+
+  Xét các đỉnh thuộc tập ob, ta cần bổ sung 0 hoặc 2 hoặc 4 hoặc 6 hoặc 8 hoặc .....   để nối cạnh với đỉnh i + 1 
+
+  C(0, ob) + C(2, ob) + C(4, ob) + ........ 
+
+  f[i + 1][ow + 1][ew][ob] += 2^(ow + ew + eb) * [ C(0, ob) + C(2, ob) + C(4, ob) + ........ ] * f[i][ow][ew][ob] 
+
+  . Nếu ta muốn đỉnh i + 1 thuộc tập even white 
+
+  f[i + 1][ow][ew + 1][ob] += 2^(ow + ew + eb) * [ C(1, ob) + C(3, ob) + C(5, ob) + ........ ] * f[i][ow][ew][ob] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
