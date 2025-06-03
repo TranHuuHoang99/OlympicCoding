@@ -1,0 +1,156 @@
+Discover: 
+
+
+Nhận xét: 1 <= N <=  10000 
+
+totalCost[u] : tổng các cost[v] với v là các đỉnh cách u một đoạn <= k cạnh 
+
+
+Với mỗi đỉnh u, ta sử dụng thuật toán Bfs xuất phát tại u 
+
+bfs(u): 
+  dist[v] : độ dài đường đi ngắn nhất từ u -> v 
+
+  Với một đỉnh u lấy từ hàng đợi 
+    Ta duyệt mọi v kề u 
+      nếu dist[v] == -1: 
+        totalCost[u] += cost[v] 
+        dist[v] = dist[u] + 1 
+        nếu dist[v] < k: bỏ v vào hàng đợi 
+
+
+moon[u] : chi phí phụ 
+
+Áp dụng thuật toán dijkstra 
+
+Khi ta có đỉnh u: 
+  Duyệt mọi v kề u: 
+    Chi phí cho con đường u -> v: w(u, v), 
+      nếu dist[v] > dist[u] + w(u, v) + totalCost[v]: 
+        dist[v] = dist[u] + w(u, v) + totalCost[v] 
+        totalMoon[v] = totalMoon[u] + moon[v] 
+      else nếu dist[v] == dist[u] + w(u, v) + totalCost[v]: 
+        totalMoon[v] = max(totalMoon[v], totalMoon[u] + moon[v])  
+
+--------------------------------------------------------------------------------------------------------------
+
+Fairy And hairy 
+
+Có 2 người thợ U và M. 
+
+Có N người muốn cắt tóc, người thứ i sẽ mất thời gian để phục vụ là t[i] 
+
+thợ U trong 1 phút có thể thực hiện công việc tương đương u phút 
+
+thợ M trong 1 phút có thể thực hiện công việc tương đương m phút 
+
+Ta cần phân cho thợ U một vài người khách, những người còn lại được phân cho thợ M 
+
+Hãy tính thời gian đóng cửa tiệm sớm nhất. Biết rằng thời gian đóng cửa tiệm tương đương thời gian hoàn thành chậm nhất của cả 2 người thợ 
+
+
+
+
+N = 8, U = 3, M = 5  
+
+t = [4, 9, 1, 2, 6, 8, 3, 3] 
+
+
+U :  9, 2, 8, 3   =====> 22 phút     ========> 8 phút 
+
+M :  4, 1, 6, 3   =====> 14 phút     ========> 3 phút 
+
+
+max(8, 3) = 8 =====> thời gian đóng cửa tiệm = 8 
+
+
+Nếu ta có thể phân j phút cho U =====> số phút cho M: t[1] + t[2] + .... + t[n] - j 
+
+
+Bài toán đưa về: 
+
+Cho một dãy số t, hãy cho biết những giá trị j nào mà ta có thể tạo ra được bằng cách chọn một vài số trong dãy t 
+
+
+Nhận xét: 1 <= N <= 10000, 1 <= t[i] <= 100 
+
+=====> giá trị j : 0 ---> 1000000 
+
+
+Gọi f[i][j] = true / false : có thể chọn ra một vài phần tử trong i phần tử đầu tiên sao cho có tổng = j 
+
+bài toán cơ sở: f[0][0] = true 
+
+khi ta có f[i][j] == true: 
+
+Xét t[i + 1]:  
+
+ . không chấp nhận: f[i + 1][j] = true 
+ . chấp nhận: f[i + 1][j + t[i + 1]] = true 
+
+
+Nhận xét: 1 <= t[i] <= 100 
+
+Gọi count[x] : số lượng giá trị t[i] = x 
+
+
+Bài toán đưa về: 
+
+Ta có 100 giá trị từ 1 -> 100, mỗi giá trị x có count[x] số, ta cần chọn ra một vào số trong từng giá trị để lấy tổng = j 
+
+
+x = 47  =====> 1 + 2 + 4 + 8 + 16 + 16 
+
+y = 19 , 26 
+
+
+ta phân số x = 2^0 + 2^1 + 2^2 + .... + 2^k + R 
+
+Với bất kỳ số nào từ 1 -> x, đều có thể biểu diễn được = tổng của các số trên 
+
+
+f[i][j] = true / false với i là giá trị thứ i và tổng = j 
+
+f[i][j] = true ===> xét: Nếu ta chọn y giá trị = i (y: 0 -> count[i]) 
+
+f[i + 1][j + y * count[i]] = true 
+
+
+
+
+
+Ta xét giá trị i = 11 và có 47 số 
+
+1 + 2 + 4 + 8 + 16 + 16
+
+11 
+22 
+44 
+88 
+176 
+
+y = 19 
+
+
+
+
+100 giá trị =====> 100 * log2(10000) = 1200 giá trị 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

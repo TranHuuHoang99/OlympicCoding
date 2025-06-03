@@ -1,0 +1,281 @@
+Hero world: 
+
+Ta có N con quái vật, con quái vật thứ i có sức mạnh là a[i] 
+
+Ban đầu ta có sức mạnh là x 
+
+Với mỗi lượt chơi k, ta sẽ làm như sau: 
+
+Ta chọn bất kỳ một con quái vật i nào còn sống sao cho: x >= a[i], con quái vật này sẽ bị tiêu diệt 
+
+Sau khi bị tiêu diệt, chỉ số sức mạnh của ta sẽ được nhân thêm một lượng là (k + 1), những con quái vật còn sống còn lại, mỗi con sẽ được nhân thêm k 
+
+Hãy cho biết ta có thể tiêu diệt tối đa bao nhiêu con quái vật ???? 
+
+
+
+N = 7, x = 5 
+
+8 9 1 6 3 7 5 
+
+
+Ta sắp xếp các con quái vật tăng dần theo a[i] 
+
+Ta tiến hành tiêu diện từng con a[1], a[2], a[3], ....., a[n] 
+
+
+Khi ta xét con quái vật a[i], giả sử chiến thắng 
+
+
+x *= (i + 1) 
+
+a[j] *= i  (j: i + 1 -> n) 
+
+
+
+
+x ---> x * (i + 1) 
+
+a[i + 1] --> i * a[i + 1] 
+
+
+Lượt tiếp theo: 
+
+So sánh: x * (i + 1)  và  i * a[i + 1] 
+
+
+<=> x * (i + 1) / i   và  a[i + 1] 
+
+
+Ta có thể chuyển thành: 
+
+x ----> x * (i + 1) / i 
+
+
+Duyệt i: 1 -> n 
+  nếu x >= a[i]: 
+    ans++ 
+    x = x * (i + 1) / i 
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Moving marbles: 
+
+Đề yêu cầu di chuyển với số bước <= 1500 
+
+
+Giả sử có 50 viên bi 
+
+Viên số 1  : 51 bước 
+Viên số 2  : 50 bước 
+Viên số 3  : 49 bước 
+
+...... 
+
+Viên số 50 : 2 bước 
+
+
+
+=====> tổng số bước:1 +  2 + 3 + 4 + ...... + 51  ~ 1326 bước 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Two Arrays: 
+
+Cho 2 dãy số a và c
+
+Ta chọn một số x nào đó sao cho: 
+
+Tổng c[i] * |a[i] - x|  với i: 1 -> n   nhỏ nhất có thể. 
+
+
+Nhận xét: Nếu x <= a[i] =====> |a[i] - x| =  a[i] - x 
+
+Nếu x >= a[i] =====> |a[i] - x| = x - a[i] 
+
+Ta sắp xếp tăng dần theo a[i]  
+
+
+Nếu ta có một số x 
+
+a[i] <= x  <=   a[i + 1] 
+
+
+=====> các số a[1], a[2], ....., a[i]  đều <= x ,    a[i + 1], a[i + 2], ....., a[n] đều >= x 
+
+
+====> Tổng = c[1] * (x - a[1]) + c[2] * (x - a[2]) + ..... + c[i] * (x - a[i]) + c[i + 1] * (a[i + 1] - x) + c[i + 2] * (a[i + 2] - x) + ..... + c[n] * (a[n] - x) 
+
+
+
+=  c[1] * x + c[2] * x + .... + c[i] * x - c[i + 1] * x - c[i + 2] * x - .... - c[n] * x - c[1] * a[1] - c[2] * a[2] - .... - c[i] * a[i] + c[i + 1] * a[i + 1] + ... + c[n] * a[n] 
+
+
+=  x * (c[1] + c[2] + ... + c[i] - c[i + 1] - c[i + 2] - .... - c[n])  - c[1] * a[1] - c[2] * a[2] - .... - c[i] * a[i] + c[i + 1] * a[i + 1] + ... + c[n] * a[n] 
+
+Xét đoạn [ a[i] ..... a[i + 1]    ]
+
+
+Nếu c[1] + c[2] + ... + c[i] - c[i + 1] - c[i + 2] - .... - c[n] < 0 ====> x = a[i + 1] 
+
+Nếu c[1] + c[2] + ... + c[i] - c[i + 1] - c[i + 2] - .... - c[n] > 0 ====> x = a[i] 
+
+
+
+Sử dụng: 
+
+prefixC[i] = c[1] + c[2] + .... + c[i] 
+suffixC[i] = c[n] + c[n - 1] + .... + c[i] 
+
+prefixAC[i] = a[1] * c[1] + a[2] * c[2] + .... + a[i] * c[i] 
+suffixAC[i] = a[n] * c[n] + a[n - 1] * c[n - 1] + ..... + a[i] * c[i] 
+
+=  x * (c[1] + c[2] + ... + c[i] - c[i + 1] - c[i + 2] - .... - c[n])  - c[1] * a[1] - c[2] * a[2] - .... - c[i] * a[i] + c[i + 1] * a[i + 1] + ... + c[n] * a[n] 
+
+= x * (prefixC[i] - suffixC[i + 1]) - prefixAC[i] + suffixAC[i + 1] 
+
+
+
+Xét x >= a[n]  hoặc  x <= a[1] 
+
+
+Nếu x: a[n] ---> +oo 
+
+Tổng = x * prefixC[n] - prefixAC[n] 
+
+
+Nếu x: a[1] ---> -oo 
+
+Tổng = x * (-suffixC[1]) + suffixAC[1] 
+
+------------------------------------------------------------------------------------------------------------------------------
+
+String sorting 
+
+Ta có 2 chuỗi s và t có cùng độ dài và với mỗi ký tự trong chuỗi s, số lần xuất hiện = đúng số lần xuất hiện của ký tự đó trong chuỗi t.
+
+Ta được phép thực hiện không quá k thao tác, mỗi thao tác ta làm điều sau: 
+
+Ta chọn một đoạn [l ... r] bất kỳ, ta có thể đảo các ký tự trong đoạn [l .... r] đó theo bất kỳ thứ tự nào mà ta muốn. 
+
+
+9 2
+
+
+[ab]   ca    [eefbccdc]    ba     [aagge]     x        [ddfe]
+[ba]   ca    [feeccbcd]    ba     [egaga]     x        [edfd] 
+
+1 2 4 6 2 1 7 3 2
+
+
+
+Giả sử ta có K đoạn cần thay đổi và ta cần trở thành h đoạn cần thay đổi 
+
+
+=====> ta cần "kết dính" K - h đoạn 
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Internet 
+
+Ta có N máy tính và M đoạn dây mạng.
+
+Đoạn dây mạng thứ i kết nối giữa 2 máy tính u[i] và v[i], chi phí của đoạn dây mạng là w[i] và đoạn dây mạng sẽ thuộc nhà mạng c[i] 
+
+Ta cần chọn những đoạn dây mạng sao cho: 
+
+
+Các máy tính trong toàn bộ N máy tính phải liên thông với nhau. 
+
+Mỗi nhà mạng sẽ có chương trình khuyến mãi như sau: 
+
+Nếu tổng chi phí ta sử dụng cho nhà mạng x mà > s[x] thì ta được giảm 50% 
+
+
+
+Ví dụ 
+
+s = 200000 
+
+
+500000  
+
+Họ sẽ giảm (300000) / 2 = 150000 ====> chi phí ta cần phải trả = 500000 - 150000 = 350000 
+
+
+Hay nói cách khác: Nếu chi phí ta trả cho nhà mạng x là cost[x] =====> chi phí thực ta phải trả là: cost[x] - (max(0, cost[x] - s[x])) / 2 
+
+Hãy tính chi phí tối thiểu là bao nhiêu ???? 
+
+
+
+Nhận xét: 1 <= k <= 10 
+
+
+Xét nhà mạng x: Giả sử được giảm giá ====> cost[x] >= s[x] 
+
+
+cost[x] - (cost[x] - s[x]) / 2 = (cost[x] + s[x]) / 2 
+
+
+====> chi phí sau khi giảm giá: cost[x] + s[x] 
+
+
+Nếu giả sử không được giảm giá: 2 * cost[x] 
+
+
+Giả sử ta có một tập hợp các nhà mạng x1, x2, ...., xk là những nhà mạng được giảm giá ====> những nhà mạng còn lại không được giảm giá 
+
+
+
+ABC 
+
+không - không - không 
+không - không - có 
+không - có - không 
+
+
+Sử dụng quay lui back tracking
+
+Xét nhà mạng thứ x, nếu có giảm giá: cost[x] + s[x]   (cost[x] < s[x] ===> cost[x] + cost[x])
+
+.................., nếu không giảm giá: 2 * cost[x] 
+
+
+Xét đoạn dây cáp nối 2 máy u và v với chi phí là w  (thuộc nhà mạng x) 
+
+.  Nếu nhà mạng x có giảm giá: w 
+
+.  Nếu nhà mạng x không giảm giá: 2 * w 
+
+=====> bài toán đưa về: Chọn các đoạn dây cáp sao cho tổng chi phí nhỏ nhất có thể mà vẫn tạo thành đồ thị liên thông =======> Kruskal 
+
+
+Vấn đề: 
+
+1 <= m <= 500000 
+
+
+Số cách chọn trạng thái cho nhà mạng: 2^k 
+
+O(2^k * mlogm )
+
+Với mỗi nhà mạng, ta hãy tiến hành tìm danh sách các cạnh trong nhà mạng đó sao cho chúng "cần thiết" 
+
+
+Ta gọi listImportantEdges[x] : danh sách các cạnh "cần thiết" khi xét nhà mạng x 
+
+
+
+
+
+
+
+
+
+
+
+
+
