@@ -4,22 +4,18 @@
 using namespace std;
 
 string str;
-stack<int> st;
 
 void solve(void) {
-	while (!st.empty()) st.pop();
 	cin >> str;
+	stack<int> st;
 	int cnt = 0;
 	for (int i = 0; i < str.size(); i++) {
-	 	if (st.empty()) cnt++;
-	 	if (str[i] == '(') {
-	 	 	st.push(i);
-	 	} else {
-	 	 	while (!st.empty()) {
-	 	 	 	st.pop();
-	 	 	 	break;
-	 	 	}
-        }       
+		if (str[i] == '(') {
+		 	if (st.empty()) cnt++;
+		 	st.push(i);
+		} else {
+		 	if (!st.empty()) st.pop();
+		}
 	}
 	if (cnt > 1) {
 	 	cout << "YES" << endl;
@@ -32,6 +28,7 @@ int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
+
 #ifdef HOANGPRODN_DEBUG
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
@@ -45,4 +42,4 @@ int main(void) {
 
 	return 0;
 }
-
+ 
