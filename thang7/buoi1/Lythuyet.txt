@@ -1,0 +1,144 @@
+Tháng 7 (Advanced Data Structure) 
+
+- Buổi 1: Segment tree
+- Buổi 2: Luyện tập về Segment tree
+- Buổi 3: Fenwick tree + Fenwick 2D 
+- Buổi 4: Trie 
+- Buổi 5: Sparse Table
+- Buổi 6: Suffix Array
+- Buổi 7: Một số biến thể của các cấu trúc dữ liệu (Persistent Segment tree + Dsu roll back) 
+- Buổi 8: Contest
+
+
+Segment tree 
+
+Static Minimum Range: 
+
+Cho một dãy số a gồm N số nguyên dương. 
+
+Cho Q truy vấn, mỗi truy vấn gồm 2 vị trí l và r. Hỏi trong các số a[l], a[l + 1], a[l + 2], ....., a[r], số nhỏ nhất là số nào ????? 
+
+
+Thuật toán ngây thơ: 
+
+Với mỗi truy vấn, ta duyệt i: l -> r, và lấy số nhỏ nhất ====> mỗi truy vấn, số thao tác O(N) 
+
+
+Ý tưởng của segment tree 
+
+Với mỗi đoạn [l ... r] bất kỳ, ta hoàn toàn có thể chia được đoạn [l .... r] thành log2(r - l + 1) đoạn và mỗi đoạn đã được tính trước một thông tin nào đó. 
+
+Ta xây dựng một cấu trúc cây với ý nghĩa: 
+
+Nút gốc sẽ quản lý đoạn [1 ... N] và trả về giá trị nhỏ nhất của đoạn này 
+
+2 nút con của một nút quản lý đoạn [L ... R] thì 2 nút đó sẽ quản lý đoạn [L ... mid] và [mid + 1 .... R]  
+
+Nút index thì 2 nút con là 2 * index và 2 * index + 1 
+
+
+Xây dựng cây segment tree ???? 
+
+Gọi it[index]: giá trị nhỏ nhất mà của các phần tử mà nút index đang quản lý 
+
+Xây dựng hàm build(index, L, R)
+
+build(index, L, R): 
+  nếu L == R: 
+    it[index] = a[L] 
+    return 
+  đặt mid = (L + R) / 2 
+  build(2 * index, L, mid)
+  build(2 * index + 1, mid + 1, R) 
+  it[index] = min(it[2 * index], it[2 * index + 1])   
+
+
+Độ phức tạp: O(N.logN) 
+
+
+get(index, L, R, l, r): 
+  nếu l > R || L > r: 
+    return inf 
+  nếu l <= L và R <= r: 
+    return it[index] 
+  đặt mid = (L + R) / 2 
+  đặt getLeft = get(2 * index, L, mid, l, r)
+  đặt getRight = get(2 * idnex + 1, mid + 1, R, l, r) 
+  return min(getLeft, getRight) 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Serja and brackets 
+
+Cho một chuỗi gồm các ngoặc '(' và ')' 
+
+Cho Q truy vấn, mỗi truy vấn gồm 1 đoạn [l .... r] 
+
+Hãy cho biết chuỗi ngoặc đúng là chuỗi con của đoạn [l .. r] có độ dài dài nhất là bao nhiêu ????? 
+
+
+s = "())(()(()(()())(())" 
+
+Q = 10 
+
+6 10  ---> )(()(  
+6 14  ---> )(()(()(() 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
