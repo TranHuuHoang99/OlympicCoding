@@ -1,0 +1,298 @@
+Bro think he's him 
+
+
+Cho một chuỗi s gồm các ký tự '0' và '1' 
+
+Xét một chuỗi st, ta định nghĩa hàm f(st) = số lượng nhóm tối thiểu có thể tách ra sao cho mỗi nhóm gồm các ký tự giống nhau 
+
+
+
+Giả sử: f("00110100") = 5 
+
+
+00   11    0   1      00
+
+Cho Q truy vấn, mỗi truy vấn, ta thay đổi một vị trí p của chuỗi s (từ '0' thành '1', và từ '1' thành '0') 
+
+Hỏi sau mỗi truy vấn, tổng của tất cả các f(st) với mọi chuỗi st là chuỗi con của chuỗi s là bao nhiêu ????? 
+
+
+
+s = "01100" 
+
+Q = 3 
+
+3  ----> 01000
+
+
+"0", "1", "0", "0", "0",  "01",  "00",  "00",  ,........,   "01000" 
+
+
+f("0") = 1 
+f("1") = 1 
+f("01") = 2 
+..... 
+f("01000") = 3 
+
+
+
+
+
+f("00110100") =  số vị trí mà 2 ký tự kề khác nhau + 1 
+
+00   11   0   1   00
+
+
+
+Vì đề yêu cầu với mỗi chuỗi s, ta phải xét mọi chuỗi con
+
+
+
+
+s = "-++-+-" 
+
+Có bao nhiêu chuỗi con của s ????? =====> 2^|s|
+
+====> ta phải loại chuỗi rỗng ======> số lượng chuỗi con khác rỗng là: 2^|s| - 1 
+
+
+ 
+                                                                    00011111010100                          110011000101110
+
+
+00011111010100 
+.0...11...01.. 
+
+
+
+đầu = 0, đuôi = 0     (  "0",  "0",  "00",  "001110", .... )
+đầu = 0, đuôi = 1     (  "01", "011", "01101", ..... )
+
+đầu = 1, đuôi = 0 
+đầu = 1, đuôi = 1
+
+
+
+
+                       0 - 0    --------  1 - 0      ------> 0 - 0 
+
+
+Với mỗi cặp <head - tail>, ta lưu trữ 
+
+. numb: số lượng chuỗi con thỏa mãn đầu là head, đuôi là tail 
+. numb01: tổng số lượng vị trí 01 trong chuỗi con trên 
+
+
+
+Bên trái là left.head và left.tail, bên phải là right.head và right.tail 
+
+=====> khi ghép lại thì chuỗi được ghép có head là left.head và tail là right.tail 
+
+
+ghép <left.head, right.tail>.numb01 = left <left.head, left.tail>.numb01 * right <right.head, right.tail>.numb 
+
+                                     + left <left.head, left.tail>.numb * right <right.head, right.tail>.numb01 
+
+
+
+nếu left.tail != right.head 
+
+ghép <left.head, right.tail>.numb01 += left <left.head, left.tail>.numb * right <right.head, right.tail>.numb 
+
+ghép <left.head, right.tail>.numb += left <left.head, left.tail>.numb * right <right.head, right.tail>.numb 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Qmax2: 
+
+Cho một dãy số a gồm N phần tử 
+
+Có Q truy vấn, mỗi truy vấn làm 1 trong 2 điều sau: 
+
+truy vấn loại 1: Cho một đoạn [l .... r] và một số v, ta tăng mỗi số a[i] += v với i: l -> r 
+
+truy vấn loại 2: Cho một đoạn [l .... r], hỏi số lớn nhất là bao nhiêu ???? 
+
+
+Nhận xét: 
+
+
+Nếu đoạn [L ... R], số lớn nhất là x 
+
+Khi ta được yêu cầu cập nhật từng số a[i] += v  mà  [l ..... r] bao phủ đoạn [L .... R] =====> số lớn nhất = x + v 
+
+
+Kỹ thuật lazy update 
+
+Mỗi node trên cây segment tree, ngoài giá trị maxValue, ta gọi thêm một giá trị lazyValue là tổng lượng update (nếu có yêu cầu tăng số trên đoạn [L ... R]) mà đang 
+
+quản lý. 
+
+
+struct itnode {
+    int lazyValue; 
+    int maxValue 
+}
+
+
+lazyUpdate(index, L, R):
+  nếu it[index].lazyValue > 0 và L < R: 
+    it[2 * index].lazyValue += it[index].lazyValue 
+    it[2 * index].maxValue += it[index].lazyValue 
+    it[2 * index + 1].lazyValue += it[index].lazyValue 
+    it[2 * index + 1].maxValue += it[index].lazyValue 
+  it[index].lazyValue = 0   
+
+
+update(index, L, R, l, r, value): 
+  lazyUpdate(index, L, R) 
+  nếu l > R || L > r: 
+    return 
+  nếu l <= L && R <= r:  
+    it[index].maxValue += value 
+    it[index].lazyValue += value 
+    lazyUpdate(index, L, R)
+    return   
+  mid = (L + R) / 2 
+  update(2 * index, L, mid, l, r, value)
+  update(2 * index + 1, mid + 1, R, l, r, value) 
+  it[index].maxValue = max(it[2 * index].maxValue, it[2 * index + 1].maxValue) 
+
+
+get(index, L, R, l, r)
+  lazyUpdate(index, L, R) 
+  nếu l > R || L > r:
+    return -inf 
+  nếu l <= L && R <= r: 
+    return it[index].maxValue   
+  mid = (L + R) / 2 
+  đặt getLeft = get(2 * index, L, mid, l, r)
+  đặt getRight = get(2 * index + 1, mid + 1, l, r) 
+  return max(getLeft, getRight) 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+A simple task 
+
+10 5
+abacdabcda
+7 10 0
+5 8 1
+1 4 0
+3 6 0
+7 10 1
+
+
+
+
+[3 ... 8]
+
+acdabc
+
+aabccd 
+
+Xét cây tương ứng với chữ 'a' 
+
+
+
+Ta tạo 26 cây segment tree, mỗi cây segment tree tương đương với thông tin của 1 chữ cái tương ứng. 
+
+Một cây segment tree lưu trữ thông tin về số lần xuất hiện của chữ cái tương ứng trong đoạn mà cây đó đang quản lý. 
+
+Khi có một truy vấn yêu cầu sắp xếp (tăng hoặc giảm)
+
+Xét từng chữ cái tương ứng, nếu có K chữ cái và ta biết các chữ cái đó xuất hiện từ l ... l + K - 1 thỉ ta tiến hành tăng từng số trên cây segment tree tương ứng 
+
+thêm 1 đơn vị với từng vị trí từ [l .... l + K - 1] 
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+Income 
+
+Cho một dãy số a gồm N số
+
+Với số thứ i, ta có đoạn [li ...... ri] 
+
+Thực hiện liên tục các thao tác như sau: 
+
+Ta tạo ra dãy số b với ý nghĩa: b[i] = max(a[i], max(a[k]) với k: li .... ri) 
+
+Sau đó ta gán a = b 
+
+Hãy cho biết tại thời điểm nào thì dãy số a sẽ được giữ nguyên giá trị. 
+
+
+4
+a = 1 2 4 4 3 4
+2 2
+3 3
+1 2
+1 3
+
+
+
+Subtask 3: Tổng các R[i] - L[i] <= 10^6 
+
+
+Với mỗi vị trí i, ta duyệt j: L[i] ---> R[i] 
+
+Ta vẽ một cạnh có hướng nối từ j -----> i 
+
+
+Thuật giải full: 
+
+
+N = 10 
+
+a[1]:  [4 ... 9]    ----> [4 .. 5],   [6 ... 8] , [9 ... 9] 
+a[2]:  [2 ... 10]   ----> [2 .. 3],  [4 ... 5],  [6 .... 10] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
