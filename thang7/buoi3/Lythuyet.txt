@@ -1,0 +1,319 @@
+Legacy: 
+
+Cho N đỉnh trên đồ thị và các đỉnh hiện tại chưa kết nối với nhau. 
+
+Ta có Q thao tác "thêm cạnh", mỗi thao tác sẽ là 1 trong 3 loại sau: 
+
+Loại 1: Thêm cạnh u -> v với trọng số là w 
+
+Loại 2: Thêm các cạnh nối từ u --> các đỉnh thuộc [l .... r] với trọng số là w 
+
+Loại 3: Thêm các cạnh nối từ các đỉnh thuộc [l .... r] đến đỉnh u với trọng số là w 
+
+Hãy cho biết nếu ta xuất phát từ đỉnh 1, độ dài đường đi ngắn nhất từ 1 -> các đỉnh còn lại là bao nhiêu ?????? 
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Another Query problem (ICPC National 2017) 
+
+Cho một dãy số a, ban đầu các số = 0 
+
+Cho Q truy vấn, mỗi truy vấn là một đoạn [l ... r], gồm 1 trong 3 loại 
+
+Loại 1: tăng a[l] lên 1 x 2 x 3, tăng a[l + 1] lên 2 x 3 x 4, tăng a[l + 2] lên 3 x 4 x 5, ..... 
+
+Loại 2: giảm a[l] lên 1 x 2 x 3, giảm a[l + 1] lên 2 x 3 x 4, giảm a[l + 2] lên 3 x 4 x 5, ..... 
+
+Loại 3: Tính tổng các số trong đoạn [l ... r]
+
+
+
+Với truy vấn loại 1 
+
+for i: l -> r 
+  tăng a[i] thêm 1 lượng là: (i - l + 1) * (i - l + 2) * (i - l + 3)
+
+
+[4 .. 7] 
+
+a[4] tăng (4 - 4 + 1) * (4 - 4 + 2) * (4 - 4 + 3) = 1 x 2 x 3 
+a[5] tăng (5 - 4 + 1) * (5 - 4 + 2) * (5 - 4 + 3) = 2 x 3 x 4 
+
+
+Ta phân tích a[i] = C3 * i^3 + C2 * i^2 + C1 * i^1 + C0 
+
+
+
+
+(i - l + 1) * (i - l + 2) * (i - l + 3)
+= i^3 * 1
++ i^2 * (-3*l + 6)
++ i^1 * (3*l^2 - 12*l + 11)
++ i^0 * (-l^3 + 6*l^2 - 11*l + 6)
+
+
+
+b0[i] = 0 
+b1[i] = i 
+b2[i] = i^2 
+b3[i] = i^3 
+
+
+
+tăng : [2 .. 7]  ====> b3[2] tăng thêm 1, b3[3] tăng thêm 1, ...., b3[7] tăng thêm 1 
+                       b2[2] tăng thêm 0, b3[2] tăng thêm 0, ...., 
+                       b1[2] tăng thêm -1, b1[3] tăng thêm -1, ...., b1[7] tăng thêm -1 
+                       b0[i] 
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Một số cấu trúc dữ liệu mở rộng 
+
+Persistent Segment tree 
+
+Range queries and copies 
+
+Cho một dãy số a gồm N số nguyên dương 
+
+Cho Q truy vấn 
+
+Loại 1: k, p và số x: Ta tới dãy thứ k, thay đổi a[p] thành x 
+
+Loại 2: k, l, r: Tính tổng các số trên đoạn [l .... r] ở dãy thứ k 
+
+Loại 3: k : Tạo thêm một dãy mới là phiên bản copy của dãy thứ k. 
+
+
+a = [4, 5, 1, 2, 6]  dãy thứ 1 
+a = [4, 5, 6, 2, 6]  dãy thứ 2 
+a = [4, 5, 1, 2, 6]  dãy thứ 3 
+a = [4, 5, 6, 2, 6]  dãy thứ 4
+
+3 1 
+2 2 3 5  ---> 9 
+1 2 3 6 
+3 1 
+3 2
+1 1 2 4 ----> 8 
+
+
+Con trỏ 
+
+Trong máy tính, khi ta lưu trữ dữ liệu, ta sẽ lưu trữ xuống bộ nhớ. 
+
+Bộ nhớ sẽ được chia thành rất nhiều "ô nhớ"
+
+Mỗi "ô nhớ" sẽ có một địa chỉ tương ứng. 
+
+
+
+Nhận xét: Nếu ta có thay đổi a[p] nào đó thì chỉ có tối đa logN nút trên cây segment tree bị thay đổi 
+
+
+Tổ chức cây segment tree 
+
+Một node trên cây segment tree 
+
+struct itnode {
+  long long sum; 
+  itnode *left, *right; 
+};
+vector <itnode *> version; 
+itnode *createNode() {
+  itnode *ret = new itnode(); 
+  ret->sum = 0; 
+  ret->left = NULL; 
+  ret->right = NULL; 
+  return ret;   
+}
+void build(itnode *&root, int L, int R) {
+  root = createNode(); 
+  if (L == R) {
+    root->sum = a[L];
+    return; 
+  }  
+  int mid = (L + R) / 2; 
+  build(root->left, L, mid); 
+  build(root->right, mid + 1, R); 
+  root->sum = root->left->sum + root->right->sum; 
+}
+long long get(itnode *root, int L, int R, int l, int r) {
+  if (l > R || L > r) {
+    return 0; 
+  }  
+  if (l <= L && R <= r) {
+    return root->sum; 
+  }
+  int mid = (L + R) / 2;  
+  đặt getLeft = get(root->left, L, mid, l, r); 
+  đặt getRight = get(root->right, mid + 1, R, l, r); 
+  return getLeft + getRight
+}
+void update(itnode *&root, int L, int R, int position, int value) {
+  if (position < L || position > R) {
+    return; 
+  }
+  itnode *ret = createNode(); 
+  if (L == R && L == position) {
+    ret->sum = value; 
+    root = ret; 
+    return; 
+  } 
+  đặt mid = (L + R) / 2 
+  nếu (position <= mid) {
+    ret->right = root->right; 
+    update(root->left, L, mid, position, value); 
+  } 
+  else {
+    ret->left = root->left; 
+    update(root->right, mid + 1, R, position, value); 
+  }
+  ret->sum = ret->left->sum + ret->right->sum; 
+  root = ret; 
+}
+main(): 
+  itnode *ver0; 
+  build(ver0, 1, n) 
+  version.push_back(ver0); 
+  Duyệt các truy vấn 
+    Loại 3: k 
+    itnode *new_version = createNode(); 
+    itnode *need = version[k - 1] 
+    *new_version = *need; 
+    version.push_back(new_version)
+    Loại 2: k, l, r 
+    itnode *root = version[k - 1]; 
+    xuất get(root, 1, n, l, r) 
+    Loại 1: k, pos, x 
+    itnode *root = version[k - 1]
+    update(root, 1, n, pos, x)
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Dynamic Connectivity 
+
+Cho N đỉnh, ban đầu có M cạnh vô hướng. 
+
+Cho Q truy vấn, mỗi truy vấn gồm 1 trong 2 loại 
+
+Loại 1: u v: Thêm cạnh u - v vào đồ thị 
+
+Loại 2: u v: Xóa cạnh u - v ra khỏi đồ thị. Ta bảo đảm có cạnh u - v trong đồ thị 
+
+
+Sau mỗi truy vấn, số lượng thành phần liên thông là bao nhiêu ???????
+
+
+
+findRoot(u): 
+  nếu root[u] == u: 
+    return root[u] 
+  root[u] = findRoot(root[u]) 
+  return root[u]   
+
+
+Dsu union by rank 
+
+findRoot(u): 
+  nếu root[u] == u: 
+    return root[u] 
+  return findRoot(root[u])    
+
+
+
+Gọi rank[u] là khoảng cách từ đỉnh tối thượng đến đỉnh xa đỉnh này nhất trong tplt 
+
+Khởi tạo: rank[u] = 0 
+
+Khi ta kết nối u và v lại với nhau 
+
+đặt rootu = findRoot(u), rootv = findRoot(v) 
+
+nếu rank[rootu] > rank[rootv] 
+  root[rootv] = rootu 
+else nếu rank[rootu] < rank[rootv] 
+  root[rootu] = rootv 
+else: 
+  root[rootu] = rootv 
+  rank[rootv]++     
+
+
+N = 10 
+
+M = 6 
+
+1 4
+2 5
+1 3
+5 7
+2 9
+3 5 
+
+Q = 6
+
+thêm 2 8 
+thêm 7 9 
+xóa 5 7 
+xóa 1 4 
+xóa 1 3  
+thêm 2 4 
+
+
+
+cạnh <5, 7> tồn tại [0 ... 2] 
+cạnh <1, 4> tồn tại [0 ... 3] 
+cạnh <1, 3> tồn tại [0 ... 4] 
+cạnh <2, 5> tồn tại [0 ... 6] 
+cạnh <3, 6> tồn tại [5 ... 6] 
+
+
+
+Gọi it[index] là danh sách các cạnh có tồn tại trong đoạn thời gian [L .... R] 
+
+                                                         it[1] : {<2, 5>, <2, 9>, <3, 5>}
+                               
+                        it[2] : {<1, 4>, <1, 3>}   
+
+         it[4]: {<5, 7>}                         it[5] : 
+
+
+it[8] : {<4, 7>}       it[9] : { }       it[10] : {<5, 7>}
+
+
+
+Dsu roll back: 
+
+Ta sử dụng một stack để lưu trữ những thông tin mà ta vừa thay đổi nếu thêm 1 cạnh mới 
+
+Khi ta thêm cạnh u - v 
+
+đặt rootu = findRoot(u), rootv = findRoot(v) 
+
+
+Ta đưa bộ {u, v, rootu, rootv, numbComponents, rank[rootu], rank[rootv]} vào stack 
+
+Giả sử root[rootu] bị thay đổi thành rootv, rank[rootu] bị thay đổi, numbComponents-- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
