@@ -1,0 +1,304 @@
+Mkthnum:
+
+Cho một dãy số a gồm N số nguyên dương. 
+
+Cho Q truy vấn, mỗi truy vấn gồm một đoạn [l .... r]
+
+Xét các số a[l], a[l + 1], a[l + 2], ....., a[r], hỏi số nhỏ thứ k trong đoạn này là số nào ???? 
+
+
+Ví dụ: 
+
+N = 10, Q = 7 
+
+7 1 9 2 2 6 5 10 8 4
+
+3 8 2 
+1 9 4 
+
+
+
+Kỹ thuật "nén số" 
+
+
+a = [100, 1000000, 1252, 8,  1252, 1000000000000000000000000000000000007, 1, -4] 
+
+b = [4, 6, 5, 3, 5, 7, 2, 1]
+
+
+Sau khi ta áp dụng "nén số", các số b[i]: [1 .... n] 
+
+Ta tổ chức một cây segment tree với ý nghĩa: 
+
+Nút index quản lý đoạn [L .... R] : Đếm có bao nhiêu giá trị nằm trong miền [L .... R] 
+
+
+7 1 9 2 2 6 5 10 8 4
+
+
+
+    9 2 2 6 5 10  (số nhỏ thứ 4)
+
+
+
+
+Ta xây dựng N cây segment tree, cây thứ i tương ứng với dãy số a gồm i phần tử đầu tiên 
+
+version[0]:  hoàn toàn chưa có gì 
+
+version[1]:   {a[1]} 
+
+version[2]:   {a[1],a[2]} 
+
+version[3]:   {a[1],a[2], a[3]} 
+
+.....
+
+version[N]:   {a[1], a[2], a[3], ...., a[N]} 
+
+
+
+
+9 2 2 6 5 10  (số nhỏ thứ 5)
+
+                                                                          [1 ... 10] : 6 
+                                        [1 .. 5] : 3                                               [6 ... 10] : 3 
+
+                                                                                        [6 .. 8]: 1             [9 .. 10] : 2 
+
+                                                                                                      [9 .. 9] : 1              [10 ... 10] : 1 
+
+
+
+Khi ta có đoạn [L ... R] mà xét các phần tử từ x ---> y 
+
+Ta muốn đếm có bao nhiêu số trong đoạn [L .. R]: giá trị tương ứng [L .. R] của version[y] - giá trị tương ứng [L .. R] của version[x - 1] 
+
+------------------------------------------------------------------------------------------------------------------------------------ 
+
+Modulo 3 
+
+Cho một đồ thị có hướng, mỗi đỉnh u sẽ chỉ có đúng duy nhất 1 đỉnh v mà u ----> v 
+
+Có Q câu hỏi, mỗi câu hỏi gồm 3 số x, y và k 
+
+Ta thay đổi x ---> y. 
+
+
+Ta tiến hành sơn cho các đỉnh u trong đồ thị bằng những màu từ 1 -> k
+
+Khi ta sơn 1 đỉnh u thì đỉnh kề với u sẽ được sơn bằng màu đó, sau đó cứ tiếp tục như vậy cho đến khi không sơn được nữa. 
+
+Hỏi: Đồ thị của chúng ta sẽ có bao nhiêu màu khác nhau ? Tất cả các đỉnh đều phải được yêu cầu sơn ít nhất 1 lần 
+
+Vì số cách rất lớn, ta chỉ việc in số cách khi mod cho 3 
+
+
+Functional Graph 
+
+Là một đồ thị có hướng mà mỗi đỉnh u chỉ có duy nhất 1 cạnh có hướng đến một đỉnh v nào đó (v có quyền bằng với u) 
+
+Tính chất của đồ thị functional graph là gì ????? 
+
+Dù ta xuất phát tại bất kỳ đỉnh nào, khi ta di chuyển, ta đều sẽ bước vào một chu trình nào đó. 
+
+
+
+Quay trở lại bài toán: 
+
+Xét một "vùng" đồ thị, giả sử vùng đó bao gồm X đỉnh không trong chu trình =====> số cách là k^(X + 1)
+
+
+Xét có nhiều "vùng" đồ thị, mỗi vùng có số cách là: k^(X1 + 1), k^(X2 + 1) ....... 
+
+====> số cách sơn màu cho toàn bộ đồ thị: k^(X1 + 1) * k^(X2 + 1) * k^(X3 + 1) * ...... 
+
+= k^(X1 + 1 + X2 + 1 + X3 + 1 + .... )
+
+
+Nếu k chia hết cho 3 ====> xuất ra số 0 
+
+Nếu k chia 3 dư 1 ======>  xuất ra số 1 
+
+Nếu k chia 3 dư 2 
+
+2^0 mod 3 = 1 
+2^1 mod 3 = 2 
+2^2 mod 3 = 1 
+2^3 mod 3 = 2 
+2^4 mod 3 = 1 
+
+---------------------------------------------------------------------------------------------------------------------
+
+Fenwick Tree + Fenwick Tree 2D 
+
+Nkinv 
+
+Cho một dãy số a có các số hoàn toàn khác nhau. 
+
+Một cặp (i, j) được gọi là nghịch thế nếu i < j và a[i] > a[j] 
+
+Hãy cho biết trong dãy có bao nhiêu cặp nghịch thế ?????? 
+
+
+1 <= a[i] <= n 
+
+
+Xét thuật ngây thơ: 
+
+for i: 1 -> n 
+  for j: i + 1 -> n 
+    nếu a[i] > a[j]: 
+      ans++ 
+
+
+
+Thuật chuẩn 
+
+Sử dụng segment tree với ý nghĩa: 
+
+it[index]: tổng các số trên đoạn [L .... R] mà index quản lý 
+
+for i: n -> 1 
+  Ta hỏi: nãy giờ có bao nhiêu giá trị a[j] sao cho a[j] thuộc [1 .....  a[i] - 1] 
+  update tăng a[i] thêm 1 đơn vị vào cây segment tree  
+
+
+
+Cây chỉ số nhị phân (fenwick tree) 
+
+Ta xét bài toán: 
+
+có 2 dạng truy vấn: 
+
+. tăng a[p] thêm v đơn vị                     O(logN) 
+. Tính tổng các số a[1], a[2], ....., a[p]    O(LogN)
+
+
+Ta có 2 hàm 
+
+fw[100005]
+
+update(index, value): 
+  for (; index <= 100000; index += index & -index) {
+    fw[index] += value 
+  }
+
+get(index): 
+  đặt ret = 0 
+  for (; index > 0; index -= index & -index) {
+    ret += fw[index]; 
+  }
+  return ret 
+
+
+b = [0, 0, 0, 2, 0, 4, 0, 0, 0]
+
+for i: n -> 1 
+  ans += get(a[i] - 1)
+  update(a[i], 1)   
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+Nkmobiles (IOI 2001) 
+
+Cho một bảng kích thước 1024 x 1024
+
+Cho Q thao tác, mỗi thao tác là 1 trong 3 loại 
+
+Loại 1: Tăng giá trị a[i][j] thêm v đơn vị 
+
+Loại 2: Cho x1, y1, x2, y2 (x1 <= x2, y1 <= y2) : Tính tổng của hình chữ nhật giới hạn từ (x1, y1) ----> (x2, y2) 
+
+Loại 3: Nếu gặp loại 3 thì dừng thuật toán 
+
+
+
+Fenwick 2D 
+
+
+fenwick 2D là cấu trúc dữ liệu dùng để tăng giá trị tại (x, y) thêm một lượng v hoặc tính tổng các số trên một hình chữ nhật con từ (1, 1) ---> (x, y) 
+
+
+fw[1030][1030] 
+
+update(x, y, value)
+  for (indexx = x, indexx <= 1024; indexx += indexx & -indexx) {
+    for (indexy = y; indexy <= 1024; indexy += indexy & -indexy) {
+      fw[indexx][indexy] += value 
+    }
+  }
+
+get(x, y)
+  ret = 0 
+  for (indexx = x; indexx > 0; indexx -= indexx & -indexx) {
+    for (indexy = y; indexy > 0; indexy -= indexy & -indexy) {
+      ret += fw[indexx][indexy] 
+    }
+  }
+  return ret 
+
+
+
+Truy vấn loại 1: Gọi update(i, j, v) 
+
+Truy vấn loại 2: ====> xuất ra get(x2, y2) - get(x1 - 1, y2) - get(x2, y1 - 1) + get(x1 - 1, y1 - 1) 
+
+-------------------------------------------------------------------------------------------------------------------
+
+Inversions: 
+
+Cho một dãy số a là một hoán vị của N số tự nhiên đầu tiên 
+
+Ta chọn một vị trí i, sau đó ta dồn tất cả các giá trị < a[i] về phía bên trái (bảo toàn thứ tự), dồn tất cả các giá trị > a[i] về phía bên phải 
+
+Sau khi dồn, ta đếm có bao nhiêu nghịch thế. Hỏi cách dồn nào cho ra số nghịch thế nhỏ nhất ????? 
+
+
+N = 9
+
+a = [4, 7, 1, 9, 6, 5, 2, 8, 3] 
+
+
+[4, 1, 2, 3, 5, 7, 9, 6, 8] 
+
+Gọi smaller[x]: số lượng số bên phải số x mà nhỏ hơn số x 
+
+=====> dùng fenwick tree 
+
+
+Số nghịch thế NỘI BỘ của phần nhỏ: smaller[1] + smaller[2] + .... + smaller[a[i] - 1]  (nếu chọn a[i])
+
+
+Gọi bigger[x]: số lượng số bên trái số x mà lớn hơn số x 
+
+
+bigger[x] = i - 1 - (x - 1 - smaller[x])
+
+
+Nếu ta chọn x làm mốc 
+
+Số nghịch thế = smaller[1] + smaller[2] + ..... + smaller[x - 1] + bigger[x + 1] + bigger[x + 2] + ..... + bigger[n] 
+
+
+prefix[i] = smaller[1] + smaller[2] + .... + smaller[i] 
+suffix[i] = bigger[n] + bigger[n - 1] + bigger[n - 2] + ..... + bigger[i] 
+
+
+Khi ta chọn một giá trị x, tổng số nghịch thế = smaller[x - 1] + bigger[x + 1] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

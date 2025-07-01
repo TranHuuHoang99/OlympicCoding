@@ -1,0 +1,329 @@
+Manhathan Distance 
+
+Cho N điểm trên mặt phẳng, điểm thứ i có tọa độ là (xi, yi) 
+
+Xét mọi cặp điểm (i, j), mỗi cặp điểm ta tính khoảng cách Manhathan 
+
+dist(i, j) = |xi - xj| + |yi - yj| 
+
+Ta sắp xếp toàn bộ các khoảng cách này tăng dần =====> hỏi phần tử thứ K là bao nhiêu ??? 
+
+
+1 <= N <= 100000 
+
+
+Ta chặt nhị phân, giả sử ta có khoảng cách là D 
+
+Hãy đếm có bao nhiêu cặp điểm (i, j) sao cho dist(i, j) <= D 
+
+Nếu số lượng cặp >= K ====> ans = D, tìm trên khoảng nhỏ hơn 
+
+else: tìm trên khoảng lớn hơn 
+
+
+
+
+
+Xét 2 điểm (i, j) 
+
+
+|xi - xj| + |yi - yj| 
+
+
+= (xi - xj) + (yi - yj) = (xi + yi) - (xj + yj)  (trường hợp 1) 
+
+
+= (xi - xj) + (yj - yi) = (xi - yi) - (xj - yj)  (trường hợp 2) 
+
+
+= (xj - xi) + (yi - yj) = (xj - yj) - (xi - yi)  (trường hợp 3) 
+
+
+= (xj - xi) + (yj - yi) = (xj + yj) - (xi + yi)  (trường hợp 4) 
+
+
+
+Đặt a[i] = xi + yi,  b[i] = x[i] - y[i] 
+
+
+|xi - xj| + |yi - yj| = 
+
+Max ( {   a[i] - a[j], b[i] - b[j], a[j] - a[i], b[j] - b[i] }  ) 
+
+
+Ta sắp xếp các điểm tăng dần theo a[i] 
+
+
+Nếu i < j ======> a[i] <= a[j] 
+
+
+
+|xi - xj| + |yi - yj| = 
+
+Max ( {  b[i] - b[j], a[j] - a[i], b[j] - b[i] }  )  <= D 
+
+
+Tương đương: 
+
+b[i] - b[j] <= D       <=>    b[i] <= D + b[j] 
+a[j] - a[i] <= D    x 
+b[j] - b[i] <= D       <=>    b[i] >= b[j] - D 
+
+
+Nếu ta cố định điểm j, những điểm i "có khả năng" là những điểm có a[i] sao cho a[j] - a[i] <= D 
+
+
+Với mỗi j, ta xác định l là chỉ số xa j nhất về phía bên trái sao cho: a[j] - a[l] <= D 
+
+Những "ứng viên" i là những điểm thuộc [l ...... j - 1]
+ 
+  Trong những ứng viên i (thuộc [l .... j - 1]), ta đếm có bao nhiêu ứng viên sao cho: 
+     b[i] thuộc [b[j] - D ....... b[j] + D] 
+
+  
+      l                         j 
+ 
+
+  Ta muốn đếm có bao nhiêu số nằm trong đoạn [L ... R] ====> get(R) - get(L - 1) 
+
+
+Ta "nén số", xét từng điểm i trong N điểm, mỗi điểm i ta xét 3 giá trị b[i], b[i] - D và b[i] + D 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Impeval 
+
+
+Cho một đồ thị có N đỉnh và M cạnh, mỗi cạnh có một trọng số dương. 
+
+Có 2 thành phố trọng điểm là 1 và 2 
+
+Với mỗi thành phố X, ta gọi D1(X) và D2(X) là độ dài đường đi ngắn nhất từ 1 -> X và từ 2 -> X 
+
+Định nghĩa R(X) là "hạng" của thành phố X. Hạng là số lượng thành phố Y sao cho: 
+
+D1(Y) <= D1(X) 
+D2(Y) <= D2(X) 
+
+
+Có Q sự thay đỏi độc lập, mỗi sự thay đổi như sau: 
+
+Ta chọn một cạnh u - v, ta thay đổi trọng số của cạnh này thành giá trị T  (T < w(u, v)) 
+
+Hỏi sau khi thay đổi, thứ hạng của 2 đỉnh u và v là bao nhiêu ?????? 
+
+
+
+
+Khi ta chọn cạnh u - v và thay đổi thành một trọng số nhỏ hơn 
+
+Xét một đỉnh X bất kỳ 
+
+Nếu ta thay đổi w(u, v) ----> T
+
+Xét một đỉnh X bất kỳ, việc thay đổi sẽ ảnh hưởng tới đỉnh X nếu đường đi từ 1 -> X hoặc từ 2 -> X có đi ngang qua cạnh u - v 
+
+
+Nếu đỉnh X "có bị ảnh hưởng" ========> đỉnh X không thể nào ảnh hưởng tới R(u) hay R(v) 
+
+
+=====> những đỉnh mà ta cần quan tâm là những đỉnh mà khi ta xét đường đi ngắn nhất từ 1 và 2 tới đỉnh đó, chúng không hề bị ảnh hưởng bởi cạnh u - v 
+
+
+=====> với mỗi truy vấn thay đổi w(u, v) ----> T, ta chỉ so sánh 
+
+D'1(u) với D1(X) 
+D'2(u) với D2(X) 
+
+
+D'1(v) với D1(X) 
+D'2(v) với D2(X) 
+
+
+
+Với mỗi đỉnh u, ta xem như có 2 giá trị x và y, x = D1(u), y = D2(u) 
+
+Ta đọc Q truy vấn, mỗi truy vấn ta biết được 2 đỉnh u và v và cũng biết được D'1(u), D'2(u), D'1(v) và D'2(v) 
+
+Ta đưa các đỉnh u, v của Q truy vấn vào chung với những đỉnh X ban đầu của đồ thị 
+
+Ta tiến hành sắp xếp các đỉnh i tăng dần theo x[i]  
+
+   Với mỗi đỉnh u, ta có những đỉnh i trước đỉnh u là những đỉnh bảo đảm có x[i] <= x[u] 
+
+   những đỉnh i thỏa mãn là những đỉnh có y[i] <= y[u] 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Trie (Cây tiền tố) 
+
+Xét bài toán sau: 
+
+Xét N bộ gen, mỗi bộ gen độ dài <= 1000 ký tự và gồm 4 loại "A", "C", "G", T" 
+
+Cho Q truy vấn, mỗi truy vấn là một bộ gen g, hỏi bộ gen g có xuất hiện trong N bộ gen đã cho hay không ????? 
+
+Tổng ký tự <= 2 triệu 
+
+
+N = 6 
+
+AAAAAC
+AAAAAA
+TTGA
+TCA
+ACCT
+TCACAGT 
+
+
+Q = 4 
+
+CGG ---> NO 
+TGA ---> YES 
+...
+
+
+Lưu trữ các chuỗi vào set <string> 
+
+Vấn đề: Khi so sánh 2 chuỗi, số thao tác : O(len) 
+
+
+Trie: Là một cấu trúc dữ liệu nhằm lưu trữ các tiền tố của một chuỗi hoặc tiền tố của thông tin nào đó 
+
+Ta tổ chức cây trie: 
+
+struct trieNode {
+  bool isEnd; 
+  vector <trieNode *> child; 
+}
+
+trieNode *createNode() {
+  trieNode *ret = new trieNode(); 
+  ret->isEnd = false; 
+  ret->child.resize(4); 
+  for (int i = 0; i < 4; i++) {
+    ret->child[i] = NULL; 
+  }
+  return ret; 
+}
+
+void add(string &s) {
+  trieNode *p = root; 
+  for (từng ký tự ch):
+    id = map[ch] 
+    nếu p->child[id] == NULL: 
+       p->child[id] = createNode(); 
+     p = p->child[id]   
+  p->isEnd = true 
+}
+
+bool get(string &s) {
+  trieNode *p = root; 
+  for (từng ký tự ch): 
+    id = map[ch] 
+    nếu p->child[id] == NULL: 
+      return false 
+    p = p->child[id] 
+  nếu p->isEnd == true: 
+   return true 
+  return false      
+}
+
+main(): 
+  trieNode *root = createNode() 
+  for i: 1 -> N 
+    đọc chuỗi s 
+    add(s) 
+
+---------------------------------------------------------------------------------------------------
+
+Search Engine 
+
+Cho N chuỗi, mỗi chuỗi i có một sức mạnh là p[i] 
+
+Cho Q truy vấn, mỗi truy vấn là một chuỗi st. Xét những chuỗi s mà nhận st làm tiền tố, hỏi chuỗi nào cho sức mạnh lớn nhất ???? 
+
+
+hackerrank 10 
+hacker 20 
+hackerearth 9 
+
+
+Q = 3 
+
+hack  ---->  20 
+
+hackerr ---> 10 
+
+
+----------------------------------------------------------------------------------------------------
+
+
+Word Combination: 
+
+
+Cho N từ khóa
+
+Cho một chuỗi s, hãy đếm có bao nhiêu cách tách chuỗi s ra thành những đoạn con liên tiếp sao cho mỗi đoạn con là 1 từ khóa. 
+
+
+N = 3 
+
+aabc 
+bca 
+aacab
+
+s =   aacab  bcaaacabbca 
+
+1 <= |s| <= 5000 
+
+
+Khi ta xuất phát tại vị trí i, ta đưa ra danh sách các vị trí j sao cho từ i + 1 ---> j là một từ khóa 
+
+
+Gọi f[i] là số cách để phân tích chuỗi s gồm i ký tự đầu tiên thành các từ khóa 
+
+
+f[0] = 1 
+
+Khi ta có f[i] > 0: 
+
+  Xét các vị trí j sao cho từ i + 1 ..... j là một từ khóa =====> f[j] += f[i] 
+
+
+Kết quả: f[n] 
+
+
+Ban đầu ta đưa các từ khóa vào cây trie 
+
+Duyệt từng vị trí i 
+  Duyệt từng vị trí j : i + 1 ---> N 
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+f[u] = (f[v1] + 2) * (f[v2] + 2) * (f[v3] + 2) * ....  = 7

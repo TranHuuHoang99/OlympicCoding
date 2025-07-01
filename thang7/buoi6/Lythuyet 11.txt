@@ -1,0 +1,245 @@
+SPC1 (Spring Contest 2022) 
+
+Cho Q thao tác, mỗi thao tác gồm 1 trong 2 loại 
+
+Loại 1: thêm một số x vào một tập hợp a 
+
+Loại 2: Hỏi số nhỏ thứ K trong tập hợp a là số nào ?
+
+Ví dụ: 
+
+N = 20 
+
+1 7 : a = {7} 
+1 10 : a = {7, 10}
+1 3  : a = {7, 3, 10} 
+1 1000 : a = {7, 3, 10, 1000} 
+2 2 : 7 
+1 2051 : a = {0007, 0003, 0010, 1000, 2051}
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+Type printer
+
+
+Ta có N từ, ta sẽ đánh máy để in ra toàn bộ các từ. 
+
+Mỗi lần gõ, ta có thể gõ các phím sau: 
+
+'a' ---> 'z' : các chữ cái mà ta gõ 
+'-' : xóa ký tự cuối cùng mà con trỏ đang trỏ tới 
+'P' : in chuỗi mà ta đang gõ ra màn hình. 
+
+Hãy cho biết các thao tác và số lượng thao tác tối thiểu mà ta cần gõ để in ra toàn bộ N chuỗi. 
+ 
+
+program
+programming
+prolog     
+python    
+java 
+pro          
+
+
+
+proPlogP-----ythonP
+
+
+
+
+...................................................... programmingP
+
+------------------------------------------------------------------------------------------------------------------------
+
+Sparse Table (Bảng thưa) 
+
+Cho một dãy số a có N số 
+
+Cho Q truy vấn, mỗi truy vấn có 2 giá trị l và r. Hỏi số nhỏ nhất trong đoạn a[l], a[l + 1], ...., a[r] là bao nhiêu ??? 
+
+
+Mỗi truy vấn ta truy vấn trong O(1) 
+
+
+
+N = 10 
+
+a = [9, 6, 8, 9, 4, 5, 7, 6, 8, 20] 
+
+f[3][2] = 4
+f[3][3] = 4 
+
+f[1][1] = 6 
+
+Gọi f[i][j] là giá trị của số nhỏ nhất khi ta xuất phát từ i và xét liên tục 2^j số (bao gồm cả i) 
+
+bài toán cơ sở: f[i][0] = a[i] 
+
+công thức qhd: 
+
+f[i][j] = min(f[i][j - 1], f[i + (1 << (j - 1))][j - 1])
+
+Lưu ý: ta chỉ tính f[i][j] nếu i + (1 << j) - 1 <= n
+
+
+khởi tạo: f[i][0] = a[i] 
+
+for j: 1 -> 18 
+  for i: 1 -> n 
+    nếu i + (1 << j) - 1 <= n: 
+      f[i][j] = min(f[i][j - 1], f[i + (1 << (j - 1))][j - 1])
+
+
+Với mỗi truy vấn: 
+
+  [l ... r]  (3 .... 9  :   )
+  gọi len = log2(r - l + 1) 
+  kết quả: min(f[l][len], f[r - (1 << len) + 1][len]) 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Company Queries 
+
+Gọi f[i][j] là người cách người i một cấp bậc là 2^j 
+
+bài toán cơ sở: f[i][0] = boss[i] 
+
+
+f[i][j] 
+
+Nếu f[i][j - 1] != -1 : 
+  bossMid = f[i][j - 1] 
+  nếu f[bossMid][j - 1] != -1: 
+    f[i][j] = f[bossMid][j - 1] 
+
+
+
+Với mỗi truy vấn, ta có một số k bất kỳ: 
+
+for j: 18 -> 0 
+  nếu k >= (1 << j) 
+    i = f[i][j] 
+    k -= (1 << j) 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Planet Queries 
+
+Có N hành tinh, hành tinh u sẽ có thể nhảy sang đúng hành tinh v
+
+Có Q truy vấn, mỗi truy vấn gồm hành tinh u và số k. Hãy cho biết nếu nhảy u liên tục k lần thì hành tinh mà u dừng lại là hành tinh nào ???? 
+
+1 <= k <= 1 tỷ 
+
+
+
+
+Gọi f[u][j] là hành tích mà u có thể nhảy tới được sau 2^j bước 
+
+Bài toán cơ sở: f[u][0] = next[u] 
+
+f[u][j] = 
+
+
+Đặt v = f[u][j - 1] 
+
+f[u][j] = f[v][j - 1] 
+
+
+for j: 29 -> 0 
+  nếu k >= (1 << j): 
+    u = f[u][j] 
+    k -= (1 << j) 
+  
+---------------------------------------------------------------------------------------------------------
+
+
+ZeroSeq 
+
+
+a = [   -7, -4, 5, 2, 4, 0, -2, 1, 1, 0, 0, 4, 3, -7, -1, 1    ]
+
+
+Gọi f[i][j] là CHỈ SỐ l bên trái gần nhất sao cho từ l .... i có thể chia thành 2^j đoạn có tổng = 0 
+
+Bài toán cơ sở: 
+
+
+f[i][0] = 
+
+Xét 2 trường hợp 
+
+TH1: ta chấp nhận a[i] có xuất hiện trong đoạn có tổng = 0 
+
+====> tìm vị trí l lớn nhất sao cho a[l] + a[l + 1] + .... + a[i] = 0 ====> 
+
+đặt sum[i] = a[1] + a[2] + .... + a[i] 
+
+
+a[l] + a[l + 1] + .... + a[i] = 0 <=> sum[i] - sum[l - 1] = 0 <=> sum[i] = sum[l - 1] 
+
+Ta gọi maxPos[S] : vị trí i lớn nhất sao cho sum[i] = S 
+
+p = maxPos[sum[i]]  =====> chỉ số thỏa: p + 1 
+
+
+TH2: không chấp nhận a[i]: f[i][0] = f[i - 1][0] 
+
+=====> f[i][0] = max(p + 1, f[i - 1][0]) 
+
+
+Với truy vấn [L ... R] 
+
+Đặt i = R 
+
+Duyệt j: 18 --> 0 
+  nếu f[i][j] >= L : 
+    ans += (1 << j) 
+    i = f[i][j] - 1 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
