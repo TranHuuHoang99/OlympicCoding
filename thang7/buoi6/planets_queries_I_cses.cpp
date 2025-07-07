@@ -5,30 +5,30 @@ using namespace std;
 
 const ll N = 2e5+10;
 int n, q;
-int A[N];
-int dp[N][40];
+int dp[N][30];
 
 void solve(void) {
-	cin >> n >> q;
-	for (int i = 1; i <= n; i++) cin >> A[i];	
-	for (int i = 1; i <= n; i++) dp[i][0] = A[i];
-	for (int j = 1; j <= 29; j++) {
-	 	for (int i = 1; i <= n; i++) {
-	 	 	int nextPlanet = dp[i][j-1];
-	 	 	dp[i][j] = dp[nextPlanet][j-1];
-	 	}
-	}
-	for (int i = 1; i <= q; i++) {
-	 	int x, k;
-	 	cin >> x >> k;
-	 	for (int j = 29; j >= 0; j--) {
-	 	 	if (k >= (1 << j)) {
-	 	 	 	x = dp[x][j];
-	 	 	 	k -= (1 << j);
-	 	 	}
-	 	}
-	 	cout << x << endl;
-	}
+ 	cin >> n >> q;
+ 	for (int i = 1; i <= n; i++) {
+ 	 	cin >> dp[i][0];
+ 	}
+ 	for (int j = 1; j <= 29; j++) {
+ 	 	for (int i = 1; i <= n; i++) {
+ 	 	 	int planetMid = dp[i][j-1];
+ 	 	 	dp[i][j] = dp[planetMid][j-1];
+ 	 	}
+ 	}
+ 	for (int i = 1; i <= q; i++) {
+ 	 	int x, k;
+ 	 	cin >> x >> k;
+ 	 	for (int j = 29; j >= 0; j--) {
+ 	 	    if (k >= (1 << j)) {
+ 	 	     	x = dp[x][j];
+ 	 	     	k -= (1 << j);
+ 	 	    }
+ 	 	}
+ 	 	cout << x << endl;	
+ 	}
 }
 
 int main(void) {
