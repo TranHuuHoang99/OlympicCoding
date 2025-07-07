@@ -1,0 +1,326 @@
+Labyrinth Adventure: 
+
+
+Với mỗi truy vấn, ta tiến hành tính "lớp" của điểm xuất phát và điểm kết thúc, nếu lớp của điểm xuất phát > lớp của điểm kết thúc ====> hoán đổi 2 điểm 
+
+
+Gọi f[i][j][door1][door2]: 
+
+Nếu ta xuất phát từ cửa door1 của lớp i - 1, số bước tối thiểu ta cần để đến cửa door2 của lớp i + (1 << j) - 1 là bao nhiêu ????? 
+
+Điều kiện: i + (1 << j) - 1 <= n 
+
+bài toán cơ sở: 
+
+
+f[i][0][door1][door2] = Khoảng cách Mahathan giữa cửa door1 (lớp thứ i - 1) ====> cửa door2 (lớp thứ i - 1) 
+
+
+công thức qhd: 
+
+
+f[i][j][door1][door2] = ???? 
+
+Điều kiện i + (1 << j) - 1 <= n 
+
+
+Giả sử xuất phát từ door1 (của lớp i - 1), ta di chuyển tới cửa x (của lớp i + (1 << (j - 1)) - 1), và từ cửa x ta di chuyển tới cửa y (của lớp i + (1 << (j - 1)))  
+
+
+f[i][j][door1][door2] = Min { f[i][j - 1][door1][x] + khoảng cách Mahathan từ x -> y + f[i + (1 << (j - 1))][j - 1][y][door2] }
+
+
+Với 1 truy vấn có 2 điểm (startx, starty) và (endx, endy) 
+
+Duyệt j từ 18 -> 0 
+  
+  nếu i ---> i + (1 << j) - 1  (điều kiện i + (1 << j) - 1 <= lớp cuối)  
+  Giả sử ta chọn cửa tiếp theo là cửa x 
+
+    cửa hiện tại (của lớp i - 1) ====> cửa x  (của lớp i + (1 << j) - 1) 
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Suffix Array (Mảng hậu tố) 
+
+Bài toán đặt ra: 
+
+Cho một chuỗi s gồm N ký tự (1 <= N <= 500000) 
+
+Xét toàn bộ tất cả các hậu tố của chuỗi s, sau đó ta sắp xếp các hậu tố tăng dần. 
+
+Hãy cho biết vị trí của các hậu tố sau khi được sắp xếp ???? 
+
+
+s = "aaczabac" 
+
+c
+ac 
+bac
+abac 
+zabac
+czabac
+aczabac 
+aaczabac 
+
+
+
+aaczabac    : 1 
+abac        : 5 
+ac          : 7
+aczabac     : 2 
+bac         : 6 
+c           : 8 
+czabac      : 3 
+zabac       : 4 
+
+
+p = [1 5 7 2 6 8 3 4]
+
+
+Counting Sort  : O(N + V)   với V là kích thước của các số trong dãy a 
+
+
+a = [7, 4, 1, 2, 2, 6, 4, 4, 5, 1, 4]
+
+cnt[1] = 2 
+cnt[2] = 2 
+cnt[3] = 0 
+cnt[4] = 4 
+cnt[5] = 1 
+cnt[6] = 1
+cnt[7] = 1 
+
+cnt[i] = cnt[i] + cnt[i - 1]   
+
+
+cnt[i]: số lượng số <= i 
+
+
+cnt[0] = 0 
+cnt[1] = 0
+cnt[2] = 2
+cnt[3] = 4 
+cnt[4] = 4
+cnt[5] = 8
+cnt[6] = 9
+cnt[7] = 10
+
+
+
+a = [1, 1, 2, 2, 4, 4, 4, 4, 5, 6, 7]
+
+
+Radix Sort  O(V * N) với V là số lượng chữ số tối đa của số a[i] 
+
+
+a = {1, 29, 68, 187, 1250, 2333, 459, 492, 521} 
+
+v[0] = {1, 29, 68, 187,  459, 492, 521 }
+v[1] = {1250}
+v[2] = {2333}
+v[3] = 
+v[4] = 
+v[5] = 
+v[6] = 
+v[7] = 
+v[8] = 
+v[9] = 
+
+a = 1, 29, 68, 187,  459, 492, 521, 1250, 2333 
+
+
+s = "aaczabac$" 
+
+
+
+
+p = [1 5 7 2 6 8 3 4]
+
+p = [9 1 2 3 4 5 6 7 8]
+
+
+ 
+
+
+Ta sắp xếp theo từng "pha" 
+
+cnt['$'] = 1 
+cnt['a'] = 4 
+cnt['b'] = 1 
+cnt['c'] = 2 
+cnt['z'] = 1 
+
+p = [9, 1, 2, 5, 7, 6, 3, 8]
+
+Xét mỗi pha 
+
+với pha thứ h, ta xét các chuỗi bao gồm 2^h ký tự liên tục CUỐI CÙNG 
+
+
+s += '$' 
+for i: 0 -> n 
+  p[i] = i 
+
+Duyệt i từ 0 -> n 
+  cnt[s[i]]++ 
+
+for c: 1 -> 255 
+  cnt[c] += cnt[c - 1] 
+
+for i: n -> 0 
+  p[cnt[s[i]]] = i
+  cnt[s[i]]-- 
+
+classes = 0
+class[s[p[0]]] = classes  
+for i: 1 -> n 
+  nếu s[p[i]] != s[p[i - 1]] 
+    classes++ 
+  class[p[i]] = classes   
+
+
+for h: 1 -> logn 
+  for i: 0 -> n 
+    prev[i] = p[i] - (1 << (h - 1)) 
+    nếu prev[i] < 0
+      prev[i] += n 
+
+  for i: 0 -> n 
+    cnt[class[prev[i]]]++ 
+
+  for i: 1 -> n 
+    cnt[i] += cnt[i - 1] 
+  for i: n -> 0 
+    p[cnt[class[prev[i]]]] = prev[i] 
+    cnt[class[prev[i]]]-- 
+  classes = 0 
+  new_class[p[0]] = classes 
+  for i: 1 -> n 
+    pair <int, int> current = make_pair(class[p[i] - (1 << (h - 1))], class[p[i]]) 
+    pair <int, int> previous = make_pair(class[p[i - 1] - (1 << (h - 1))], class[p[i - 1]])
+    nếu current != previous: 
+      classes++ 
+      new_class[p[i]] = classes 
+  class.swap(new_class)  
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Counting Patterns 
+
+s = "abccabgabcdec"
+
+p = []
+
+abccabgabcdec
+abcdec
+abgabcdec
+
+
+Nguyên tắc: Những chuỗi mà có các tiền tố giống nhau sẽ đứng liên tiếp với nhau 
+
+abc =====> 2 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+LCS (Longest Common Substring)
+
+
+Cho 2 chuỗi S và T, ta cần xác định 2 đoạn 
+
+[i .... j] : Xét các ký tự S[i], S[i + 1], ...., S[j] 
+
+[x .... y] : Xét các ký tự T[x], T[x + 1], ...., T[j] 
+
+Sao cho chuỗi S và T tạo từ 2 đoạn này giống nhau và độ dài dài nhất có thể. 
+
+
+Bài toán LCP (Longest Common Prefix) 
+
+
+Gọi lcp[i] là mảng chứa độ dài tiền tố chung dài nhất khi xét 2 chuỗi bắt đầu từ p[i] và p[i + 1] 
+
+s = "abccabgabcdec"
+
+abccabgabcdec  ----> 3 
+
+bccabgabcdec
+
+ccabgabcdec
+
+cabgabcdec  ----> 1 
+
+abgabcdec
+bgabcdec
+
+
+abccabgabcdec  ---> 3 
+abcdec   
+abgabcdec     -----> 0 
+bccabgabcdec  ---> 2 
+bcdec
+bgabcdec    ----> 0 
+c 
+cabgabcdec   -----> 1 
+ccabgabcdec   ----> 1 
+cdec
+dec  
+ec    
+gabcdec 
+
+
+
+Kasai algorithm 
+
+Ý tưởng của thuật Kasai 
+
+Ta thấy nếu lcp giữa chuỗi xuất phát từ p[i] và chuỗi xuất phát từ p[i + 1] mà = k thì độ dài tiền tố chung giữa chuỗi xuất phát từ p[i] + 1 và chuỗi xuất phát từ 
+
+p[i + 1] + 1 ít nhất là k - 1 
+
+
+
+k = 0 
+for i: 1 -> n 
+  đặt x = p[i] 
+  đặt y = p[i + 1] 
+  while x + k <= n và y + k <= n && s[x + k] == s[y + k]
+    k++ 
+  lcp[p[i]] = k 
+  nếu k > 0: 
+    k-- 
+
+
+
+alsdfkjfkdsal.fdjskalajfkdsla
+
+
+
+jfkdsal.fdjskalajfkdsla
+jfkdsla
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
