@@ -1,0 +1,420 @@
+The boss can count pairs 
+
+Cho 2 dãy số a và b có cùng n phần tử 
+
+Đếm có bao nhiêu cặp (i, j) sao cho: a[i] * a[j] = b[i] + b[j] 
+
+1 <= n <= 100000 
+
+1 <= a[i], b[i] <= n 
+
+
+a[i] * a[j] = b[i] + b[j]  (*) 
+
+
+b[i] + b[j] <= 2 * n 
+
+
+a[i] * a[j] <= 2 * n 
+
+
+====> số min {a[i], a[j]}  <= căn (2 * n) 
+
+
+Ta sắp xếp các cặp {a[i], b[i]} tăng dần theo a[i] 
+
+
+min{a[i], a[j]} = a[i]   với i < j 
+
+====> a[i] <= căn (2 * n) 
+
+
+Ta CỐ ĐỊNH giá trị a[i] = d   (1 <= d <= căn (2 * n)) 
+
+
+Gọi bảng count[x] : số lượng vị trí i sao cho: b[i] = x, a[i] = d 
+
+Duyệt d: 1 -> căn (2 * n) 
+   Duyệt j: 1 -> n 
+     d * a[j] = b[i] + b[j] 
+
+     <=> bi = d * a[j] - b[j] 
+     ans += count[bi]  
+     nếu a[j] == d: 
+       count[b[j]]++    
+
+
+
+a  =  d,  . , . , d, ., ., . ,. d 
+
+b  =  3,  4,  5 , 8, 9, 
+
+-------------------------------------------------------------------------------------------------------------------
+
+LCG Multiplication 
+
+Ta có 4 con số a, p, s, b 
+
+Ta xét một dãy số vô hạn các số như sau: 
+
+x0 = s 
+x1 = (a.x0 + b) mod p 
+x2 = (a.x1 + b) mod p 
+
+...... 
+
+xi = (a.xi-1 + b) mod p 
+
+
+
+Cho một giá trị v, hãy tìm giá trị n nhỏ nhất có thể sao cho xn = v 
+
+
+x0 = s 
+x1 = a.s + b 
+x2 = a.(a.s + b) + b = a^2.s + a.b + b 
+x3 = a^3.s + a^2.b + a.b + b 
+
+.... 
+
+xn = a^n.s + a^(n-1).b + a^(n-2).b + a^(n-3).b + ..... + a.b + b 
+
+= a^n.s + b * (1 + a + a^2 + a^3 + ..... + a^(n-1)) 
+
+
+
+S = 1 + a + a^2 + .... + a^(n - 1)    (1)
+
+a.S = a + a^2 + a^3 + ..... + a^n     (2) 
+
+(2) - (1) : 
+
+a.S - S = a^n - 1 
+
+S.(a - 1) = a^n - 1 
+
+Nếu a = 1 
+
+xn = s + b * n = v 
+
+(s + b * n) mod p = v 
+
+<=> n = (v - s) / b  mod p 
+
+===> n = (v - s) * b^(p - 2)  mod p 
+
+
+Nếu a khác 1 
+
+
+S.(a - 1) = a^n - 1 
+
+S = (a^n - 1) / (a - 1) 
+
+
+
+xn = a^n.s + a^(n-1).b + a^(n-2).b + a^(n-3).b + ..... + a.b + b 
+   
+   = (a^n.s + b * (a^n - 1) / (a - 1)) mod p 
+
+xn = v 
+
+a^n.s + b * (a^n - 1) / (a - 1) = v 
+
+
+a^n.s.(a - 1) + b * (a^n - 1) = v.(a - 1) 
+
+
+a^n.s.(a - 1) + b * a^n - b = v.(a - 1) 
+
+a^n. (s.(a - 1) + b) = v.(a - 1) + b 
+
+
+a^n = [v.(a - 1) + b ] / (s.(a - 1) + b)
+
+
+
+Cần tìm số n sao cho: 
+
+a^n mod p = [v.(a - 1) + b ] / (s.(a - 1) + b) mod p 
+
+a^n mod p = X 
+
+
+Baby Step giant step 
+
+Xác định số n nhỏ nhất sao cho: 
+
+a^n mod p = X 
+
+
+Đặt M = 33000 
+
+Với bất kỳ một giá trị n = d * M + r 
+
+====> d <= M,   r <= M 
+
+
+a^n = a^(d * M + r) = a^(d * M)   *   a^r 
+
+
+=  (a^M)^d     *    a^r      =   X 
+
+
+
+
+r = 0 ===> 1      f[1] = 0 
+r = 1 ===> 10     f[10] = 1 
+
+r = 2 ===> 15     f[15] = 2 
+r = 3 ===> 10    
+
+
+
+Dùng map <long long, int> f : f[x] : số r NHỎ NHẤT sao cho a^r mod p = x 
+
+
+Ta duyệt d: 0 -> M 
+  
+  ====> a^r    =    X  /  [(a^M)^d] 
+
+
+n = d * M + r 
+
+------------------------------------------------------------------------------------------------------------------------- 
+
+Bonus 21  (VOI 2021) 
+
+Có N phần thưởng, mỗi phần thưởng có một giá trị là p[i] và có một tên là một chuỗi s[i] 
+
+Ta được phép chọn các phần thưởng 
+
+Ban đầu, ta chọn một phần thưởng bất kỳ 
+
+Nếu phần thưởng hiện tại là i, thì phần thưởng tiếp ta có thể chọn (nếu có) là một phần thưởng j thỏa: 
+
+j > i 
+
+.  ta có thể xóa một vài ký tự cuối cùng của tên phần thưởng thứ i để được tên của phần thưởng thứ j 
+
+   programming ,         program
+
+
+.  cặp p[i] và p[j] tạo thành 1 cặp số may mắn 
+
+
+Ban đầu đề sẽ cho ta m cặp số may mắn 
+
+
+
+Sử dụng quy hoạch động: 
+
+Gọi f[i] là tổng giải thưởng lớn nhất khi ta xét i phần thưởng và BUỘC phải lấy phần thưởng thứ i 
+
+f[i] = max ( f[j] ) + p[i]  với j < i  và   j và i thỏa 1 trong 2 điều kiện 
+
+
+
+
+M = 11 
+(1, 5) 
+(2, 9)
+(1, 3)
+(1, 7)
+(5, 6)
+(1, 2) 
+
+1 : loại "nặng" 
+
+
+
+Phân các giá trị p[i] theo 1 trong 2 loại 
+
+
+loại "nhẹ" : Những giá trị p sao cho từ p có thể đi tới số lượng giá trị <= căn (2 * M) 
+
+loại "nặng" : những giá trị p sao cho từ p có thể đi tới số lượng giá trị > căn (2 * M) ====> số lượng giá trị loại "nặng" < căn (2 * M) 
+
+
+
+Với mỗi giá trị p, ta xét một tập hợp chỉ bao gồm các giá trị "nặng" là những giá trị mà có thể đi đến p 
+
+===> số lượng đỉnh trong tập nặng mà p lưu được <= căn (2 * M) 
+
+
+
+f[i] = max(f[j]) + p[i] 
+
+
+
+Khi ta đã có f[i], nếu p[i] là một giá trị "nhẹ", ta duyệt những giá trị tiếp theo mà p[i] có thể xét tiếp để cập nhật 
+
+
+------------------------------------------------------------------------------------------------------------------------------- 
+
+KMP + Hashing 
+
+
+String matching 
+
+
+abcabdabcabcabab
+
+abcabcabab 
+
+
+
+
+abcabcaba  
+
+pi[1] = 0
+pi[2] = 0  
+pi[3] = 0 
+pi[4] = 1 
+pi[5] = 2 
+pi[6] = 3 
+pi[7] = 4 
+pi[8] = 5 
+pi[9] = 1 
+pi[10] = 2 
+
+
+pi[i] : độ dài của hậu tố lớn nhất mà có thể trùng với tiền tố (hậu tố không bao gồm toàn bộ chuỗi từ 1 -> i)
+
+k = 5
+pi[1] = 0 
+pi[2] = 0 
+pi[3] = 0 
+pi[4] = 1 
+pi[5] = 2 
+pi[6] = 3 
+pi[7] = 4
+pi[8] = 5
+pi[9] = 
+
+
+
+k = 0 
+pi[1] = 0 
+Duyệt i: 2 -> N  
+  while k > 0 và pattern[k + 1] != pattern[i] 
+    k = pi[k] 
+  nếu pattern[k + 1] == pattern[i] 
+    k = k + 1 
+  pi[i] = k   
+
+
+
+
+abcabdabcabcabab
+
+abcabcabab 
+
+
+
+k = 0 
+for i: 1 -> M 
+  while k > 0 và pattern[k + 1] != text[i]: 
+    k = pi[k] 
+  nếu pattern[k + 1] == text[i] 
+    k = k + 1 
+  nếu k == N 
+    ans++   
+    k = pi[k] 
+
+----------------------------------------------------------------------------------------------------------------- 
+
+Palindrome Queries: 
+
+Cho một chuỗi s gồm N ký tự. 
+
+Cho Q câu hỏi, mỗi câu hỏi gồm l và r. Hỏi chuỗi s tạo nên từ [l .... r] có phải là chuỗi đối xứng hay không ????? 
+
+
+
+
+Kỹ thuật Hash 
+
+N1 = 10581518838782789239872587387587683268923769873267827687325987325987236873276932759832759832327698327698723687827638937268976329832769876
+
+
+N2 = 10581518838782789239872587387587683268923769873267827687325987325987236873276932759832759832327698327698723687827638937268976329832769876
+
+
+Kỹ thuật Hash là kỹ thuật mà với 2 giá trị bất kỳ, ta có thể "hash" chúng theo cùng một cơ chế nào đó. Nếu 2 giá trị sau khi "hash" mà giống nhau thì rất có 
+
+khả năng 2 số ban đầu giống nhau 
+
+Nhược điểm: Có khả năng bị sai sót 
+
+
+
+Ta có thể xem ký tự 'a' là 1, 'b' là 2, ....., 'z' là 26 
+
+
+abccab   ---->   1 * 26^5 + 2 * 26^4 + 3 * 26^3 + 3 * 26^2 + 1 * 26^1 + 2 * 26^0  
+
+ab 
+
+
+
+
+ab =====> 1 * 26^1 + 2 * 26^0 
+
+
+Khi ta xét một đoạn [l .... r], hỏi đoạn [l .... r] này có chuỗi con trùng với chuỗi pattern hay không ??? 
+
+
+sum[r] - sum[l - 1] ==  (hash của pattern) * 26^l 
+
+
+power26[i] = 26^i 
+
+
+
+Kiểm tra đoạn [l .... r] có đối xứng hay không ???? 
+
+
+Ta tạo prefixSum[i] : tổng các giá trị hash theo chiều từ trái sang phải, suffixSum[i] : tổng các giá trị hash theo chiều từ phải sang trái  
+
+
+
+Ta sử dụng segment tree 
+
+it[index] quản lý đoạn [L .... R] gồm 2 thông tin 
+
+s[L] * 26^L + s[L + 1] * 26^(L + 1) + .... + s[R] * 26^(R) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

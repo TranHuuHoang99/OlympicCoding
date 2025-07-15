@@ -1,0 +1,245 @@
+Eating
+
+Ta có N con sâu, con sâu thứ i sẽ có trọng lượng là w[i] 
+
+Có Q truy vấn, mỗi truy vấn ta thêm một con sâu có trọng lượng là x và con sâu này ở vị trí N + 1 
+
+Con sâu này sẽ tiến hành ăn thịt những con sâu bên trái theo nguyên tắc sau: 
+
+Nếu trọng lượng x >= w[i] ====> con i sẽ bị ăn thịt, đồng thời x ----> x XOR w[i] 
+
+Hỏi x có thể ăn được tối đa bao nhiêu con ?????? 
+
+
+Nhận xét: 
+
+
+Xét các bit b : 29 --> 0 
+
+
+
+
+
+
+
+0001001000       0000001000        0000001000       0000001000                  [ 0100101010          0001001000           0000111010      0001001010         0101110111 ]
+
+                                                                                                      bit số 6 = 1  
+Với một vị trí i, gọi nextPosition[i][b] là vị trí j gần vị trí i nhất tính về phía bên trái sao cho từ bit b --> bit 29, phải có bit = 1 
+
+---------------------------------------------------------------------------------------------
+
+Shorten Array 
+
+Cho một dãy số a gồm N số. Cho một số k 
+
+Ta cần tìm một đoạn [l .... r] ngắn nhất có thể sao cho: 
+
+Có tồn tại 1 cặp (i, j)  (l <= i <= j <= r) sao cho a[i] XOR a[j] >= k 
+
+
+Ta hãy xét các số a[i] đều cố định có 30 chữ số 
+
+
+Ý tưởng ngây thơ: 
+
+Với một số a[i] hiện tại, ta cần a[j] sao cho: 
+
+a[i] XOR a[j] >= k 
+j gần i nhất có thể 
+
+-------------------------------------------------------------------------------------------------------------------
+
+Square Root Decomposition 
+
+
+Forward And Backward 
+
+
+Cho một số nguyên dương N. Ta hãy liệt kê tất cả các hệ cơ số B (B: 2 -> N - 1) sao cho sau khi đổi số N theo hệ cơ số đó thì ta được các chữ số tạo thành số 
+
+đối xứng !!! 
+
+
+N = 9 
+
+2 8
+
+
+B = 2: 9  ----->   1001   x 
+
+B = 3: 9  ----->   100 
+
+B = 4: 9  ----->   21 
+
+B = 5: 9  ----->   14 
+
+B = 6: 9  ----->   13
+
+B = 7: 9  ----->   12
+
+B = 8: 9  ----->   11    x 
+
+
+
+
+1 <= N <= 10^12 
+
+Nhận xét: căn (N) <= 1000000 
+
+
+Ta xét các hệ cơ số B: 2 -> căn (N) =====> ta chỉ việc kiểm tra N có ra được đối xứng hay không thông thường. 
+
+
+Với B > căn (N) 
+
+
+B^2 > N 
+
+
+a1 a2 a3 
+
+
+a3 * B^0 + a2 * B^1 + a1 * B^2
+
+
+Với các hệ cơ số B > căn (N) =====> số thỏa mãn chỉ là số có 2 chữ số 
+
+
+Giả sử số đó là số dd 
+
+
+d * B^0 + d * B^1 = N 
+
+
+d + d * B = N 
+
+<=> d * (B + 1) = N 
+
+====> d <= căn (N) 
+
+Duyệt d : 1 -> căn (N) 
+
+   với mỗi số d, ta kiểm tra N có chia hết cho d hay không ???? 
+
+   Nếu có thì B = N / d - 1 
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+Hole 
+
+
+Đặt BLOCK = căn (N) =====> ta gom BLOCK lỗ liên tục làm 1 "lô" 
+
+
+Số lượng lỗ ở mỗi lô <= BLOCK 
+
+Số lượng lô ~ BLOCK 
+
+
+Với mỗi "lô", ta xét các ô i trong từng lô, ta gọi lastHole[i] và steps[i]: 
+
+lastHole[i]: lỗ cuối cùng trong lô có chứa lỗ i 
+
+steps[i] : số lượng bước để nhảy từ ô i đến lỗ lastHole[i] 
+
+
+Ta xây dựng 2 bảng lastHole[i] và steps[i] trong O(N.căn(N)) 
+
+Duyệt i: 1 -> N 
+  đặt j = i 
+  Cho j nhảy đến khi nhảy ra khỏi lô tương ứng thì dừng 
+
+------------------------------------------------------------------------------------------------------------------------- 
+
+Dquery    (MO algorithm) 
+
+Cho một dãy số a gồm N số nguyên dương. Cho Q truy vấn, mỗi truy vấn gồm 1 đoạn [l .... r] 
+
+Hãy đếm số lượng số khác nhau trong đoạn [l ..... r] đó 
+
+
+
+a = 8 9 1 2 2 5 6 4 8 2 3 1 4 8
+
+
+
+4 ..... 10   : cnt[2] = 3,   cnt[4] = 1, cnt[5] = 1, cnt[6] = 1, cnt[8] = 1 
+
+
+5 ..... 12   : cnt[2] = 2    cnt[1] = 1,  cnt[3] = 1, cnt[4] = 1, cnt[5] = 1, cnt[6] = 1, cnt[8] = 1 
+
+
+Ta tiến hành sắp xếp lại các truy vấn theo ý tưởng sau 
+
+Ta sẽ chia các số từ 1 -> N ra thành các "lô", một "lô" có căn (N) phần tử 
+
+những truy vấn có l chung 1 "lô" thì r phải tăng dần, nếu 2 truy vấn có l ở 2 lô khác nhau thì truy vấn ở lô nhỏ phải xuất hiện trước 
+
+N = 20 
+Q = 10 
+
+7 14 
+2 15 
+1 20 
+18 19 
+20 20 
+13 19 
+3 8 
+6 20 
+4 19 
+5 17 
+
+
+
+4 1
+1 15  
+4 19 
+1 100000
+
+ 
+
+ 
+7 14
+5 17 
+6 20 
+
+
+13 19 
+
+
+
+
+18 19 
+20 20 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
