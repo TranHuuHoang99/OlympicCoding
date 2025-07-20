@@ -3,14 +3,22 @@ Macro {
   key = "CtrlShiftN";
   description = "New C++ file from template (disk-write fallback)";
   action = function()
+  	local now = os.date("%Y-%m-%d %H:%M:%S")
     local templates = {
       { text = "Empty file", content = "" },
       {
         text = "Single test case",
         content = [[
+/*
+**************************************************************************
+  	author     : hoangprodn
+  	email  	   : thhoang08091999@gmail.com
+]] .. [[
+  	local time : ]] .. now .. [[
+************************************************************************** 
+*/
 #include <bits/stdc++.h>
 #define ll long long
-
 using namespace std;
 
 void solve(void) {
@@ -21,9 +29,11 @@ int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-	
+#ifdef HOANGPRODN_DEBUG
+	freopen("input.in", "r", stdin);
+	freopen("output.out", "w", stdout);
+#endif // HOANGPRODN_DEBUG
 	solve();
-
 	return 0;
 }
 
@@ -32,9 +42,16 @@ int main(void) {
       {
         text = "Multiple test cases",
         content = [[
+/*
+**************************************************************************
+  	author     : hoangprodn
+  	email  	   : thhoang08091999@gmail.com
+]] .. [[
+  	local time : ]] .. now .. [[ 
+************************************************************************** 
+*/
 #include <bits/stdc++.h>
 #define ll long long
-
 using namespace std;
 
 void solve(void) {
@@ -45,18 +62,15 @@ int main(void) {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-
 #ifdef HOANGPRODN_DEBUG
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 #endif // HOANGPRODN_DEBUG
-
 	int t;
 	cin >> t;
 	for (int i = 1; i <= t; i++) {
 	 	solve();
 	}
-
 	return 0;
 }
 
