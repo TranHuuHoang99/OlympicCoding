@@ -1,0 +1,300 @@
+Set Query 
+
+Có 2 dãy số a và b cùng có N phần tử 
+
+Có Q truy vấn, mỗi truy vấn gồm 4 số la, ra, lb, rb: 
+
+Xét các số trong dãy a từ la ... ra, các số trong dãy b từ lb .... rb 
+
+Kiểm tra tập hợp các giá trị khác nhau trong 2 dãy số trên có giống nhau hay không ????? 
+
+
+1 <= N, Q <= 100000
+
+N = 10 ,  Q = 3 
+
+a = 4 9 9 2 5 1 3 6 8 3
+
+b = 2 9 4 2 2 3 5 2 2 6 
+
+
+1 <= a[i], b[i] <= 10^9 
+
+
+Truy vấn 1: 
+
+1 4 2 5 
+
+a = [4 9 9 2]      Sa = {2, 4, 9} 
+b = [9 4 2 2]      Sb = {2, 4, 9}
+
+====> YES 
+
+
+
+Suma 
+
+BASE = 1000000007 
+
+Nếu giá trị x có xuất hiện trong Sa ====> Suma += BASE^x 
+
+
+Mỗi truy vấn [la ... ra]  và  [lb ... rb] 
+
+
+Ta "gom" các đoạn [la ... ra] của toàn bộ truy vấn về một vector và sắp xếp các truy vấn này theo ý tưởng của MO algorithm 
+
+
+Với mỗi truy vấn [la ... ra], ta hoàn toàn có thể xác định số nào có đang tồn tại và số nào không tồn tại
+
+Nếu giá trị x có tồn tại =====> cộng thêm BASE^x vào suma tương ứng, nếu x đang từ tồn tại mà trở nên biến mất ====> suma -= BASE^x 
+
+Làm một cách tương tự với [lb .... rb]
+
+------------------------------------------------------------------------------------------------------------------
+
+Nickname Suggestion 
+
+Ta có N username đã đăng ký trong hệ thống 
+
+1 người dùng mới sẽ đăng ký một username và ta biết rằng username đó đã bị trùng với 1 trong những username kể trên 
+
+
+Để tạo ra username khác với những username đã có, người dùng này sẽ chọn một vị trí i bất kỳ và gấp đôi ký tự đó lên. Tiếp tục làm như vậy đến khi được username 
+
+khác biệt hoàn toán 
+
+
+Hỏi: Với mỗi username mà người dùng đăng ký trùng với username thứ i, cần ít nhất bao nhiêu thao tác để username đó khác hoàn toàn. 
+
+
+N = 5 
+
+aab   
+ab 
+abb 
+abc 
+a 
+
+
+Sắp xếp các chuỗi giảm dần theo độ dài 
+
+
+aab     ----> 1   
+abb     ----> 1 
+abc     ----> 1 
+ab      ----> 2 
+a       ----> 1 
+
+
+Với mỗi chuỗi s[i], nếu chọn một ký tự vị trí j và gấp đôi lên, nếu tất cả vị trí sau khi gấp đôi đều bị trùng, ta chọn chuỗi bị trùng có số phép thay đổi nhỏ nhất 
+
+=====> số phép thay đổi của chuỗi s[i] = số phép thay đổi nhỏ nhất + 1 
+
+
+map <string, int> f 
+
+
+Với mỗi chuỗi s[i], ta biến đổi s[i] ---> s'[i] 
+
+f[s[i]] = min(f[s'[i]] + 1) 
+
+
+Ta hash các chuỗi s[i] thành các giá trị số nguyên  
+
+
+s = s1 s2 s3 s4 s5 ....... sk
+
+
+====> s1 * BASE^1 + s2 * BASE^2 + ....... + sk * BASE^k 
+
+Ta chọn sj và ta chèn sj vào sau 
+
+
+s = s1 s2 s3 s4 s5 ..........sj sj .......... sk
+
+====> s1 * BASE^1 + s2 * BASE^2 + ...... + sj * BASE^j + sj * BASE^(j + 1) +  BASE * (.................)
+
+
+Với mỗi chuỗi s[i], ta đặt prefix[j] và suffix[j] 
+
+Nếu ta chọn ký tự j để gấp đôi  
+
+HASH MỚI = prefix[j] + s[j] * BASE^(j + 1) + BASE * suffix[j + 1] 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Shift and swap 
+
+Cho một dãy số a gồm N số 
+
+Ta được phép thực hiện các loại phép toán sau: 
+
+. Dịch các số trong dãy a sang trái 1 đơn vị. a[1] sẽ trở thành số a[n] 
+
+  2 5 5 4 1 
+
+-> 
+  5 5 4 1 2   
+
+. Đổi chỗ 2 giá trị a[i] và a[i + 1] nếu |a[i] - a[i + 1]| >= 2 
+
+Cho một dãy số b cũng có N số. Kiểm tra có thể biến dãy a thành dãy b hay không ????????? 
+
+
+a = 
+
+
+
+2 3 1 1 4 2 2 4 1 3 2 4 
+
+
+
+
+                                        4                           4                               4
+
+                            3                                                                3 
+
+                2    2                                                               2    2   
+
+
+         1                                                                 1     1   
+
+
+
+
+1 4 4 2 2 1 3 2 4 2 1 3 
+
+                                        4                           4                               4
+
+                            3                                                               3
+
+                2     2                                                           2     2  
+
+
+         1                                                              1     1 
+
+
+
+
+
+                      4                               4                                            4
+
+                                                3                                       3
+
+                                    2     2                                 2    2
+
+
+                        1     1                                       1
+
+
+
+hasha[1], hasha[2], hasha[3], ......, hasha[k] 
+
+hashb[1], hashb[2], hashb[3], ......, hashb[k], hashb[1], hashb[2], hashb[3], ......, hashb[k] 
+
+------------------------------------------------------------------------------------------------------------------------
+
+Sweep line 
+
+SC6 (Summer Contest 2019) 
+
+Cho N căn phòng, căn phòng thứ i có một dãy mật mã [li .... ri] 
+
+Có M đường có hướng, đường thứ i nối từ căn phòng ui --> vi 
+
+Có K người công nhân xuất phát từ căn phòng S và muốn đến căn phòng E 
+
+K người này, mỗi người có một mã id đánh số từ 1 -> K  
+
+Khi 1 người công nhân có mã id đang đứng ở phòng u, người này muốn di chuyển sang phòng v thì id phải thuộc đoạn [lv ..... rv] 
+
+Hỏi: có bao nhiêu người công nhân có thể di chuyển tới phòng E ??????? 
+
+
+Với subtask nhỏ: 
+
+1 <= k <= 1000 
+
+Ý tưởng: với mỗi người công nhân có id 
+
+Ta kiểm tra người công nhân id có đi được từ S -> E hay không ????? ====> dfs 
+
+u ---> v 
+
+
+dfs(u, id) : 
+  visited[u] = true 
+  for v kề u 
+    nếu l[v] <= id và id <= r[v]: 
+      dfs(v, id) 
+
+
+Với subtask lớn 
+
+1 <= k <= 10^9 
+
+
+K = 20000 
+
+1 ... 8 
+2 ... 15 
+4 ... 9 
+8 ... 12 
+1 ... 7 
+2 ... 18 
+1 ... 20000
+
+
+
+[1 .. 1] , [2 ... 3], [4 ... 7], [8 ... 8], [9 ... 9], [10 ...12] , [13 ... 15], [16 ... 18], [19 ..... 200000] 
+
+
+
+
+<1, L>, <2, L>, <4, L>, <8, L>, <1, L>, <2, L>, <1, L>,  <8, R>, <15, R>, <9, R>, <12, R>, <7, R>, <18, R>,  <20000, R> 
+
+
+
+<1, L> ,  <2, L>,  <4, L>,    <7, R>,    <8, L>,   <8, R>,     <9, R>,   <12, R>,   <15, R>   <18, R>,   <20000, R> 
+
+
+
+
+
+[1 ... 1] ,   [2 ... 3],  [4 .... 7] ,  [8 ... 8],   [9 ... 9],   [10 .... 12],  [13 .... 15],   [16 .... 18],    [19 ..... 20000] 
+
+-------------------------------------------------------------------------------------------------
+
+Skyscraper 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
