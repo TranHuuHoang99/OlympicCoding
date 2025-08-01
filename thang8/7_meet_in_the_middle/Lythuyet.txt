@@ -1,0 +1,181 @@
+Candy Rush: 
+
+Có N viên kẹo và có K màu. Viên kẹo thứ i có màu c[i] (1 <= c[i] <= K) 
+
+Đếm có bao nhiêu đoạn [l .... r] sao cho số lượng viên kẹo màu 1 = số viên kẹo màu 2 = ...... = số viên kẹo màu K 
+
+
+1 <= N, K <= 100000 
+
+
+
+Tạo ra K giá trị 
+
+r[1] : số bất kỳ 
+r[2] : số bất kỳ 
+r[3] : số bất kỳ 
+
+...... 
+
+r[K - 1] : số bất kỳ 
+r[K] = -r[1] - r[2] - r[3] - ..... - r[K - 1] 
+
+
+=====> r[1] + r[2] + ..... + r[K - 1] + r[K] = 0 
+
+
+[i .... j] =====> tổng các giá trị r[i] + r[i + 1] + ..... + r[j] = x * (r[1] + r[2] + .... + r[K - 1] + r[K]) = 0 
+
+=====> đếm có bao nhiêu đoạn [i ... j] sao cho có tổng = 0 
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Decorate the tree 
+
+Có 2 người bạn A và B cùng chơi 1 trò chơi. 2 người này sẽ cùng vẽ 1 cây có N đỉnh 
+
+Người A sẽ tiến hành vẽ trước M cạnh và người B cũng biết điều này 
+
+Người B sẽ tiến hành thêm một số cạnh vào cây và người A không biết điều này và cây sẽ đủ N đỉnh và N - 1 cạnh 
+
+
+Sau đó ta có quyền hỏi người B các loại câu hỏi sau: 
+
+. dist(u, v) : đưa ra độ dài đường đi từ u -> v 
+
+. subtree(u, v) : giả sử u là gốc của cây, hỏi độ dài của đỉnh xa nhất tới đỉnh u khi ta xét các đỉnh thuộc cây con gốc v 
+
+Hãy cho biết độ dài đường kính của cây N, biết rằng ta được phép hỏi không quá 666 câu 
+
+
+M >= N / 3 
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------ 
+
+Meet in the middle 
+
+vector: 
+
+Có N vector, định nghĩa phép cộng 2 vecto (xi, yi) và vecto (xj, yj) là vecto tổng (xi + xj, yi + yj) 
+
+Đếm có bao nhiêu cách chọn ra 1 tập các vecto sao cho tổng các vecto = (U, V) 
+
+
+1 <= N <= 40 
+
+
+Ta chia N vecto thành 2 tập, tập đầu tiên có N/2 vecto, tập còn lại có N - N/2 vecto 
+
+Với tập 1: 
+
+Ta vét toàn bộ tất cả các trường hợp, gọi count[ {X, Y} ] là số lượng cách để chọn ra 1 tập sao cho tổng vecto = (X, Y) 
+
+
+Với tập 2: 
+
+Ta vét toàn bộ tất cả các trường hợp, khi ta có vecto tổng là { X', Y' } 
+
+
+=====> bên tập 1 ta cần vecto { U - X', V - Y' } =====> ans += count[ {U - X', V - Y' }] 
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+Maximum Subsequence 
+
+Ta gán các a[i] = a[i] % m 
+
+Chia dãy a thành 2 phần
+
+phần 1: Quay lui để ra được tổng các tập (mod m) và ta đưa các tổng này vào set 
+
+
+phần 2: Giả sử ta có một tổng hiện tại = S  (mod m) 
+
+
+S + sum1 <= 2 * m - 2 
+
+
+Ta xét 2 trường hợp: 
+
+TH1: S + sum1 < m  =====> sum1 ta cần tìm số lớn nhất có thể sao cho sum1 < m - S  ====> ans = max(ans, S + sum1) 
+
+
+TH2: S + sum1 >= m  ====> (S + sum1) % m  = S + sum1 - m  =====> Xác định số sum1 lớn nhất bên tập 1 ====> ans = max(ans, S + sum1 - m) 
+
+---------------------------------------------------------------------------------------------------------------------
+
+Make them similar 
+
+Cho một dãy số a gồm N số a1, a2, ...., aN 
+
+Tìm một số x sao cho: 
+
+b[i] = a[i] XOR x 
+
+và các f(b1) = f(b2) = ..... = f(bn) 
+
+
+f(bi) : số lượng bit 1 trong số b[i] 
+
+
+
+1 <= a[i] <= 10^9  =====> a[i] có tối đa 30 bit 
+
+Ta xét số x thành 2 phần 
+
+phần 1: gồm 15 bit đầu tiên 
+
+phần 2: gồm 15 bit còn lại 
+
+
+Dãy a1 với ý nghĩa: a1[i] : 15 bit đầu tiên của a[i] 
+
+x ---> x1 và x2 
+
+
+
+Duyệt phần x1   (x1 : 0 -> 2^15 - 1) 
+   vector <int> v 
+   Duyệt i: 1 -> n 
+      Ta tính các x1 XOR a1[i] 
+      ta ra được số lượng bit 1 của kết quả (x1 XOR a1[i]) 
+
+      Đưa kết quả này vào vector v   
+
+
+
+Duyệt phần x2   (x2 : 0 -> 2^15 - 1) 
+   Xét các giá trị (x2 XOR a2[i]) 
+   Ta cũng ra được vector <int> v2 
+
+   Nếu ta chọn một giá trị k là số lượng bit 1 của các giá trị sau khi XOR 
+
+   ====> v1[i] + v2[i] = k ====> v1[i] = k - v2[i] 
+
+
+
+
+
+
+
+
+
+
+
+
+x = 1011             0111 
+
+
+
+
+
+
+
+
+
+
+
+

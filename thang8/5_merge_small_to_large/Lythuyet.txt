@@ -1,0 +1,233 @@
+Intersection points 
+
+Intevals: 
+
+Cho N phần thưởng, phần thưởng thứ i được quy định bằng 3 giá trị l[i], r[i] và c[i] 
+
+Ta xây dựng một chuỗi s chỉ gồm các số 0 và 1. 
+
+Tổng giá trị giải thưởng được tính: 
+
+Xét giải thưởng thứ i, nếu từ l[i] -> r[i] có ít nhất 1 số 1 thì giá trị c[i] sẽ được cộng vào giải thưởng. 
+
+Hỏi tổng giá trị lớn nhất là bao nhiêu ??? 
+
+
+
+s = 0010110 
+
+giải thưởng 1: l1 = 2, r1 = 4, c1 = 3 
+
+giải thưởng 2: l2 = 1, r2 = 2, c2 = -10 
+
+
+
+Thuật toán ngây thơ: 
+
+
+
+s = ........ i 
+
+
+
+gọi f[i] là tổng giải thưởng lớn nhất khi ta có i ký tự đầu tiên và ta muốn xây dựng s[i] = 1 
+
+
+bài toán cơ sở: f[0] = 0 
+
+công thức qhd: 
+
+Trước đó, ta xây tại một vị trí j một ký tự = 1 
+
+f[i] = Max { f[j] + cost(j .... i) }  
+
+
+cost(j  ... i) : tổng các giá trị giải thưởng sao cho i nằm trong đoạn [l ... r] của giải thưởng đó nhưng j thì không nằm trong [l ... r] 
+
+
+
+Với một phần thưởng x  [lx .... rx] ,  c[x] 
+
+
+Nếu tại cột mốc lx, ta xây = 1 ====> mỗi giá trị cost(j, i) với i: lx --> rx, đều có sự "đóng góp" của c[x] 
+
+
+Ta có 2 loại sự kiện 
+
+. Sự kiện thêm phần thưởng tại lx, total[lx] += cost[x] 
+
+. Sự kiện bớt phần thưởng tại rx + 1, ta ghi nhận save[rx + 1]: danh sách những phần thưởng bị xóa. 
+
+
+
+f[i] = Max { f[j] + cost(j .... i) }  
+
+====> mỗi giá trị cost(0 ... i), cost(1 ... i), cost(2 .... i), ...... , cost(i - 1 .... i) đều sẽ được cộng thêm một lượng total[i] 
+
+Ta sử dụng segment tree với ý nghĩa: 
+
+Nút index quản lý đoạn [L ... R] : max(f[j] + cost(j ... )) với j: L -> R 
+
+Xét i: 1 -> n 
+  nếu đang đứng tại i là "sự kiện" thêm phần thưởng 
+   ====> tăng tất cả các phần tử từ 0 ......... i - 1 một lượng là total[i] 
+  
+ f[i] = get( 0 ..... i - 1) 
+
+ update f[i] vào trong cây segment tree 
+
+ Duyệt các "sự kiện xóa" khi đang đứng tại mốc i, xét phần thưởng x có mốc bắt đầu là l[x]  
+   ====> trừ tất cả những cost(j, i - 1) (j: l[x]) với giá trị là cost[x] 
+
+--------------------------------------------------------------------------------------------------------------------------------- 
+
+Algo Tour 2025 - Bài 3 
+
+Cho N đoạn [li ... ri], mỗi đoạn i chọn ra một phần tử A[i]  (l[i] <= A[i] <= r[i]) 
+
+Có bao nhiêu cách chọn sao cho dãy A là dãy tăng dần ????? 
+
+
+1 <= N <= 300 
+
+
+N = 5
+
+1 10 
+2 5 
+4 9 
+6 8 
+7 12 
+
+
+[1 .. 1],  [2 .. 3],  [4 .. 5], [6 .. 6], [7 .. 8], [9 ... 9], [10 ... 10], [11 ... 12] =====> số lượng đoạn <= 2 * N ,    sz : số lượng đoạn 
+
+1 2 
+1 3 
+2 3 
+
+
+f[2][2] = 3
+
+
+Gọi f[i][j] : số cách tạo ra dãy A có j phần tử đầu tiên và ta đã sử dụng i đoạn đầu tiên 
+
+bài toán cơ sở: f[0][0] = 1 
+
+kết quả bài toán: f[sz][n] 
+
+công thức qhd: 
+
+Khi ta có f[i][j] > 0 
+
+. Đoạn i + 1 ta không dùng đến: f[i + 1][j]  += f[i][j] 
+
+. Đoạn i + 1 ta dùng đến: 
+
+   Nếu ta muốn xây dựng các số A[j + 1], A[j + 2], A[j + 3], ...., A[j + x] 
+
+   Điều kiện:  [l[i + 1] .... r[i + 1]]   Phải là đoạn con của các đoạn   j + 1, j + 2, ...., j + x ,  x <= r[i + 1] - l[i + 1] + 1 
+
+
+   f[i + 1][j + x] += C(x, r[i + 1] - l[i + 1] + 1 ) * f[i][j] 
+
+
+
+fact[i] = i! 
+inv_fact[i] = 1/i! 
+
+
+
+C(4, N) 
+
+N! / (N - 4)! * 4! 
+
+
+= N * (N - 1) * (N - 2) * (N - 3) / 4! 
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Merge Small To large 
+
+Disticnt Color: 
+
+Với mỗi đỉnh u, ta gọi S[u]: tập hợp các màu có trong đỉnh u 
+
+====> ans[u] = S[u].size() 
+
+
+Với đỉnh u, xét các đỉnh con v của u và ta đã tính được S[v] sau quá trình duyệt Dfs tại v 
+
+====> S[u] được xây bằng cách: Đổ các S[v] vào S[u] 
+
+
+Khi ta có 2 tập Sa và Sb, ta muốn trộn Sa và Sb lại với nhau 
+
+====> ta nên đổ tập hợp có ít phần tử hơn vào tập hợp có nhiều phần tử hơn 
+
+
+Giả sử Sa.size() < Sb.size() ====> đổ bên Sa vào Sb 
+
+======> Sa.size() < (Sa.size() + Sb.size()) / 2 
+
+
+Xét mỗi phần tử i trong Sa, nếu "được" trộn vào 1 tập hợp khác 
+
+===> phần tử i sẽ ở trong 1 tập hợp có kích thước gấp đôi so với tập hợp cũ 
+
+====> mỗi phần tử i chỉ có tối đa logN lần "được" trộn =====> Tổng số thao tác trộn <= O(N.logN) 
+
+
+Khi ta có Sa và Sb là 2 set (hoặc 2 map ...) 
+
+Sa.swap(Sb) ====> hoán đổi 2 set Sa và Sb cho nhau với O(1) 
+
+
+Nếu Sa.size() < Sb.size() ====> Sa.swap(Sb) 
+
+====> luôn trộn Sb vào Sa 
+
+---------------------------------------------------------------------------------------------------
+
+Disruption 
+
+Với mỗi đỉnh u, gọi S[u] là danh sách các cạnh mà nếu xóa u - p[u], thì vẫn còn những cạnh này để di chuyển 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

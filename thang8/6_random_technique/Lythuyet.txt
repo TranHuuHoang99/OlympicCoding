@@ -1,0 +1,161 @@
+Fixed Length Path II 
+
+
+Gọi f[x] : số lượng đỉnh u có độ dài tới đỉnh root >= x 
+
+
+
+
+u và v thuộc 2 tplt khác nhau 
+
+
+u cách rootu một đoạn là du 
+
+v cách rootv một đoạn là dv 
+
+
+====> độ dài là du + dv + 1 
+
+
+k1 <= du + dv + 1 <= k2 
+
+
+Ta xét mỗi đỉnh v ====> nhu cầu ta cần đếm có bao nhiêu đỉnh u sao cho: 
+
+k1 - dv - 1 <= du <= k2 - dv - 1 
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Joitters 
+
+Nhận xét: 
+
+Với một tplt gồm X đỉnh, với một đỉnh u có cạnh có hướng tới 1 đỉnh nào đó trong tplt thì đỉnh u đó sẽ có toàn bộ cạnh tới các đỉnh còn lại trong tplt đó 
+
+
+Khi xét 2 tplt A và B, nếu có cạnh nối từ A -> B và có cạnh nối từ B -> A thì 2 tplt này sẽ kết nối lại với nhau và trở thành 1 đồ thị đầy đủ gồm các đỉnh trong cả 
+
+2 tplt 
+
+------------------------------------------------------------------------------------------------------------------------ 
+
+Random Techniques 
+
+Lost Root 
+
+Ta có một cây K - ary gồm N đỉnh nhưng ta không biết đó là những đỉnh nào. 
+
+Ta được phép hỏi các câu hỏi như sau: 
+
+Hỏi a b c : Hỏi trên đường đi từ a sang c, có sự xuất hiện của b hay không ?????? 
+
+Hãy cho biết nút gốc có số là bao nhiêu ???? 
+
+
+Ta chỉ được phép hỏi <= 60 * N câu hỏi 
+
+
+Giả sử ta có 2 nút u1 và u2 
+
+
+for i: 1 -> n 
+  hỏi: u1 i u2 
+
+nếu số lượng câu trả lời YES = 2 * h - 1 ======> u1 và u2 là 2 nút lá cần tìm    
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Fall by line 
+
+Cho N điểm,điểm thứ i có tọa độ là (x[i], y[i]) 
+
+Ta cần tìm một đường thẳng sao cho đi qua nhiều điểm nhất có thể. 
+
+Nếu giả sử số lượng điểm cần xóa là M, ta đưa ra đường thẳng sao cho số điểm cần xóa [M .... 2M]  
+
+
+x là số lượng điểm cần xóa 
+
+M <= x <= 2M 
+
+M <= N - P <= 2M
+
+P >= N - 2M  
+P <= N - M 
+
+N - 2M <= P <= N - M 
+
+Giả sử P là số lượng điểm cần được giữ lại (trong đáp án tối ưu) 
+
+
+
+
+
+Số lượng điểm cần giữ trong miền nào ???? 
+
+[2N - 2P ..... P] 
+
+
+Trường hợp 1: P <= N / 2 
+
+=====> số lượng điểm cần giữ thuộc [0 ..... P] 
+
+
+Trường hợp 2: P > N / 2 
+
+=====> Ta chọn random 2 điểm bất kỳ và ta đếm có bao nhiêu điểm nằm trên đường thẳng mà ta đã chọn 2 điểm đó 
+
+=====> Ta lấy số lượng điểm maximum 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
