@@ -1,0 +1,11 @@
+4 10
+join 1 2
+add 1 100
+join 2 3
+add 1 50
+join 3 4
+add 1 25
+get 1
+get 2
+get 3
+get 4
