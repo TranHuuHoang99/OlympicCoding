@@ -1,0 +1,317 @@
+Dead ends 
+
+Cho một đồ thị gồm N đỉnh và M cạnh vô hướng 
+
+Đếm có bao nhiêu cách tạo ra một cây gồm N đỉnh và có đúng K đỉnh lá 
+
+1 <= N <= 10 
+
+
+Gọi f[mask][submask] là số cách tạo ra cây gồm các đỉnh thuộc tập mask và các đỉnh lá là các đỉnh thuộc tập submask 
+
+bài toán cơ sở: Xét một cạnh u - v: 
+
+f[(1 << u) + (1 << v)][(1 << u) + (1 << v)] = 1 
+
+
+đáp án bài toán: Tổng f[(1 << n) - 1][submask]   với số lượng bit 1 trong submask = k 
+
+
+Ta chọn L là đỉnh lá nhỏ nhất trong submask 
+
+
+f[mask][submask] += f[mask - (1 << L)][submask - (1 << L)] 
+
+Ta duyệt các đỉnh u kề với L 
+  nếu u thuộc mask 
+    f[mask][submask] += f[mask - (1 << L)][submask - (1 << L) + (1 << u)]  
+
+
+----------------------------------------------------------------------------------------------------------------------------------- 
+
+Hongcow buy deck of cars 
+
+Có N lá bài, mỗi lá bài hoặc là màu đỏ, hoặc màu xanh 
+
+Mỗi lá bài để thu thập được, ta cần r[i] token đỏ, b[i] token xanh 
+
+Nếu hiện tại trong tay của ta có R lá đỏ và B lá xanh, số token đỏ ta cần là max(0, r[i] - R), số token xanh ta cần là max(0, b[i] - B) 
+
+Ta có thể thực hiện các thao tác sau: 
+
+. Thu thập token: Ta có thêm 1 token đỏ và 1 token xanh 
+
+. Ta lấy lá bài thứ i, sau khi lấy lá i, số token đỏ và token xanh cần thiết sẽ biến mất, tuy nhiên những lá bài vẫn còn đó. 
+
+Hỏi: Cần thực hiện tối thiểu bao nhiêu thao tác để thu thập toàn bộ N lá bài ?????? 
+
+
+N = 5 
+
+Đ 2 1 
+Đ 1 2 
+X 2 2 
+X 1 1 
+Đ 2 2 
+
+
+thu thập : 1 1 
+
+lấy lá 4 : 0 0 ,  có 1 lá xanh 
+
+thu thập : 1 1 
+
+lấy lá 2 : 0 0 ,  có 1 lá đỏ và 1 lá xanh 
+
+thu thập : 1 1 
+
+lấy lá 5 : 
+
+
+1 <= N <= 16 
+
+1 <= r[i], b[i] <= 10^7 
+
+ 
+
+Giả sử hiện tại ta có R lá đỏ và B lá xanh 
+
+
+max(0, r[i] - R) = r[i] - min(R, r[i])
+ 
+
+
+r[5] - R1 + r[2] - R2 + r[4] - R3 + r[1] - R4 + r[3] - R5 
+
+cntRed = (r[1] + r[2] + r[3] + r[4] + r[5]) - (min(r[5], R1) + min(r[2], R2) + min(r[4], R3) + min(r[1], R4) + min(r[3], R5)) 
+
+Giả sử toàn bộ lá đều là màu đỏ 
+
+Tổng các min(r[i], Ri) <= 0 + 1 + 2 + ..... + 15 = 120 
+
+
+
+cntBlue = (b[1] + b[2] + b[3] + b[4] + b[5]) - (min(b[i], Bi) + ....)
+
+
+===> số thao tác thu thập token = max(cntRed, cntBlue) 
+
+
+Ta cố định t = min(r[5], R1) + min(r[2], R2) + min(r[4], R3) + min(r[1], R4) + min(r[3], R5)   (0 <= t <= 120) 
+
+
+Gọi f[mask][t] là tổng của các min(b[i], Bi) + .... lớn nhất có thể khi có tập các lá bài đã lấy là mask, tổng min(r[i], Ri) + .... = t 
+
+bài toán cơ sở: f[0][0] = 0 
+
+đáp án bài toán: 
+
+Khi ta có t ----> f[(1 << n) - 1][t]  =====> Số thao tác thu thập token = max (r[1] + r[2] + ... + r[n] - t, b[1] + b[2] + .... + b[n] - f[(1 << n) - 1][t])
+
+======> Số thao tác thu thập token + N 
+
+công thức qhd: 
+
+Khi ta có f[mask][t] != -1 
+
+Gọi numbRed là số lá đỏ, numbBlue là số lá xanh 
+
+Xét lá bài thứ i (bit i = 0) 
+
+
+f[mask + (1 << i)][t + min(numbRed, r[i])] = max(f[mask + (1 << i)][t + min(numbRed, r[i])], f[mask][t] + min(numbBlue, b[i])) 
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Kỹ thuật S.O.S (Sum over subset) 
+
+
+Cho danh sách các chi phí là cost[mask] : nếu tập hợp là mask thì giá trị là cost[mask] 
+
+Với mỗi tập hợp mask, ta tính tổng tất cả các cost[submask] với submask là tập hợp con của mask  
+
+
+cost [ {} ] = 2 
+cost [ {0} ] = 10 
+cost [ {1} ] = 8 
+cost [ {2} ] = 15 
+
+
+cost [ {0, 1} ] = 4 
+cost [ {0, 2} ] = 12 
+cost [ {1, 2} ] = 7 
+
+
+cost [ {0, 1, 2} ] = 14 
+
+
+
+mask = {0, 2} 
+
+{}, {0}, {2}, {0, 2} : 2 + 10 + 15 + 12 = 39 
+
+
+N <= 20 
+
+
+Với thuật toán: 
+
+Duyệt mask 
+  Duyệt submask 
+
+====> ĐPT : O(3^N) 
+
+01011011101
+
+f[mask][4] 
+
+mask =                                                          01011011101 , 4 
+
+                                        01011011101 , 3                                 01011010101, 3  
+
+
+
+                                                                01011010101 , 4 
+
+                                                                01011010101 , 3 
+
+
+
+Ta định nghĩa "bit linh động" là một bit i sao cho nếu nó "linh động", bit i = 1, có thể trở thành 0 hoặc vẫn = 1, nếu bit i = 0 thì bit i = 0 
+
+Gọi f[mask][i] là tổng của các cost[mask] khi ta có i bit đầu tiên linh động 
+
+bài toán cơ sở: 
+
+f[mask][0] = cost[mask] 
+
+
+công thức qhd: 
+
+f[mask][i] = 
+
+Nếu bit i = 1: f[mask][i] = f[mask][i - 1] + f[mask - (1 << i)][i] 
+
+Nếu bit i = 0: f[mask][i] = f[mask][i - 1] 
+
+Kết quả bài toán: 
+
+Xuất ra các f[mask][N] 
+
+
+f[mask][0] = cost[mask] 
+
+for i: 1 -> N 
+  for mask 
+    f[mask][i] = f[mask][i - 1] 
+    nếu bit i == 1: 
+      f[mask][i] += f[mask - (1 << i)][i - 1] 
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+Compatible Number 
+
+
+6 ---> 110 
+
+
+????????00?
+
+Gọi f[mask][i]: trả về một con số sao cho khi biểu diễn bit, nó là tập con của tập mask  với i bit linh động 
+
+Bài toán cơ sở: Khi ta có số a[i] : f[a[i]][0] = a[i] 
+
+đáp án bài toán: với số a[i], xét con số (1 << 20) - 1 - a[i] , xuất ra f[(1 << 20) - 1 - a[i]][20] 
+
+công thức qhd: 
+
+f[mask][i] = f[mask][i - 1] 
+
+nếu bit i == 1 và f[mask - (1 << i)][i - 1] != -1 ====> f[mask][i] = f[mask - (1 << i)][i - 1] 
+
+
+------------------------------------------------------------------------------------------------------------------------------ 
+
+Bit problem 
+
+Với mỗi x, đếm số y sao cho x | y = x  ======> y là tập con của x 
+
+Gọi f1[mask][i] là số lượng phần tử = mask nhưng có i bit linh động đầu tiên 
+
+bài toán cơ sở: f1[a[i]][0]++ 
+
+f1[mask][i] += f1[mask][i - 1] 
+nếu bit i == 1 ===> f1[mask][i] += f1[mask - (1 << i)][i - 1] 
+
+
+
+Với mỗi x, đếm số y sao cho x & y = x ======> x là tập con của y 
+
+
+Gọi f2[mask][i] là số lượng phần tử = mask nhưng có i bit linh động đầu tiên 
+
+bài toán cơ sở: f2[a[i]][0]++ 
+
+f2[mask][i] += f2[mask][i - 1] 
+nếu bit i == 0 ===> f2[mask][i] += f2[mask + (1 << i)][i - 1] 
+
+
+
+Với mỗi x, đếm số y sao cho x & y khác 0 
+
+
+Ta đưa về bài toán: Đếm số y sao cho x & y = 0 =====> ta lấy N - số lượng đó 
+
+
+Với x, ta xét (1 << 20) - 1 - x  =====> số lượng y sao cho x & y =  : f1[(1 << 20) - 1 - x][20] 
+
+====> kết quả: N - f1[(1 << 20) - 1 - x][20] 
+
+-----------------------------------------------------------------------------------------------------------
+
+Vowels 
+
+5
+abc
+aaa
+ada
+bcd
+def
+
+
+
+Xét toàn bộ tập hợp tất cả các chữ cái (24 chữ đầu tiên) 
+
+
+{'a'} ---> 3 
+
+{'a', 'x'} ---> 3 
+
+{'a', 'g', 'i'} ---> 3 
+
+{'a', 'b', 'c'} ---> 4 
+
+
+
+
+Khi ta có tập mask ====> xét tập (1 << 24) - 1 - mask, số lượng chuỗi không có ký tự nào trong tập mask ====> sẽ là tập con trong tập bù 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

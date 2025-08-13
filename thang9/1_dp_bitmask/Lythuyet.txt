@@ -1,0 +1,220 @@
+Tháng 9: Advanced Dynamic Programming 
+
+- Buổi 1: Dp + bitmask 
+- Buổi 2: Kỹ thuật SOS (Sum over subset) 
+- Buổi 3: Digit Dp 
+- Buổi 4: Dp + Matrix multiplication 
+- Buổi 5: Dp on tree 
+- Buổi 6: Convex hull trick 
+- Buổi 7: Dp + Divide and conquer 
+- Buổi 8: Contest 
+
+
+Lem3: 
+
+Có N thành phố, ta có một bảng cost là bảng chi phí 
+
+cost[u][v]: Nếu ta đi từ u -> v thì ta sẽ mất chi phí là cost[u][v] 
+
+Ta được xuất phát tại một thành phố bất kỳ, ta cần tìm một lộ trình sao cho đi qua hết toàn bộ N thành phố sao cho tổng chi phí là nhỏ nhất.  
+
+
+1 <= N <= 16 
+
+
+
+{0, 1, 3} ---> 5 
+
+
+0 -> 3 -> 1  ----> 5 
+3 -> 0 -> 1 
+
+
+001011  = 11 
+
+
+
+f[11][1] 
+
+
+Gọi f[mask][u] : tổng chi phí nhỏ nhất khi ta có tập các thành phố đã đi qua là mask, thành phố cuối cùng trong tập đó là u 
+
+bài toán cơ sở: Nếu ta xuất phát tại thành phố u: f[1 << u][u] = 0,     f[mask][u] = inf 
+
+đáp án bài toán: Min {f[(1 << n) - 1][u]} 
+
+công thức qhd: 
+
+
+Khi ta có f[mask][u] != inf 
+
+Nếu ta xét thành phố tiếp theo là thành phố v 
+
+Điều kiện: (mask & (1 << v)) == 0  (bit v = 0) 
+
+f[mask | (1 << v)][v] = min(f[mask | (1 << v)][v], f[mask][u] + cost[u][v]) 
+
+
+Độ phức tạp: O(2^n * n * n)
+
+
+----------------------------------------------------------------------------------------------------------------------- 
+
+Fish 
+
+
+Có N con cá, con cá thứ i muốn ăn thịt cá j thì xác suất là p[i][j]  =====> p[j][i] = 1 - p[i][j] 
+
+Mỗi ngày sẽ có 2 con cá gặp nhau và 1 trong 2 con sẽ ăn thịt con còn lại 
+
+Xét từng con cá, hỏi xác suất để nó là con sống sót cuối cùng ??? 
+
+
+1 <= n <= 18 
+
+
+Gọi f[mask] là xác suất để tập cá là mask 
+
+bài toán cơ sở: f[(1 << n) - 1] = 1.0 
+
+đáp án bài toán: Xét từng con cá i : 0 -> n - 1 ----> f[1 << i] 
+
+Công thức qhd: 
+
+Khi ta có f[mask] != 0.0 
+
+Ta xét 2 con cá i và j   (bit i và bit j = 1)
+
+
+Gọi cnt: số lượng bit 1 trong mask   (cnt: số lượng cá còn sống,     cnt = __builtin_popcount(mask))  
+
+Số cách để chọn 2 cá bất kỳ trong cnt cá: C(2, cnt)
+
+=====> i và j gặp nhau với xác suất: 1 / C(2, cnt) 
+
+
+Nếu i ăn thịt j ====> f[mask - (1 << j)] += 1 / C(2, cnt) * p[i][j] * f[mask]
+
+Nếu j ăn thịt i ====> f[mask - (1 << i)] += 1 / C(2, cnt) * p[j][i] * f[mask]
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Group 
+
+
+3
+0 10 20
+10 0 -100
+20 -100 0
+
+
+
+{0, 1, 2}    : 10 + 20 + (-100) = -70 
+
+{0, 2}  {1}  :   20 + 0 =20 
+
+
+Gọi f[mask] là tổng độ hạnh phúc lớn nhất khi ta có một tập các con thỏ là mask 
+
+bài toán cơ sở: f[0] = 0, khởi tạo các f[mask] = -inf 
+
+đáp án bài toán: f[(1 << n) - 1] 
+
+công thức qhd: 
+
+
+f[mask] 
+
+Giả sử ta chia một tập các con thỏ ra một chuồng riêng submask 
+
+(submask : tập con của mask) 
+
+
+f[mask] = Max (f[mask - submask] + cost[submask]) với submak là con của mask 
+
+
+Tạo một bảng cost[mask] : Nếu ta gom các con thỏ trong mask vào chung 1 chuồng thì tổng độ hạnh phúc là bao nhiêu 
+
+for (int mask = 0; mask < (1 << n); mask++) {
+   for (submask = mask; submask > 0; submask = (submask - 1) & mask) {
+      ...... 
+   }
+}
+
+
+-------------------------------------------------------------------------------------------------------------- 
+
+Qbselect 
+
+Cho một bảng hình chữ nhật gồm 4 hàng, N cột 
+
+Trên bảng này ta chọn một vài số sao cho tổng là lớn nhất có thể. Lưu ý các số này không được phép kề cạnh nhau 
+
+
+
+Gọi f[i][mask] : tổng giải thưởng lớn nhất khi ta có i cột đầu tiên và tập các ô trên cột i đã chọn là mask 
+
+(Điều kiện: Không được phép có 2 bit cùng = 1 kề nhau trên mask) 
+
+
+bài toán cơ sở: f[0][0] = 0, khởi tạo các f[i][mask] = -inf 
+
+đáp án bài toán: max {f[n][mask]} 
+
+
+Khi ta có f[i][mask] != -inf 
+
+Xét cột i + 1 và ta xét trạng thái chọn tiếp theo là nextMask 
+
+f[i + 1][nextMask] = max(f[i + 1][nextMask], f[i][mask] + cost(i, mask)) 
+
+--------------------------------------------------------------------------------------------------------------------
+
+Dead ends: 
+
+Cho một đồ thị liên thông gồm N đỉnh và M cạnh 
+
+Đếm có bao nhiêu cách chọn ra một subgraph là một cây gồm N đỉnh, N - 1 cạnh và có ĐÚNG k nút lá 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
