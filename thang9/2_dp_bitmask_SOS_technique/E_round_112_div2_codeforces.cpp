@@ -10,10 +10,10 @@
 using namespace std;
 
 const ll N = 1e6+10;
-const int mask_max = (1 << 22) + 10;
+const int max_mask = (1<<22) + 10;
 int n;
 int A[N];
-int dp[mask_max];
+int dp[max_mask];
 
 void solve(void) {
  	cin >> n;
@@ -21,14 +21,14 @@ void solve(void) {
  	for (int mask = 0; mask < (1 << 22); mask++) dp[mask] = -1;
  	for (int i = 1; i <= n; i++) dp[A[i]] = A[i];
  	for (int mask = 0; mask < (1 << 22); mask++) {
- 	 	for (int i = 0; i < 22; i++) {
- 	 	 	if ((mask & (1 << i)) && (dp[mask-(1<<i)] != -1)) {
- 	 	 	 	dp[mask] = dp[mask-(1<<i)];
- 	 	 	}
- 	 	}
+ 	    for (int i = 0; i < 22; i++) {
+ 	     	if ((mask & (1 << i)) && dp[mask^(1<<i)] != -1) {
+ 	     	    dp[mask] = dp[mask^(1<<i)];
+ 	     	}	
+ 	    }
  	}
  	for (int i = 1; i <= n; i++) cout << dp[(1<<22)-1-A[i]] << ' ';
- 	cout << endl;
+ 	cout << endl;	
 }
 
 int main(void) {
