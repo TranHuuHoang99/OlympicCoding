@@ -1,0 +1,272 @@
+Problem Setting
+
+Có N bài tập và ta có M vị giáo sư 
+
+Giáo sư thứ j sẽ đánh giá bài tập i là 'E' hoặc 'H' tương ứng là dễ hoặc khó 
+
+Ta muốn ra một kỳ thi phải có ít nhất 1 bài. 1 kỳ thi được gọi là đảm bảo chất lượng nếu đi từ bài đầu đến bài cuối, độ khó sẽ tăng dần 
+
+===> bài khó không được phép xuất hiện trước bài dễ. 
+
+Kỳ thi phải  thỏa mãn toàn bộ M vị giáo sư 
+
+
+Có bao nhiêu cách ra đề ????? 
+
+
+Subtask 1: M = 1 
+
+Ta phân N bài toán ra thành a bài dễ và b bài khó 
+
+Gọi ways(x) : số cách để xếp x bài toán cùng loại với nhau 
+
+
+for i: 0 -> x 
+  ways(x) += x! / i!  
+
+
+ways(x) = x! * (1/0! + 1/1! + 1/2! + .... + 1/x!) 
+
+Đặt inv_fact[i] = 1/i! % mod 
+
+
+Kết quả: ways(a) * ways(b) - 1 
+
+
+Subtask 2: 1 <= M <= 16
+
+Gọi count[mask] : Xét trạng thái mask : count[mask] là có bao nhiêu bài toán cùng có một trạng thái được các giáo sư nhận định 
+
+
+10 : HHH  ====> count[ {111} ] = 10 
+
+Gọi f[mask] là số cách chọn khi ta có trạng thái bài cuối cùng là mask 
+
+Nếu bit j trong mask = 1: giáo sư j nhận định bài này là khó, bit j trong mask = 0: giáo sư j nhận định bài này là dễ 
+
+f[mask] = ways(count[mask] - 1) 
+
+f[mask] += f[submask] *  (ways(count[mask]) - 1)   
+
+đáp án bài toán: Tổng của các f[mask] 
+
+
+O(3^M) 
+
+
+
+
+Subtask 3: 1 <= M <= 20
+
+
+sum[mask][i] : tổng của các f[mask] khi có i bit đầu tiên linh động 
+
+Duyệt j: 0 -> m - 1 
+
+   f[mask] = Tổng (sum[mask - (1 << j)][j]) *  (ways(count[mask]) - 1)   
+
+Ta tiến hành cập nhật sum[mask][i] 
+
+  sum[mask][0] += f[mask] 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Digit Dp 
+
+
+Digit sum 
+
+Nhận xét: số lượng chữ số của số K <= 10000 
+
+D = 3 
+K = 5231 
+
+
+11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 419, 449, 479, 509 
+
+f[2][2][0] = 14 
+
+
+999
+
+i < len(K) 
+
+
+
+
+
+
+
+
+
+Gọi f[i][r][state] : số lượng số có i chữ số đầu tiên, tổng các chữ số đàu tiên chia D dư r cùng trạng thái state 
+
+. state = 0: số này nhỏ hơn hẳn tiền tố độ dài i của số K 
+
+. state = 1: số này bằng tiền tố độ dài i của số K 
+
+. state = 2: số này lớn hơn hẳn tiền tố độ dài i của số K 
+
+Bài toán cơ sở: 
+
+Với chữ số đầu tiên là d (d: 1 -> 9)
+
+Ta so sánh d với K[0] để ra state 
+
+f[1][d % D][state]++ 
+
+đáp án bài toán: 
+
+
+Tổng các f[i][0][state] 
+
+
+Nếu i < len(K) : state = 0, 1, 2 
+
+Nếu i = len(K) : state = 0, 1 
+
+
+công thức qhd: 
+
+Khi ta có f[i][r][state] > 0 
+
+Giả sử ta quyết định gắn chữ số d vào vị trí i + 1   (d : 0 -> 9) 
+
+i ---> i + 1 
+r ---> (r + d) % D 
+state --> nextState 
+
+Nếu state = 0 hoặc 2 =====> nextState = state 
+
+Nếu d < K[i + 1] : nextState = 0 
+
+Nếu d = K[i + 1] : nextState = 1 
+
+nếu d > K[i + 1] : nextState = 2 
+
+
+f[i + 1][(r + d) % D][nextState] += f[i][r][state] 
+
+------------------------------------------------------------------------------------------------------------------------
+
+Minionplex 
+
+
+Cho số N, xét toàn bộ các substring của số N, tính tổng bình phương của các substring đó 
+
+N = 2207 
+
+
+f(4) =  07^2 + 207^2 + 2207^2 + 7^2 
+
+
+2, 2, 0, 7, 22, 20, 07, 220, 207, 2207 
+
+
+
+220 
+
+0^2 + 20^2 + 220^2 
+
+S(3) = 0 + 20 + 220 
+f(3) = 0^2 + 20^2 + 220^2 
+
+
+S(4) = 07 + 207 + 2207 + 7 
+f(4) = 07^2 + 207^2 + 2207^2 + 7^2 
+
+
+X ---> Xd   (X * 10 + d) 
+
+S(4) = 10 * S(3) + 4 * d 
+
+
+Xd ====> (X * 10 + d)  
+
+
+
+(X * 10 + d)^2 = (10X)^2 + 2.10.X + d^2 
+
+= 100X^2 + 20X + d^2 
+
+
+f(4) = 100 * f(3) + 20 * S(3) + 4 * d^2 
+
+
+f(i) = 100 * f(i - 1) + 20 * S(i - 1) + i * s[i]^2 
+
+
+
+f(i) : Tổng bình phương của các con số khi có i chữ số đầu tiên và BUỘC phải có ký tự s[i] trong số đó 
+
+S(i) : Tổng của các con số khi có i chữ số đầu tiên và BUÔc phải có ký tự s[i] 
+
+f(0) = 0 
+S(0) = 0 
+
+đáp án bài toán : f(1) + f(2) + f(3) + ....... + f(len(N)) 
+
+
+công thức: 
+
+f(i) = 100 * f(i - 1) + 20 * S(i - 1) + i * s[i]^2 
+
+S(i) = 10 * S(i - 1) + i * s[i] 
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+WC1 (Winter Contest 2020) 
+
+Gọi f[i][r][rSum][rMul][state] là số lượng số có i chữ số, số này chia K dư r, tổng chữ số chia K dư rSum, tích các chữ số chia K dư rMul cùng trạng thái state 
+
+bài toán cơ sở: Khi chữ số đầu tiên = d: 
+
+f[1][d % K][d % K][d % K][state]++ 
+
+đáp án bài toán: Tổng các f[i][0][0][0][state]  
+
+
+công thức qhd: 
+
+Khi ta có f[i][r][rSum][rMul][state] > 0 
+
+Giả sử ta gắn thêm chữ số d vào vị trí i + 1 
+
+i -> i + 1 
+r -> (r * 10 + d) % K 
+rSum -> (rSum + d) % K 
+rMul -> (rMul * d) % K 
+state -> nextState 
+
+f[i + 1][(r * 10 + d) % K][(rSum + d) % K][(rMul * d) % K][nextState] += f[i][r][rSum][rMul][state] 
+
+
+
+Đây là những con số có tối đa 10 chữ số 
+
+9999999999 
+
+Nếu K > 90 ====> kết quả là 0 
+
+else: quy hoạch động 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
