@@ -1,0 +1,330 @@
+XOR matrix 
+
+Xét 2 dãy số a và b, dãy a có N số, dãy b có M số 
+
+0 <= a[i] <= A 
+0 <= b[i] <= B 
+
+Xét một ma trận M với ý nghĩa: M[i][j] = a[i] XOR b[j] 
+
+Hãy đếm có bao nhiêu cách tạo ra 2 dãy số a và b sao cho ma trận M chỉ có tối đa 2 giá trị khác nhau ??? 
+
+
+Tình huống 1: 
+
+Các số trong dãy a giống nhau : A + 1 giá trị 
+
+Các số trong dãy b giống nhau : B + 1 giá trị 
+
+====> số cách: (A + 1) * (B + 1) 
+
+
+Tình huống 2: 
+
+Dãy a các số giống nhau : A + 1 giá trị 
+
+Dãy b có đúng 2 giá trị khác nhau: C(2, B + 1) * (2^M - 2)
+
+====> số cách: (A + 1) * C(2, B + 1) * (2^M - 2) 
+
+
+Tình huống 3: 
+
+Dãy a có đúng 2 giá trị khác nhau: C(2, A + 1) * (2^N - 2) 
+
+Dãy b các số giống nhau: B + 1 giá trị 
+
+====> số cách: C(2, A + 1) * (2^N - 2) * (B + 1) 
+
+
+
+
+Tình huống 4: 
+
+Dãy a có đúng 2 giá trị khác nhau 
+
+Dãy b có đúng 2 giá trị khác nhau 
+
+
+
+a = [1, 2] 
+
+b = [0, 3] 
+
+
+1 XOR 3 = 2 
+1 XOR 0 = 1 
+2 XOR 0 = 2 
+2 XOR 3 = 1 
+
+
+
+a1 và a2 
+b1 và b2 
+
+a1 XOR b2 = a2 XOR b1 
+
+a1 XOR a2 = b1 XOR b2 
+
+K * (2^N - 2) * (2^M - 2) 
+
+
+
+0000000000000001011 > 0000000000000001001
+
+Gọi f[i][smallera][smallA][smallerb][smallB] : số cách mà ta xây dựng 4 giá trị a1, a2, b1, b2 khi ta xây dựng i bit đầu tiên 
+
+smallera = 0 hoặc 1 : tiền tố i bit đầu tiên của a1 < tiền tố i bit đầu tiên của a2 
+smallA = 0 hoặc 1: tiền tố i bit đầu tiên của a2 < tiền tố i bit đầu tiên của A 
+
+smallerb = 0 hoặc 1 : tiền tố i bit đầu tiên của b1 < tiền tố i bit đầu tiên của b2 
+smallB = 0 hoặc 1: tiền tố i bit đầu tiên của b2 < tiền tố i bit đầu tiên của B 
+
+
+bài toán cơ sở: f[0][1][1][1][1] = 1 
+
+đáp án bài toán: K = Tổng các f[30][0][smallA][0][smallB] 
+
+
+công thức qhd: 
+
+Khi ta có f[i][smallera][smallA][smallerb][smallB] > 0 
+
+Xét ký tự thứ i + 1 
+
+   giả sử ta gắn ký tự da1 vào vị trí i + 1 của a1, da2 vào vị trí i + 1 của a2, db1 vào vị trí i + 1 của b1, db2 vào vị trí i + 1 của b2  
+
+     nếu smallera == 1 mà da1 > da2 : continue 
+     nếu smallA == 1 mà da2 > A[i + 1] : continue 
+     nếu smallerb == 1 mà db1 > db2 : continue 
+     nếu smallB == 1 mà db2 > B[i + 1] : continue  
+     nếu (da1 XOR da2) != (db1 XOR db2) : continue 
+    
+     f[i + 1][new_smallera][new_smallA][new_smallerB][new_smallB] += f[i][smallera][smallA][smallerb][smallB] 
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Counting Cows 
+
+Trên một cánh đồng dài vô hạn, một ô (x, y) sẽ có bò nếu thỏa mãn điều kiện sau: 
+
+x và y có cùng tính chẵn lẻ 
+x/3 và y/3 có cùng tính chẵn lẻ 
+x/3^2 và y/3^2 có cùng tính chẵn lẻ 
+x/3^3 và y/3^3 .....
+
+.....
+
+x/3^k và y/3^k có cùng tính chẵn lẻ 
+
+
+Có Q câu hỏi, mỗi câu hỏi gồm 3 giá trị startx, starty và d 
+
+
+Xét các ô (startx, starty), (startx + 1, starty + 1), (startx + 2, starty + 2) , ......, (startx + d, starty + d), hỏi có bao nhiêu ô có bò ???? 
+
+
+(x, y) = (11, 63) 
+
+
+11 mod 3 = 2 ,   63 mod 3 = 0 
+3  mod 3 = 0 ,   21 mod 3 = 0 
+1  mod 3 = 1 ,   7 mod 3 = 1 
+0 mod 3 = 0 ,    2 mod 3 = 2 
+
+
+0102 
+2100 
+
+Với mỗi truy vấn, ta có startx, starty (đã đổi sang số tam phân)
+
+Đếm có bao nhiêu giá trị i  (tam phân)    (0 <= i <= d)   sao cho (startx + i, starty + i) thỏa mãn ô có bò 
+
+
+i = 1 ====> 00000000000000000001
+i = 2 ====> 00000000000000000002
+i = 3 ====> 00000000000000000010
+
+
+
+Phép cộng số tam phân 
+
+  00102
++ 02202 
+-------
+  10011
+
+
+
+
+000000000000000000000000100120 
+
+000000000000000000000002021012 
+
+
+
+?????????????????????????????2 
+
+
+
+
+
+
+Gọi f[i][remx][remy][state] : số cách xây dựng ra số k cộng thêm có CHỮ SỐ THỨ i CUỐI CÙNG, remx là phần nhớ từ i + 1 nhớ qua trong phép cộng startx + k, remy là 
+
+phần nhớ từ i + 1 nhớ qua trong phép cộng starty + k
+
+state = 0: số k < hậu tố gồm ký tự từ i -> 40 của số d, state = 1: số k = hậu tố gồm ký tự từ i -> 40 của số d, state = 2: số k > hậu tố gồm ký tự từ i -> 40 của 
+
+số d 
+
+
+bài toán cơ sở: f[41][0][0][1] = 1 
+
+đáp án bài toán: f[0][0][0][0] + f[0][0][0][1] 
+
+công thức qhd: 
+
+Khi ta có f[i][remx][remy][state] > 0 
+
+Khi ta xây dựng ký tự i - 1 là ký tự di  (di: 0 -> 2) 
+
+((di + startx[i - 1] + remx) % 3) % 2  ==  ((di + starty[i - 1] + remy) % 3) % 2   
+
+i -> i - 1 
+remx -> new_remx =  (di + startx[i - 1] + remx) / 3 
+remy -> new_remy =  (di + starty[i - 1] + remy) / 3 
+state -> new_state 
+
+f[i - 1][new_remx][new_remy][new_state] += f[i][remx][remy][state] 
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Dp + matrix mutiplication 
+
+Fibonacci number: 
+
+F0 = 1 
+F1 = 1 
+Fi = Fi-1 + Fi-2  với i > 1 
+
+
+Lớp 1: F0, F1 
+Lớp 2: F1, F2 
+
+..... 
+
+Lớp i: Fi-1, Fi 
+Lớp i+1 : Fi, Fi+1 
+
+
+
+Giới thiệu sơ về ma trận : 
+
+
+Ma trận là một bảng gồm N hàng và M cột, với giá trị trên hàng i và cột j là a[i][j] 
+
+
+Phép cộng ma trận 
+
+Với 2 ma trận A và B  (có cùng số hàng và cùng số cột) 
+
+A + B = C với ma trận C có cùng số hàng và cột đối với ma trận A và B 
+
+C[i][j] = A[i][j] + B[i][j] 
+
+
+A + B = B + A 
+
+
+
+Phép trừ ma trận 
+
+Với 2 ma trận A và B  (có cùng số hàng và cùng số cột) 
+
+A - B = C với ma trận C có cùng số hàng và cột đối với ma trận A và B 
+
+C[i][j] = A[i][j] - B[i][j] 
+
+
+
+Phép nhân ma trận 
+
+Với 2 ma trận A và B, trong đó số hàng của ma trận B = số cột của ma trận A 
+
+A x B = C 
+
+Ma trận C là ma trận có kích thước RA x CB 
+
+C[i][j] = Tổng các A[i][k] * B[k][j] 
+
+-------------------------------------------------------------------------------------------------------------------
+
+Graph Path I 
+
+Cho một ma trận kề a[i][j] với ý nghĩa: 
+
+a[i][j] = 1: có cạnh có hướng nối từ i -> j 
+
+Cho số K, đếm có bao nhiêu đường đi có độ dài = K 
+
+
+Gọi f[u][j] là tổng số đường đi từ 1 -> u mà trải qua j cạnh 
+
+bài toán cơ sở: f[1][0] = 1 
+
+đáp án bài toán: f[n][k] 
+
+công thức qhd: 
+
+Khi ta có f[u][j] > 0, xét đỉnh v kề u 
+
+f[v][j + 1] += f[u][j] 
+
+
+
+1 <= K <= 1 tỷ 
+
+
+Lớp 0: f[1][0], f[2][0], f[3][0], ....., f[n][0] 
+Lớp 1: f[1][1], f[2][1], f[3][1], ....., f[n][1] 
+
+....
+
+Lớp i: f[1][i], f[2][i], f[3][i], ....., f[n][i]
+Lớp i+1: f[1][i+1], f[2][i+1], f[3][i+1], ....., f[n][i+1]  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
