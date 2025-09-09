@@ -1,0 +1,223 @@
+Seq 
+
+Cho 2 dãy b và c có k phần tử 
+
+Ta định nghĩa dãy a như sau: 
+
+a[i] = b[i]  (nếu 1 <= i <= k) 
+
+a[i] = c[1] * a[i - 1] + c[2] * a[i - 2] + ..... + c[k] * a[i - k] với i: k + 1 ----> N 
+
+
+Cho số N, hỏi a[N] là bao nhiêu 
+
+
+
+Lớp 1: a[1], a[2], a[3], ...., a[k] 
+
+Lớp 2: a[2], a[3], a[4], ...., a[k + 1] 
+
+...... 
+
+Lớp i: a[i], a[i + 1], a[i + 2], ......, a[i + k - 1]
+
+Lớp i + 1: a[i + 1], a[i + 2], a[i + 3], ......, a[i + k]
+
+...... 
+
+Lớp N : a[N], a[N + 1], ....., a[N + k - 1]
+
+-----------------------------------------------------------------------------------------------------------------
+
+Restore 
+
+
+001010011110
+101010001001
+110100111111
+
+
+0000000000000000000000
+0000000000000000000000
+0000000000000000000000
+
+
+Bài toán đưa về: Đếm có bao nhiêu cách tạo ra 3 dãy bit có M bit sao cho tổng số bit 1 chia hết cho k và mỗi cột không có 3 bit 1. 
+
+====> kết quả: số cách - 1 
+
+
+Ta sử dụng quy hoạch động: 
+
+Gọi f[i][r] là số cách xây dựng 3 dãy bit khi ta xây dựng i cột đầu tiên, tổng số lượng bit 1 chia k dư r
+
+bài toán cơ sở: f[0][0] = 1 
+
+đáp án bài toán: f[m][0]
+
+công thức qhd: 
+
+Khi ta có f[i][r] > 0 
+
+Xét cột i + 1 
+
+ . Trường hợp 1: cột i + 1 gồm 3 số 0      f[i + 1][r] += f[i][r] 
+ . Trường hợp 2: cột i + 1 có chứa 1 số 1        f[i + 1][(r + 1) % k] += 3 * f[i][r] 
+ . Trường hợp 3: cột i + 1 có chứa 2 số 1        f[i + 1][(r + 2) % k] += 3 * f[i][r] 
+
+
+
+Lớp 0 : f[0][0], f[0][1], f[0][2],  ..... f[0][k - 1] 
+
+Lớp 1 : f[1][0], f[1][1], f[1][2],  ..... f[1][k - 1] 
+
+Lớp i : f[i][0], f[i][1], f[i][2],  ..... f[i][k - 1] 
+
+Lớp i + 1 : f[i + 1][0], f[i + 1][1], f[i + 1][2],  ..... f[i + 1][k - 1] 
+
+
+f[i][r] = f[i - 1][r] + 3 * f[i - 1][r - 1] + 3 * f[i - 1][r - 2]
+
+
+Ta tổ chức ma trận M với ý nghĩa: 
+
+M[r1][r2] : nếu ta chuyển số dư từ r1 --> r2 thì hệ số nhân là bao nhiêu ????? 
+
+M[r1][r1] : 1 
+M[r1][(r1 + 1) % k] : 3 
+M[r1][(r1 + 2) % k] : 3 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Dp on tree 
+
+Indepedent set 
+
+Gọi f[u][color] là số cách sơn cây con gốc u nếu đỉnh u có màu là color 
+
+. color = 0 : màu trắng 
+. color = 1 : màu đen 
+
+
+bài toán cơ sở: 
+
+Nếu u là đỉnh lá: f[u][0] = 1, f[u][1] = 1 
+
+đáp án bài toán : f[1][0] + f[1][1] 
+
+
+công thức qhd: 
+
+Khi ta đứng trên cây con gốc u 
+
+Ta xét mọi v là con của u 
+
+   f[u][1] = Tích các f[v][0]
+
+   f[u][0] = Tích các (f[v][0] + f[v][1])
+
+
+
+dfs(u, father): 
+  f[u][0] = 1
+  f[u][1] = 1 
+  Duyệt mọi v kề u 
+    nếu v == father: 
+      continue 
+    dfs(v, u)  
+    f[u][1] *= f[v][0] 
+    f[u][0] *= (f[v][0] + f[v][1])    
+ 
+
+--------------------------------------------------------------------------------------------------------------------
+
+SPC5 (Spring Contest 2020) 
+
+
+Gọi sz[u] là tổng số lượng đỉnh thuộc cây con gốc u 
+
+sz[u] = 1 
+
+Duyệt mọi v là con của u: 
+  sz[u] += sz[v]  
+
+
+
+Gọi f_out[u] : tổng của các tổng đường đi khi ta có đỉnh u và đi xuống tất cả những đỉnh con của cây con gốc u 
+
+bài toán cơ sở: 
+
+nếu u là đỉnh lá: f_out[u] = 0 
+
+
+f_out[u] += f_out[v] + a[v] + sz[v] * a[u]     (sz[v] : số lượng đỉnh của cây con gốc v)
+
+
+
+Gọi f_in[u] : tổng của các tổng đường đi từ u nhưng đi ra những đỉnh không thuộc cây con gốc u 
+
+
+
+
+
+
+dfs_in(u, father): 
+  Duyệt mọi v kề u 
+    nếu v == father: 
+      continue 
+    đi tính f_in[v] = f_in[u] + f_out[u] - f_out[v] - a[v] - sz[v] * a[u] + a[u] + (N - sz[v]) * a[v]
+    dfs_in(v, u)   
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+Tom and jerry 
+
+Gọi f_out[u] : độ dài của đỉnh xa u nhất khi ta xét những đỉnh con của u 
+
+
+Xét mọi v là con của u 
+
+ f_out[u] = max(f_out[u], f_out[v] + 1) 
+
+
+Gọi f_in[u] : độ dài của đỉnh xa u nhất khi đi từ u lên đỉnh cha của u 
+
+
+Khi đi từ u -> v 
+
+Giả sử v ở vị trí j trong các đỉnh con của u 
+
+f_in[v] = max(f_in[u] + 1,  max(prefixMax[j - 1], suffixMax[j + 1]) + 1 )
+
+
+Xét đỉnh u, khi ta có danh sách các đỉnh v là con của u 
+
+Xét prefixMax[i] : giá trị f_out[v] lớn nhất khi xét i đỉnh con đầu tiên của các đỉnh con v của u 
+
+Xét suffixMax[i] : giá trị f_out[v] lớn nhất khi xét i đỉnh con cuối cùng của các đỉnh con v của u 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
