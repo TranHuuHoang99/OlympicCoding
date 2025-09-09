@@ -1,0 +1,288 @@
+Subtree: 
+
+Ta gọi f_out[u] là số cách sơn khi u có màu đen  
+
+với u là đỉnh lá: f_out[u] = 1 
+
+đáp án bài toán: f_out[1]
+
+công thức qhd: 
+
+Với v là con của u 
+f_out[u] *= (1 + f_out[v][1])
+
+
+Ta gọi f_in[u] là số cách khi sơn các đỉnh không phải là con của u với u là màu đen 
+
+Khi đi từ u xuống con là v 
+
+Gọi prefix[u][i] : tích các (f_out[v] + 1) của i nút con đầu trong những nút con của u, suffix[i][u] : tích các (f_out[v] + 1) từ nút con thứ i đến nút cuối cùng trong những nút con của nút u 
+
+f_in[v] = 1 + f_in[u] * prefix[u][i - 1] * suffix[u][i + 1] 
+
+
+M không phải là số nguyên tố 
+
+
+Nhắc lại nghịch đảo modulo 
+
+Với M là số nguyên tố, với mọi a có gcd(a, M) = 1 ====> a^(M - 1) mod M = 1 
+
+--------------------------------------------------------------------------------------------------------------------------
+
+SPC3 (Spring Contest 2019) 
+
+Cho một cây, nút thứ i có giá trị là a[i]. Hãy tính tổng của các giá trị của các subgraph của cây 
+
+Giá trị của subgraph = Tổng OR của các giá trị của các nút 
+
+
+
+
+Nguyên tắc của phép OR 
+
+Chỉ cần một bit = 1 thì kết quả sẽ = 1 
+
+
+Nhận xét: a[i] <= 10^9 
+
+
+=====> ta chỉ có tối đa 30 bit độc lập 
+
+=====> ta có thể chia thành 30 bài toán độc lập với nhau 
+
+Với vị trí bit thứ b, ta cần đếm xem có bao nhiêu subgraph sao cho tổng OR (chỉ xét trên vị trí b) = 1 
+
+Giả sử số subgraph thỏa mãn = K 
+
+====> ans += (1 << b) * K 
+
+
+Với mỗi bài toán trên vị trí bit b 
+
+Ta tìm một nút u sao cho bit b = 1 
+
+Gọi f[u] : số cách tạo ra subgraph khi ta có subtree có nút gốc là u 
+
+bài toán cơ sở: f[u] = 1 
+
+công thức qhd: f[u] = Tích (1 + f[v]) 
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Convex Hull trick 
+
+Frog 3 
+
+Có một con ếch nhảy trên các cột từ 1 -> N, cột thứ i có chiều cao là h[i] 
+
+Ếch có thể đứng từ cột i và nhảy sang bất kỳ cột j tiếp theo (j > i) 
+
+Chi phí năng lượng cho một lần nhảy: 
+
+
+(h[j] - h[i])^2 + C 
+
+Hãy cho biết tổng mức năng lượng nhỏ nhất để ếch nhảy từ cột 1 -> cột N 
+
+
+Thiết kế công thức qhd căn bản: 
+
+Gọi f[i] là tổng mức năng lượng nhỏ nhất khi ta nhảy đến cột thứ i 
+
+bài toán cơ sở: f[1] = 0 
+
+đáp án bài toán: f[n] 
+
+công thức qhd: 
+
+
+f[i] = min(f[j] + (h[i] - h[j])^2 + C) 
+
+
+Độ phức tạp: O(N^2) 
+
+
+
+f[i] = f[j] + h[i]^2 + h[j]^2 - 2 * h[i] * h[j] + C 
+
+
+
+Ta chỉ cần tìm min(f[j] + h[j]^2 - 2 * h[i] * h[j])
+
+
+Xét những phần tử j trước i, nếu ta đặt b = f[j] + h[j]^2, đặt a = -2 * h[j] 
+
+trong những j trước i, là những "bộ" <aj, bj> 
+
+
+Với những j < i, những "bộ" <aj, bj> có thể xem như phương trình đường thẳng  y = aj * x + bj
+
+
+Đặt hull là tập các "bộ" <aj, bj> "đang quan trọng" 
+
+Đặt new_line là "bộ" <new_a, new_b> mà ta chuẩn bị thêm 
+
+
+
+y = a1.x + b1 
+y = a2.x + b2 
+
+a2.y = a1.a2.x + b1.a2 
+a1.y = a1.a2.x + b2.a1 
+
+(a2 - a1).y = b1.a2 - b2.a1 
+
+<=> y = (b1.a2 - b2.a1) / (a2 - a1) 
+
+x = (y - b1) / a1 
+
+
+
+
+
+not_important(new_line, line1, line2): 
+  point1 = intersect(new_line, line1) 
+  point2 = intersect(new_line, line2) 
+  nếu point1.x > point2.x: return true 
+  else: return false 
+
+
+while ((int) hull.size() >= 2 và not_important(new_line, hull.back(), hull[(int) hull.size() - 2]) == true): 
+  hull.pop_back() 
+
+hull.push_back(new_line)
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Acquire 
+
+Có N hình chữ nhật, hình chữ nhật thứ i có kích thước là w[i] * h[i] 
+
+Khi ta chọn một "nhóm" các hình nhữ nhật 
+
+<w[i1], h[i1]>
+<w[i2], h[i2]>
+<w[i3], h[i3]>
+....
+<w[ik], h[ik]>
+
+
+Ta sẽ lấy một hình chữ nhật để bao toàn bộ các hình chữ nhật trên với W = max (w[i1], w[i2], ...., w[ik]),  H = max (h[i1], h[i2], ..., h[ik]) 
+
+
+
+
+hình chữ nhật số 1: 3 4 
+hình chữ nhật số 2: 5 6 
+
+
+
+{  hcn2 ,   ..... }
+
+
+Ta sắp xếp các hình chữ nhật tăng dần theo w[i], nếu w[i] = nhau thì tăng dần theo h[i] 
+
+
+hình chữ nhật i sẽ "không quan trọng" nếu có tồn tại hình chữ nhật j nào đó có h[j] >= h[i] 
+
+
+
+8 
+
+2 5
+1 9
+2 6 
+4 8 
+5 10
+2 8
+10 6 
+4 10 
+
+
+
+
+10 6   x 
+5 10   x  
+2 16   x 
+
+
+====> sau khi lọc, ta chọn một tập các hình chữ nhật thì phải chọn một đoạn gồm các hình chữ nhật liên tiếp nhau 
+
+====> cho tập các hình chữ nhật, hãy tách ra thành các đoạn liên tiếp sao cho tổng diện tích là nhỏ nhất 
+
+
+f[i] : tổng diện tích nhỏ nhất khi có i hình chữ nhật 
+
+f[i] =  Min { f[j - 1] + w[j] * h[i] } 
+
+
+Ta đặt a = w[j], b = f[j - 1] 
+
+Ta có các "bộ" đường thẳng a.x + b   với hệ số góc a giảm dần =====> tối ưu = convex hull trick 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
