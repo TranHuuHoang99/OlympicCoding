@@ -1,0 +1,382 @@
+Commando 
+
+
+Gọi f[i] là tổng sức mạnh của các nhóm người lính khi có i người lính đầu tiên 
+
+bài toán cơ sở: f[0] = 0 
+
+
+f[i] = max(f[j - 1] + cost(j ... i)) 
+
+
+
+cost(j ... i) = a.(sum[i] - sum[j - 1])^2 + b.(sum[i] - sum[j - 1]) + c 
+
+
+
+f[i] =  f[j - 1] + a. (sum[i]^2 - 2 * sum[i] * sum[j - 1] + sum[j - 1]^2) + b.(sum[i] - sum[j - 1]) + c 
+
+
+     =  a. sum[i]^2 + b.sum[i] + c     +     f[j - 1] + a.sum[j - 1]^2 - b.sum[j - 1]   - 2.a.sum[i].sum[j - 1] 
+
+
+Xét tập các đường thẳng y = a.x + b 
+
+với a = -2a.sum[j - 1],   b = f[j - 1] + a.sum[j - 1]^2 - b.sum[j - 1]  
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+Joining network 
+
+Xét tổng bình phương các đường đi nội bộ trên 1 cây 
+
+Ý tưởng
+
+Với mỗi đỉnh u, ta hãy tính tổng bình phương của đường đi từ u ra mọi đỉnh còn lại trên cây 
+
+=======> tổng bình phương của mọi cặp đỉnh = Tổng bình phương khi xét từng đỉnh u trên cây / 2 
+
+
+Gọi d_out[u]: tổng độ dài từ u đi tới mọi đỉnh con của cây con gốc u 
+
+bài toán cơ sở: khi u là lá: d_out[u] = 0 
+
+Xét mọi v là con của u 
+
+d_out[u] += d_out[v] + size[v]
+
+
+
+Gọi f_out[u]: tổng bình phương từ đỉnh u đi tới mọi đỉnh trên cây con gốc u 
+
+bài toán cơ sở: khi u là lá: f_out[u] = 0 
+
+Xét mọi v là con của u 
+
+
+f_out[u] += f_out[v] + 2 * d_out[v] + size[v] 
+
+
+
+
+với đỉnh v, có đường đi đi xuống một đỉnh x nào đó bên dưới v là d 
+ 
+
+d(u, x)^2 = (d(v, x) + 1)^2 = d(v, x)^2 + 2.d(v, x) + 1  
+
+
+
+Gọi d_in[u] là tổng độ dài đường đi từ u đi tới những đỉnh không thuộc cây con gốc u
+
+Gọi f_in[u] là tổng bình phương độ dài đường đi từ u đi tới những đỉnh không thuộc cây con gốc u 
+
+
+Khi ta đi từ u đi xuống v 
+
+d_in[v] = d_in[u] + d_out[u] - d_out[v] - size[v] + N - size[v] 
+
+f_in[v] = f_in[u] + f_out[u] - f_out[v] - 2 * d_out[v] - size[v] + N - size[v] 
+
+
+Tổng bình phương của các đỉnh "nội bộ" trong 1 cây: 
+
+Tổng các (f_out[u] + f_in[u]) / 2  với mọi u: 1 -> n 
+
+
+
+Để tổng bình phương độ dài nhỏ nhất: 
+
+
+Chọn một đỉnh uA bên cây A và đỉnh uB bên cây B và nối 2 đỉnh lại với nhau. 
+
+
+Xét 2 đỉnh xA và xB của 2 cây con 
+
+
+Tổng  [ d(uA, xA) + d(uB, xB) + 1 ]^2 với mọi xA, xB 
+
+
+
+
+
+
+Tổng (  d(uA, xA)^2 + d(uB, xB)^2 + 1 + 2.d(uA, xA).d(uB, xB) + 2.d(uA, xA) + 2.d(uB, xB)      )  với mọi xA, xB 
+
+
+
+=  f_outA[uA] + f_inA[uA]  +   f_outB[uB] + f_inB[uB]   +  NA * NB   + 2 * Tổng (d(uA, xA) * d(uB, xB))  + 2 * (d_outA[uA] + d_inA[uA])  + 2 * (d_outB[uB] + d_inB[uB]) 
+
+
+=  f_outA[uA] + f_inA[uA]  +   f_outB[uB] + f_inB[uB]   +  NA * NB   + 2 * (d_outA[uA] + d_inA[uA]) * (d_outB[uB] + d_inB[uB])  + 2 * (d_outA[uA] + d_inA[uA])  + 2 * (d_outB[uB] + d_inB[uB]) 
+
+
+
+
+
+=   fA[uA] + fB[uB] + NA * NB + 2 * dA[uA] * dB[uB] + 2 * dA[uA] + 2 * dB[uB]
+
+
+Duyệt uB: 
+
+  Ta cần cực tiểu hóa: fA[uA] + 2 * dA[uA] * dB[uB] + 2 * dA[uA] 
+
+
+
+Xét những "bộ" phương trình đường thẳng y = a.x + b 
+
+a = 2 * dA[uA],  b = fA[uA] + 2 * dA[uA] 
+
+
+Ta sắp xếp các "bộ" đường thẳng giảm dần theo 2 * dA[uA] 
+
+----------------------------------------------------------------------------------------------------------------------
+
+Quy hoạch động + chia để trị 
+
+Subarray Square: 
+
+Cho một dãy a, ta cần chia dãy số a này thành k đoạn liên tục. Mỗi đoạn ta lấy tổng các số trên đoạn đó và chi phí của 1 đoạn = bình phương của tổng các số đó. 
+
+Hỏi chia như thế nào để tổng các chi phí nhỏ nhất có thể ??? 
+
+
+1 <= k <= n <= 3000 
+
+Gọi f[i][j] là tổng chi phí nhỏ nhất khi có i phần tử đầu tiên của dãy a và ta chia thành j đoạn liên tục 
+
+bài toán cơ sở: 
+
+f[i][1] = sum[i]^2 
+
+đáp án bài toán: f[n][k] 
+
+công thức qhd: 
+
+f[i][j] = min(f[x - 1][j - 1] +  cost(x ... i))
+
+cost(l ... r) = (sum[r] - sum[l - 1])^2 
+
+
+Vì a[i] > 0 ====> cost(l ... r) < cost(l ... r + 1)
+
+
+f[i][j] = min(f[x - 1][j - 1] +  cost(x ... i))
+
+
+Gọi opt[i][j] là số x cần thiết để f[x - 1][j - 1] + cost(x .... i) nhỏ nhất 
+
+Dựa vào bất đẳng thức tứ giác   (Quadrangle Inequality) 
+
+
+opt[i][j] <= opt[i + 1][j] <= opt[i + 2][j] <= ........ 
+
+
+
+f[10][4] ,    opt[10][4] = 3 
+
+f[11][4] ,    opt[11][4] = 3 
+
+f[12][4] ,    opt[12][4] = 6 
+
+f[13][4] ,    opt[13][4] = 7 
+
+
+Với "lớp" thứ j 
+
+f[1][j], f[2][j], ......, f[10][j] 
+
+
+                                                                            f[5][j] ,        opt =  [1 .. 5] .   opt = 3 
+
+                             [1 .. 4] , f[2][j]  , opt = [1 .. 2]                                                                     [6 .. 10]   , f[8][j]  ,   opt = [3 ... 10]            
+
+
+
+===> với mỗi lớp j, số thao tác cần tính: O(N.logN)
+
+Độ phức tạp: O(K.NlogN) 
+
+
+compute(L, R, optL, optR, j): 
+  nếu L > R: return 
+  đặt mid = (L + R) / 2        (tính f[mid][j])
+  đặt best = inf, opt = -1 
+  Duyệt x : optL -> min(i, optR): 
+    nếu best > f[x - 1][j - 1] + cost(x .. i)
+      best = f[x - 1][j - 1] + cost(x .. i) 
+      opt = x 
+  compute(L, mid - 1, optL, opt, j) 
+  compute(mid + 1, R, opt,  optR, j)     
+
+
+Duyệt j: 2 ->  k 
+  compute(1, N, 1, N, j)  
+
+
+---------------------------------------------------------------------------------------------------------
+
+NKLEAVES 
+
+Có N chiếc lá, chiếc lá thứ i có trọng lượng là w[i] và chiếc lá i ở vị trí i 
+
+Tại vị trí 1 đã có sẵn 1 đồ hốt rác 
+
+Ta quét lá, ta chỉ có thể quét dồn về phía bên trái. Một chiếc lá có trọng lượng là w và di chuyển từ x -> y   (y < x) thì ta sẽ mất năng lượng là: 
+
+w * (x - y) 
+
+
+Ta có K đồ hốt rác, hỏi đặt K - 1 đồ hốt rác còn lại vào vị trí nào để tổng mức năng lượng nhỏ nhất có thể ? 
+
+Gọi f[i][j] là tổng năng lượng nhỏ nhất khi có i chiếc lá và ta đã đặt j đồ hốt rác: 
+
+bài toán cơ sở: f[i][1] = cost(1 .. i) 
+
+đáp án bài toán: f[n][k] 
+
+
+công thức qhd: f[i][j] = min(f[x][j - 1] + cost(x ... i)) 
+
+
+====> Tối ưu = qhd chia để trị 
+
+
+
+
+cost(l .... r) = Tổng các w[i] * (i - l)  với i: l -> r 
+
+
+= Tổng các (w[i] * i - w[i] * l) 
+
+
+Gọi sum[i] = w[1] + w[2] + .... + w[i],   sum2[i] = w[1] * 1 + w[2] * 2 + .... + w[i] * i 
+
+
+cost(l .... r) = sum2[r] - sum2[l - 1] - l * (sum[r] - sum[l - 1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+p(x, y) + p(x + 1, y + 1) = p(x + 1, y) + p(x, y + 1) 
+
+
+p(x, y) + p(x, y) + d(x + 1, y)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
