@@ -1,0 +1,106 @@
+Tháng 10 - Advanced Graph Theory 
+
+- Buổi 1: Maximum Flow + Maximum Matching 
+- Buổi 2: Minimum Cut 
+- Buổi 3: Euler Tour 
+- Buổi 4: Lowest Common Ancestor 
+- Buổi 5: Heavy Light Decomposition  
+- Buổi 6: Centroid Decomposition 
+- Buổi 7: 2SAT 
+- Buổi 8: Contest 
+
+
+Maximum Flow (Luồng cực đại) 
+
+Đồ thị dạng luồng là gì ??? 
+
+
+Là một loại đồ thị gồm các cạnh có hướng, có trọng số, đồng thời ta có 2 đỉnh là đỉnh phát và đỉnh thu 
+
+Đỉnh phát là đỉnh mà chỉ có các cạnh có hướng đi ra khỏi đỉnh đó 
+
+Đỉnh thu là đỉnh mà chỉ có các cạnh đi vào đỉnh đó 
+
+
+Ford Fulketson 
+
+Thuật toán Dinic 
+
+Ý tưởng của thuật toán Dinic: 
+
+Còn phát hiện có thể gửi được luồng thì tiếp tục gửi 
+
+
+Bước 1: Ta đánh level từ đỉnh S -> đỉnh T theo thuật toán Bfs 
+Bước 2: Nếu phát hiện level tại T == -1 ====> không gửi luồng được nữa ====> thuật toán kết thúc 
+Bước 3: Tìm "đường tăng luồng" từ S -> T, sau đó ta tạo cạnh revert tương ứng là trọng số bị đảo ngược. 
+
+
+Độ phức tạp: O(E * V^2) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
