@@ -1,0 +1,135 @@
+Euler Tour 
+
+Đây là kỹ thuật "trải" một cây gồm N đỉnh ra thành các đoạn liên tục, mỗi đoạn tương ứng là danh sách các đỉnh cùng thuộc cây con. 
+
+
+Subtree Queries 
+
+timeDfs = 0 
+
+dfs(u, father): 
+  timeDfs++ 
+  left[u] = timeDfs 
+  Duyệt mọi v là con của u 
+    dfs(v, u) 
+  right[u] = timeDfs 
+
+
+Ta sử dụng fenwick tree 
+
+với mỗi đỉnh u, ta có thứ tự của đỉnh u là left[u] ====> update(left[u], a[u]) 
+
+Với truy vấn thay đổi a[u] ---> x 
+
+   update(left[u], x - a[u]) 
+   a[u] = x 
+
+Với truy vấn hỏi subtree u: left[u] ...... right[u] 
+
+   Xuất ra : get(right[u]) - get(left[u] - 1) 
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+New year tree 
+
+Ta dùng euler tour để "trải" cây ra thành các đoạn liên tục. 
+
+Ta sử dụng segment tree với ý nghĩa: 
+
+it[index]: tập hợp các màu khác nhau trên đoạn [L .... R] mà nút index đang quản lý. 
+
+Khi ta gặp yêu cầu: cập nhật các đỉnh trên subtree u trở thành màu c ====> sử dụng lazy update 
+
+Với truy vấn hỏi số lượng màu khác nhau ====> Kích thước của tập hợp các màu thuộc đoạn [l ..... r] 
+
+
+Ta có thể biểu diễn tập hợp các màu như dãy bit gồm 60 bit 
+
+Khi ta gặp lazy = c ====> ta truyền xuống cho 2 nút bên dưới và ta gán it[2 * index] = 1 << c, it[2 * index + 1] = 1 << c 
+
+--------------------------------------------------------------------------------------------------------------------------------------- 
+
+Water tree 
+
+
+Ta sử dụng Euler tour để rã cây thành các đoạn liên tiếp 
+
+itFill[index]: Xét đoạn [L ... R] được quản lý bởi index, hỏi lần cuối cùng được làm đầy là tại truy vấn nào. 
+
+itEmpty[index]: Xét đoạn [L ... R] được quản lý bởi index, hỏi lần cuối cùng một đỉnh trong đoạn [L ... R] được yêu cầu làm rỗng 
+
+
+Với truy vấn subtree u được yêu cầu làm đầy tại truy vấn q : update(1, 1, n, itFill, left[u], right[u], q) 
+
+Với truy vấn làm rỗng đỉnh u: update(1, 1, n, itEmpty, left[u], left[u], q) 
+
+
+Thời điểm cuối cùng mà u được làm đầy nước: tFill = get(1, 1, n, left[u], left[u], itFill) 
+
+Thời điểm cuối cùng mà u được làm rỗng: tEmpty = get(1, 1, n, left[u], right[u], itEmpty) 
+
+nếu tFill <= tEmpty ===> u được làm rỗng 
+
+else: u vẫn đang có nước 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
