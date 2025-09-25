@@ -1,0 +1,118 @@
+LCA (Lowest Common Ancestor) 
+
+
+Distance Queries: 
+
+
+Độ dài đường đi từ u -> v 
+
+= độ dài đường đi từ u -> LCA   +   độ dài đường đi từ v -> LCA 
+
+= dist[u] - dist[LCA] + dist[v] - dist[LCA] 
+
+= dist[u] + dist[v] - 2 * dist[LCA]
+
+
+Sparse Table 
+
+Gọi f[u][j]: đỉnh cha cách đỉnh u một lượng là 2^j 
+
+bài toán cơ sở: f[u][0] = parent[u] 
+
+
+đặt father = f[u][j - 1] 
+
+nếu father != -1 và f[father][j - 1] != -1 
+  f[u][j] = f[father][j - 1] 
+
+
+
+
+lca(u, v): 
+  nếu dist[u] < dist[v]: 
+    swap(u, v) 
+  for j: 16 -> 0 
+    nếu dist[u] - (1 << j) >= dist[v]: 
+      u = f[u][j]   
+  nếu u == v: 
+    return u 
+  for j: 16 -> 0 
+    nếu f[u][j] != f[v][j]
+      u = f[u][j]
+      v = f[v][j] 
+  return f[u][0]        
+
+------------------------------------------------------------------------------------------------------------------
+
+New roads Queries 
+
+Gọi Fmax[u][j] : trọng số của cạnh lớn nhất trên đường đi từ u -> f[u][j] 
+
+bài toán cơ sở: Fmax[u][0] = w(u, parent[u]) 
+
+gọi father = f[u][j - 1] 
+
+nếu father != -1 && f[father][j - 1] != -1: 
+  f[u][j] = f[father][j - 1] 
+  Fmax[u][j] = max(Fmax[u][j - 1], Fmax[father][j - 1]) 
+
+
+lca(u, v): 
+  ans = -1 
+  nếu dist[u] < dist[v]: 
+    swap(u, v) 
+  for j: 16 -> 0 
+    nếu dist[u] - (1 << j) >= dist[v]: 
+      ans = max(ans, Fmax[u][j]) 
+      u = f[u][j]   
+  nếu u == v: 
+    return u 
+  for j: 16 -> 0 
+    nếu f[u][j] != f[v][j]
+      ans = max(ans, Fmax[u][j])
+      ans = max(ans, Fmax[v][j])
+      u = f[u][j]
+      v = f[v][j] 
+  ans = max(ans, Fmax[u][0])     
+  return f[u][0]        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
