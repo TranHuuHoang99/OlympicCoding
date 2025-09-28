@@ -1,0 +1,124 @@
+Ship 
+
+
+Gọi f[u] là tổng phần thưởng lớn nhất khi ta đứng tại đỉnh u 
+
+f[1] = 0,  f[u] còn lại = -oo 
+
+
+Khi có nhiệm vụ đi từ ui -> vi 
+
+Nếu ta chấp nhận nhiệm vụ: 
+
+f[ui] != -oo 
+
+f[vi] = max(f[vi], f[ui] + cost(ui -> vi)) 
+
+
+đáp án bài toán: max(f[u]) với u: 1 -> n 
+
+--------------------------------------------------------------------------------------------------------------
+
+Heavy Light Decomposition 
+
+
+Heavy Light Decomposition là kỹ thuật "phân rã" một cây ra thành chuỗi các mắc xích, ta dựa vào việc phân vào các cây con có số lượng đỉnh nhiều nhất 
+
+
+Sau khi rã các chuỗi mắc xích, nhận xét: Với bất kỳ đỉnh u, khi ta xét đường đi từ u -> đỉnh gốc, số lần đổi mắc xích <= logN 
+
+
+chainColor : màu mắc xích hiện tại 
+startPosition[color] : vị trí bắt đầu khi ta có màu color 
+
+chainColor = 1 
+startPosition[1] = 1 
+listVertex : danh sách các đỉnh 
+color[u] : màu của đỉnh u 
+position[u]: vị trí của đỉnh u 
+
+HLD(u, father): 
+  listVertex.push_back(u) 
+  position[u] = listVertex.size() 
+  color[u] = chainColor 
+  maxSize = -1 
+  special = -1 
+  Duyệt mọi v kề u: 
+    nếu v == father: continue 
+    nếu maxSize < size[v]: 
+      maxSize = size[v] 
+      special = v 
+  HLD(special, u) 
+  Duyệt mọi v kề u: 
+    nếu v == father || v == special: continue 
+    chainColor++ 
+    startPosition[chainColor] = listVertex.size() + 1 
+    HLD(v, u)  
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Counting Paths: 
+
+Ta phân rã cây thành các chuỗi mắc xích 
+
+Xét 1 đường từ u -> v, ta tách thành các chuỗi mắc xích. 
+
+Các đỉnh trong cùng 1 chuỗi mắc xích thì xuất hiện liên tiếp nhau trong danh sách đỉnh ====> cập nhật tăng 1 đoạn liên tiếp lên 1 đơn vị 
+
+
+f[l]++ 
+f[r + 1]-- 
+
+
+Duyệt i: 1 -> n, f[i] += f[i - 1] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
