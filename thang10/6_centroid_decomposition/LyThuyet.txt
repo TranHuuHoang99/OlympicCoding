@@ -1,0 +1,141 @@
+Centroid Decompostion (Phân tách tâm cây) 
+
+Finding Centroid 
+
+
+findCentroid(u, father): 
+  Duyệt mọi v kề u: 
+    nếu v == father: continue 
+    nếu 2 * size[v] > n: return findCentroid(v, u) 
+
+  return u 
+
+-------------------------------------------------------------------------------------------------------------
+
+Ciel the commander 
+
+Ta gán centroid của cả cây là quân hàm A 
+
+Xét từng cây con, mỗi cây con tiếp tục lấy centroid, ta gán quân hàm B 
+
+......
+
+Số lượng quân hàm = Số lượng tầng khi lấy các centroid ~ logN  
+
+
+visited[u] = true / false thể hiện là đỉnh u đã được xác nhận trở thành centroid hay chưa ???? 
+size[u] : số lượng đỉnh thuộc cây con gốc u 
+
+
+dfs_size(u, father): 
+  size[u] = 1 
+  Duyệt mọi v kề u 
+    nếu v == father || visited[v] == true: continue 
+    dfs_size(v, u) 
+    size[u] += size[v] 
+
+findCentroid(u, father, numb): 
+  Duyệt mọi v kề u: 
+    nếu v == father || visited[v] == true: continue; 
+    nếu 2 * size[v] >  numb: return findCentroid(v, u, numb) 
+  return u      
+
+dfs(u, father, label): 
+  dfs_size(u, father) 
+  đặt centroid = findCentroid(u, father, size[u]) 
+  ans[centroid] = label 
+  visited[centroid] = true 
+  Duyệt mọi v kề với centroid 
+    nếu visited[v] == true: continue 
+    dfs(v, centroid, label + 1) 
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Xenia and tree
+
+Với một cây con, khi ta gọi được c là centroid của cây con đó 
+
+Gọi dist[c][u] là độ dài đường đi từ c đi tới các đỉnh u thuộc cây con đó. 
+
+unordered_map <int, int> dist[100005]; 
+
+Ta gọi một bảng là bảng minDist[u]: Khi xét cây con gốc u (u là centroid của cây con đó) thì đỉnh màu đỏ cách u gần nhất là có độ dài bao nhiêu ?????? 
+
+Gọi parent[u] : là centroid đang quản lý đỉnh u 
+
+
+Khi có truy vấn cập nhật v là màu đỏ 
+
+Thực hiện nhảy từ u = v -> parent[u], sau đó tiếp tục .... 
+
+   Cập nhật minDist[u] = min(minDist[u], dist[u][v]) 
+
+Với truy vấn hỏi đỉnh v
+
+   ans = minDist[v] 
+
+   Cho u = v nhảy lên, với u hiện tại, ta hỏi minDist[u] và ans = min(ans, minDist[u] + dist[u][v]) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
