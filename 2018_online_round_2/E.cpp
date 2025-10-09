@@ -2,7 +2,7 @@
 **************************************************************************
   	author     : hoangprodn
   	email  	   : thhoang08091999@gmail.com
-  	local time : 2025-10-08 20:03:29 
+  	local time : 2025-10-08 10:37:57 
 ************************************************************************** 
 */
 #include <bits/stdc++.h>
@@ -21,10 +21,10 @@ struct Matrix {
   	Matrix operator *(const Matrix& other) {
   	 	Matrix ret(row, other.col);
   	 	for (int i = 0; i < row; i++) {
-  	 	 	for (int j = 0; j < other.col; j++) {
+  	 	 	for (int j = 0; j < col; j++) {
   	 	 		ll sum = 0ll;
-  	 	 	 	for (int k = 0; k < other.row; k++) {
-  	 	 	 		sum = (sum % MOD + (data[i][k] % MOD * other.data[k][j] % MOD) % MOD) % MOD;
+  	 	 	 	for (int k = 0; k < col; k++) {
+					sum = (sum % MOD + (data[i][k] % MOD * other.data[k][j] % MOD) % MOD) % MOD;
   	 	 	 	}
   	 	 	 	ret.data[i][j] = sum;
   	 	 	}
@@ -32,10 +32,10 @@ struct Matrix {
   	 	return ret;
   	}
 };
-ll A, B;
-Matrix init_m(1,10);
-Matrix base_m(10, 10);
-int base[10][10] = {
+vector<vector<ll>> init_matrix = {
+  	{2262, 78, 0, 3645, 130, 5, 15813, 546, 21, 20160}
+};
+vector<vector<ll>> base_matrix = {
   	{0, 1, 0, 5, 0, 0, 21, 0, 0, 26},
   	{0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
   	{0, 0, 0, -125, 0, 0, -21, 0, 0, -146},
@@ -47,9 +47,8 @@ int base[10][10] = {
   	{0, 0, 0, -125, 0, 0, -20, 0, 0, -145},
   	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1}
 };
-int init[1][10] = {
-	{2262, 78, 0, 3645, 130, 5, 15813, 546, 21, 20160}
-};
+ll A, B;
+Matrix init(1, 10), base(10, 10);
 
 Matrix fast_power(const Matrix& a, const ll& b) {
  	if (b <= 1) return a;
@@ -59,25 +58,40 @@ Matrix fast_power(const Matrix& a, const ll& b) {
  	return ret;
 }
 
+ll getSum(const ll& val) {
+	if (val == 0) {
+	 	return 0;
+	} else if (val == 1) {
+	 	return 26;
+	} else if (val == 2) {
+	 	return 702;
+	} else if (val == 3) {
+	 	return 20160;
+	}
+	Matrix filter = base;
+	filter = fast_power(filter, val-3);
+	Matrix input = init;
+	input = input * filter;
+	ll ret = input.data[0][9] % MOD;
+	if (ret < 0ll) ret += MOD;
+	return ret;
+}
+
 void solve(void) {
-	cin >> A >> B;
-	for (int i = 0; i < 1; i++) {
-	 	for (int j = 0; j < 10; j++) {
-	 	 	init_m.data[i][j] = init[i][j];
-	 	}
-	}
-	for (int i = 0; i < 10; i++) {
-	 	for (int j = 0; j < 10; j++) {
-	 	 	base_m.data[i][j] = base[i][j];
-	 	}
-	}
-	Matrix right_base = base_m;
-	right_base = fast_power(right_base, B);
-	Matrix right_init = init_m;
-	right_init = right_init * right_base;
-	ll right_val = (right_init.data[0][3] % MOD + right_init.data[0][6] % MOD) % MOD;
-	cout << right_val << endl;
-	cout << right_val - 20160 << endl;
+ 	cin >> A >> B;
+ 	for (int i = 0; i < 1; i++) {
+ 	 	for (int j = 0; j < 10; j++) {
+			init.data[i][j] = init_matrix[i][j];
+ 	 	}
+ 	}
+ 	for (int i = 0; i < 10; i++) {
+ 	 	for (int j = 0; j < 10; j++) {
+ 	 	 	base.data[i][j] = base_matrix[i][j];
+ 	 	}
+ 	}
+ 	ll ret = (getSum(B) - getSum(A-1)) % MOD;
+ 	if (ret < 0ll) ret += MOD;
+ 	cout << ret << endl;
 }
 
 int main(void) {
@@ -87,31 +101,6 @@ int main(void) {
 	solve();
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
