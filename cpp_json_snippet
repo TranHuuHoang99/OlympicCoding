@@ -13,7 +13,7 @@
 	  "#define ll long long",
       "using namespace std;",
       "",
-      "void solve() {",
+      "void solve(void) {",
       "",
       "}",
       "",
@@ -22,8 +22,15 @@
       "    cin.tie(nullptr);",
       "    solve();",
       "    return 0;",
-      "}"
+      "}",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
-    "description": "Competitive programming C++ template"
+    "description": "Competitive programming C++ template",
+    "competitive-programming-helper.outputFolder": "${workspaceFolder}/Contests/${input:contestName}"
   }
 }
