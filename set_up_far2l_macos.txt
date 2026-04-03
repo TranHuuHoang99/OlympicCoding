@@ -1,0 +1,155 @@
+======== CHANGE KEY THAT MISSING IN MACBOOK =====================
+
+// Macbook missing key Del, so we replace it like so
+// Macbook missing key Ins
+
+1st - go to folder ~/.config/far2l/settings
+2nd - add these two into file  "key_macros.ini"
+
+// using command+I
+[KeyMacros/Common/CtrlI]
+Sequence=Ins
+
+// using command+D
+[KeyMacros/Common/CtrlD]
+Sequence=Del
+
+
+
+========= CREATE PANEL FOR GENERATE CPP FROM MULTIPLE OPTION OF TEMPLATE FILE ====================
+
+1. open far2l -> press F2 -> press command+I to insert
+2. create menu -> create command in that menu -> using bash script already wrote
+3. link the bash command to the field command in far2l panel
+
+========= WRITING BASH SCRIPT FOR GENERATE FILE TEMPLATE ========================
+
+Multiple test case: 
+
+
+#!/bin/bash
+
+read -p "Type your CPP files : " filename
+
+if [[ ! "$filename" == *.cpp ]]; then
+    filename="${filename}.cpp"
+fi
+
+if [ -f "$filename" ]; then
+    echo "Error: File '$filename' already existed"
+    exit 1
+fi
+
+CURRENT_TIME=$(date "+%Y-%m-%d %H:%M:%S")
+
+cat <<EOF > "$filename"
+/*
+**************************************************************************
+  	author     : hoangprodn
+  	email  	   : thhoang08091999@gmail.com
+  	local time : $CURRENT_TIME 
+************************************************************************** 
+*/
+#include<bits/stdc++.h>
+#define int long long
+using namespace std;
+
+void solve(void) {
+
+}
+signed main(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int t;
+    cin >> t;
+    for (int i = 1; i <= t; i++) {
+	solve();
+    }
+    return 0;
+}
+EOF
+
+if [ $? -eq 0 ]; then
+    echo "Success created file : $filename"
+    /Applications/far2l.app/Contents/MacOS/far2l -e "$filename"
+else
+    echo "failed to create file"
+fi
+
+
+
+
+
+
+Single test case:
+
+
+
+
+
+
+
+
+
+
+#!/bin/bash
+
+read -p "Type your CPP files : " filename
+
+if [[ ! "$filename" == *.cpp ]]; then
+    filename="${filename}.cpp"
+fi
+
+if [ -f "$filename" ]; then
+    echo "Error: File '$filename' already existed"
+    exit 1
+fi
+
+CURRENT_TIME=$(date "+%Y-%m-%d %H:%M:%S")
+
+cat <<EOF > "$filename"
+/*
+**************************************************************************
+  	author     : hoangprodn
+  	email  	   : thhoang08091999@gmail.com
+  	local time : $CURRENT_TIME 
+************************************************************************** 
+*/
+#include<bits/stdc++.h>
+#define int long long
+using namespace std;
+
+void solve(void) {
+
+}
+signed main(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    solve();
+    return 0;
+}
+EOF
+
+if [ $? -eq 0 ]; then
+    echo "Success created file : $filename"
+    /Applications/far2l.app/Contents/MacOS/far2l -e "$filename"
+else
+    echo "failed to create file"
+fi
+
+
+
+
+==================== COMMAND FOR BUILD AND RUN CPP FILE =====================
+
+a file mask or several file mask:   *.cpp
+Description of the association:   Build and execute CPP file
+command: g++ -std=c++17 -DHOANGPRODN_DEBUG "!.cpp" -o "!" && ./"!" && printf "\nPress Enter to continue..." && read
+
+
+
+
+
+
