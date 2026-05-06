@@ -1,7 +1,11 @@
-1. CF 452B - Inversions (Dạng cơ bản)
-2. CF 1311F - Moving Points (Level: 1600 - 1700)
-3. CF 61E - Enemy is weak (Level: 1500)
-4. CF 1073C - Vasya and Robot (Level: 1700)
-5. CF 833B - The Bakery (Level: 2100 - Nâng cao)
+=== PRACTICE DP AND SEGMENT TREE ===
 
-toàn bộ bài tập tương đồng khi đếm các cặp i,j sử dụng segment tree
+1. 115E - Linear Kingdom Races (Rating: 2100)
+2. 160E - Buses and People (Rating: 2100)
+3. 629D - Babaei and Birthday Cake (Rating: 1600 - nhưng tư duy rất chuẩn)
+4. 1557D - Ezzat and Grid (Rating: 1800)
+5. 474E - Pillars (Rating: 1900)
+6. 597C - Subsequences (Rating: 1900)
+7. 1858D - Trees and Segments (Rating: 2200)
+
+
