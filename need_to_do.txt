@@ -12,3 +12,6 @@ current task : 1970E2
 - ...
 - Ngày thứ M sẽ có N - M + 1 con đường (nếu N >= M)
 
+
+sử dụng quy hoạch động nhân ma trận
+
