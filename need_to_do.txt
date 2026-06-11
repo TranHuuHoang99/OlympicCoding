@@ -2,16 +2,6 @@
 
 current task : 1970E2
 
-ý tương thực hiện
-- tìm tổng số tổ hợp có thể thực hiện trong 1 ngày
-- Nếu ta tìm được số tổ hợp là N tổ hợp con đường có thể đi được trong 1 ngày
-- Ngày đầu tiên sẽ có N con đường
-- Ngày thứ 2 sẽ có N - 1 con đường
-- Ngày thứ 3 sẽ có N - 2 con đường
-- Ngày thứ 4 sẽ có N - 3 con đường
-- ...
-- Ngày thứ M sẽ có N - M + 1 con đường (nếu N >= M)
-
-
 sử dụng quy hoạch động nhân ma trận
 
+cần implement lại bài này
