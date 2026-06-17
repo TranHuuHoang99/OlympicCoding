@@ -1,7 +1,10 @@
 == PRACTICE DP RATING 1800 - 2100 == 
 
-current task : 1970E2
+current task 1841C DP
 
-sử dụng quy hoạch động nhân ma trận
+sử dụng phương pháp quy hoạch động với array là
+
+khi ta đang xét đến phần tử thứ i, chọn từ A -> E ký tự để thay đổi, và status là trạng thái đã thay đổi chuỗi
+status == 0 chuỗi chưa bị thay đổi, status == 1 chuỗi đã bị thay đổi
 
 cần implement lại bài này
