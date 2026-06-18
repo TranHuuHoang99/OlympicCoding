@@ -8,7 +8,6 @@
             "command": "/opt/homebrew/bin/g++-15",
             "args": [
                 "-fdiagnostics-color=always",
-                "-g",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
@@ -31,11 +30,14 @@
             "command": "bash",
             "args": [
                 "-c",
-                "./${fileBasenameNoExtension} < input.in"
+                "./${fileBasenameNoExtension} < ${workspaceFolder}/input.in"
             ],
+            "options": {
+                "cwd": "${fileDirname}" 
+            },
             "group": {
-                "kind": "test",
-                "isDefault": false
+                "kind": "build",
+                "isDefault": true
             },
             "presentation": {
                 "echo": true,
@@ -54,6 +56,32 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
+            }
+        },
+        {
+            "label": "Run Python with Input File",
+            "type": "shell",
+            "command": "/opt/homebrew/bin/python3",
+            "args": [
+                "-u",
+                "${file}",
+                "<",
+                "${workspaceFolder}/input.in"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
             }
         }
     ],
