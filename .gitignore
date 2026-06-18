@@ -1,36 +1,80 @@
-# Prerequisites
-*.d
+# Thư mục môi trường ảo (Virtual Environments)
+.venv/
+venv/
+ENV/
+env/
+target/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+# File biên dịch Python (Byte-compiled / optimized / DLL files)
+__pycache__/
+*.py[cod]
+*$py.class
 *.so
-*.dylib
-*.dll
 
-# Fortran module files
-*.mod
-*.smod
+# Thư mục phân phối và đóng gói (Distribution / packaging)
+bin/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# File cấu hình môi trường chứa thông tin bảo mật (Environment variables / Secrets)
+.env
+.venv
+.env.secret
 
-# Executables
-*.exe
-*.out
-*.app
+# Thư mục kiểm thử và đo lường mã nguồn (Testing / coverage)
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
 
-#vscode setting
-.vscode/**/*
-main
+# Thư mục của các công cụ kiểm tra code (Jupyter Notebook, Ruff, MyPy)
+.ipynb_checkpoints
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.rruff_cache/
+.pyre/
+.pytype/
+
+# File hệ điều hành tự sinh (OS generated files)
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Cấu hình của IDE (VS Code, PyCharm)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.in
