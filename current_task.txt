@@ -1,1 +1,10 @@
-https://www.hackerrank.com/challenges/abbr/problem?isFullScreen=true&h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=dynamic-programming
+Practice for worldquant interview
+
+================ LEET CODE =======================
+LeetCode 432 - All O`one Data Structure (Hard)
+LeetCode 1352 - Product of the Last K Numbers (Medium)
+LeetCode 295 - Find Median from Data Stream (Hard)
+LeetCode 188 - Best Time to Buy and Sell Stock IV (Hard)
+LeetCode 1235 - Maximum Profit in Job Scheduling (Hard)
+LeetCode 239 - Sliding Window Maximum (Hard)
+LeetCode 42 - Trapping Rain Water (Hard)
