@@ -1,10 +1,15 @@
-== PRACTICE DP RATING 1800 - 2100 == 
 
-current task 1841C DP
+== practice rating 1500 - 2000 ==
 
-sử dụng phương pháp quy hoạch động với array là
+rating range : 1500 - 1800
 
-khi ta đang xét đến phần tử thứ i, chọn từ A -> E ký tự để thay đổi, và status là trạng thái đã thay đổi chuỗi
-status == 0 chuỗi chưa bị thay đổi, status == 1 chuỗi đã bị thay đổi
-
-cần implement lại bài này
+• data structures
+• bitmasks
+• dp
+• two pointers
+• binary search
+• shortest paths
+• dfs and similar & trees
+• dsu
+• sortings & strings
+• greedy & implementation
