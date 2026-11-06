@@ -36,5 +36,4 @@
 *.out
 
 #vscode setting
-.vscode/**/*
 main
