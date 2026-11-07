@@ -13,3 +13,8 @@ rating range : 1500 - 1800
 • dsu
 • sortings & strings
 • greedy & implementation
+
+=============== update every days =====================
+1940C
+847K
+1198B
