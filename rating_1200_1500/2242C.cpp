@@ -9,48 +9,36 @@
 #define int long long
 using namespace std;
 
-
 void solve(void) {
     int n, k;
     cin >> n >> k;
-    map<int,int> cnt_save;
-    vector<int> arr(n+1, 0);
+    vector<int> arr(n+1);
+    map<int,int> save_cnt;
     for (int i = 1; i <= n; i++) {
         cin >> arr[i];
-        cnt_save[arr[i]] += 1;
+        save_cnt[arr[i]] += 1;
     }
     vector<int> diff;
     for (int i = 1; i <= n; i++) {
         if (arr[i] != arr[i-1]) diff.push_back(arr[i]);
     }
-    if (diff.size() == 1) {
-        cout << 1 << '\n';
-        return;
+    map<int,vector<int>> same_numb;
+    for (int d : diff) {
+        int numb = save_cnt[d];
+        same_numb[numb].push_back(d);
     }
-    vector<int> temp_arr;
-    for (int d : diff) temp_arr.push_back(cnt_save[d]);
-    sort(temp_arr.begin(), temp_arr.end());
-    int cnt_sz = n;
-    int idx = -1;
-    int inc = 1;
     int ret = 0;
-    while (cnt_sz > k) {
-        auto it = lower_bound(temp_arr.begin(), temp_arr.end(), inc);
-        inc++;
-        if (it == temp_arr.end()) break;
-        idx = it - temp_arr.begin();
-        cnt_sz -= (temp_arr.size() - idx);
-        if (cnt_sz == k) ret++;
+    int sum_survive = n;
+    int rem_blocks = diff.size();
+    for (auto& [sz, vec] : same_numb) {
+        int x = sz - 1;
+        int rem_len = sum_survive - x * rem_blocks;
+        if (rem_len <= k && (k - rem_len) % rem_blocks == 0) {
+            ret += 1;
+        }
+        sum_survive -= sz * vec.size();
+        rem_blocks -= vec.size();
     }
-    if (idx == -1) {
-        cout << ret << '\n';
-        return;
-    }
-    int n_inc = temp_arr.size() - idx;
-    while (cnt_sz < k) {
-        cnt_sz += n_inc;
-    }
-    if (cnt_sz == k) ret++;
     cout << ret << '\n';
 }
 signed main(void) {
