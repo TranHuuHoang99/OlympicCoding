@@ -1,27 +1,16 @@
-// One shared configuration for Windows 11 and macOS.
-//   compilerPath "g++"  -> resolved via `where g++` (Windows, MSYS2 ucrt64) or `which g++`
-//                          (macOS, Homebrew). Set settings "C_Cpp.default.compilerPath" to
-//                          override which g++ is found.
-//   intelliSenseMode    -> ${default} = windows-gcc-x64 on Windows, macos-clang-arm64 on macOS.
-//   includePath         -> only the workspace; standard-library headers come from the compiler.
 {
-    "version": 4,
     "configurations": [
         {
-            "name": "Default",
-            "compilerPath": "g++",
-            "intelliSenseMode": "${default}",
+            "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "browse": {
-                "path": [
-                    "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": true
-            }
+            "defines": [],
+            "compilerPath": "/opt/homebrew/bin/g++-15",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "macos-clang-arm64"
         }
-    ]
+    ],
+    "version": 4
 }

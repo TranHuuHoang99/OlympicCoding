@@ -1,10 +1,7 @@
-// Press F5 to build (task "Compile C++") and start the debugger.
-// Identical on Windows and macOS.
 {
-    "version": "0.2.0",
     "configurations": [
         {
-            "name": "C++: Debug active file (stdin = input.in)",
+            "name": "C/C++: g++-15 build and debug active file",
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
@@ -13,21 +10,9 @@
             "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "${command:cpptools.activeConfigDebuggerPath}",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "Compile C++"
+            "MIMode": "lldb",
+            "preLaunchTask": "C/C++: g++-15 build active file"
         }
-    ]
+    ],
+    "version": "2.0.0"
 }
